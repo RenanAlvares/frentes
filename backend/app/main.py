@@ -2,6 +2,7 @@
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from typing import Any
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI
@@ -14,7 +15,13 @@ from app.db.migracoes import migrar
 from app.db.sessao import criar_engine, criar_session_local
 from app.erros import registrar_handlers
 from app.routers import sistema
+from app.schemas.erros import ErroResposta
 from app.services import configuracoes
+
+# Todo erro sai no formato de 04-api; "default" também tira do contrato o 422 padrão do FastAPI.
+RESPOSTAS_ERRO: dict[int | str, dict[str, Any]] = {
+    "default": {"model": ErroResposta, "description": "Erro (04-api, Formato de erro)"},
+}
 
 
 def inicializar(settings: Settings, session_local: sessionmaker[Session]) -> None:
@@ -44,7 +51,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.engine = engine
     app.state.session_local = session_local
     registrar_handlers(app)
-    app.include_router(sistema.router, prefix="/api")
+    app.include_router(sistema.router, prefix="/api", responses=RESPOSTAS_ERRO)
     return app
 
 

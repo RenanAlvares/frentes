@@ -1,0 +1,118 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Frentes",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/saude": {
+      "get": {
+        "tags": [
+          "sistema"
+        ],
+        "summary": "Obter Saude",
+        "operationId": "obter_saude",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaudeResposta"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErroDetalhe": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo"
+          },
+          "mensagem": {
+            "type": "string",
+            "title": "Mensagem"
+          },
+          "campos": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Campos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "mensagem"
+        ],
+        "title": "ErroDetalhe"
+      },
+      "ErroResposta": {
+        "properties": {
+          "erro": {
+            "$ref": "#/components/schemas/ErroDetalhe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "erro"
+        ],
+        "title": "ErroResposta"
+      },
+      "SaudeResposta": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status"
+          },
+          "versao": {
+            "type": "string",
+            "title": "Versao"
+          },
+          "hoje": {
+            "type": "string",
+            "format": "date",
+            "title": "Hoje"
+          },
+          "hoje_simulado": {
+            "type": "boolean",
+            "title": "Hoje Simulado"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "versao",
+          "hoje",
+          "hoje_simulado"
+        ],
+        "title": "SaudeResposta"
+      }
+    }
+  }
+}

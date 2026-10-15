@@ -1,10 +1,6 @@
 import { screen } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { renderizarRota, simularSaude } from '@/test/renderizar'
-
-afterEach(() => {
-  vi.unstubAllGlobals()
-})
 
 describe('rotas de 01-produto §3', () => {
   it.each([
