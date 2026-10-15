@@ -1,0 +1,6 @@
+# Gerados ou copiados por ferramentas: não reformatar.
+src/components/ui/
+src/api/schema.d.ts
+openapi.json
+package-lock.json
+CLAUDE.md
