@@ -56,6 +56,14 @@ class Settings(BaseSettings):
             self.database_url = f"sqlite:///{(self.data_dir / 'frentes.db').as_posix()}"
         return self
 
+    @property
+    def pasta_anexos(self) -> Path:
+        return self.data_dir / "anexos"
+
+    @property
+    def pasta_backups(self) -> Path:
+        return self.data_dir / "backups"
+
 
 def get_settings(request: Request) -> Settings:
     """Dependência: o Settings com que o app foi criado."""
