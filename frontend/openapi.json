@@ -283,6 +283,50 @@
           }
         }
       }
+    },
+    "/api/lixeira/{tipo}/{item_id}/restaurar": {
+      "post": {
+        "tags": [
+          "lixeira"
+        ],
+        "summary": "Restaurar Da Lixeira",
+        "operationId": "restaurar_da_lixeira",
+        "parameters": [
+          {
+            "name": "tipo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/TipoItemLixeira"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -723,6 +767,13 @@
           "concluido"
         ],
         "title": "StatusProjeto"
+      },
+      "TipoItemLixeira": {
+        "type": "string",
+        "enum": [
+          "projeto"
+        ],
+        "title": "TipoItemLixeira"
       }
     }
   }

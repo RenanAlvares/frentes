@@ -40,7 +40,7 @@ Regras:
   Modelo, migration, schemas, repository, service, router; `busca` preenchida; exclusão lógica; reordenar.
   Aceite: testes de 07 §3.5 (RN-12 parcial, RN-15, RN-16) e CRUD.
 
-- [ ] **1.2 Home de projetos** · ler: 01 §4.2, §4.6 (Projeto); 05 §4, §5
+- [x] **1.2 Home de projetos** · ler: 01 §4.2, §4.6 (Projeto); 05 §4, §5
   Grade de cards, modal de projeto (criar/editar), menu do card, reordenar arrastando (otimista), estado vazio, excluir com Desfazer.
   Aceite: testes de componente do modal; verificação manual dos fluxos.
 

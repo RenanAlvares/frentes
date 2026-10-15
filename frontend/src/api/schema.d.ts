@@ -75,6 +75,23 @@ export interface paths {
         patch: operations["atualizar_projeto"];
         trace?: never;
     };
+    "/api/lixeira/{tipo}/{item_id}/restaurar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restaurar Da Lixeira */
+        post: operations["restaurar_da_lixeira"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -233,6 +250,11 @@ export interface components {
          * @enum {string}
          */
         StatusProjeto: "planejado" | "em_andamento" | "aguardando" | "concluido";
+        /**
+         * TipoItemLixeira
+         * @enum {string}
+         */
+        TipoItemLixeira: "projeto";
     };
     responses: never;
     parameters: never;
@@ -449,6 +471,36 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Projeto"];
                 };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    restaurar_da_lixeira: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tipo: components["schemas"]["TipoItemLixeira"];
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Erro (04-api, Formato de erro) */
             default: {
