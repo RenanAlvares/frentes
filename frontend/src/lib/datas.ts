@@ -45,6 +45,16 @@ export function isoParaDataLocal(iso: string): Date {
   return new Date(Number(ano), Number(mes) - 1, Number(dia))
 }
 
+/** Carimbo de tempo UTC (`criado_em` etc., com "Z") → "dd/mm/aaaa" no fuso do navegador. */
+export function formatarCarimbo(carimbo: string): string {
+  // Carimbos podem usar `new Date` (05 §6): têm fuso explícito.
+  return new Date(carimbo).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+}
+
 /** Compara duas datas "AAAA-MM-DD" (a ordem do texto é a ordem das datas). */
 export function antesDe(iso: string, outra: string): boolean {
   partes(iso)

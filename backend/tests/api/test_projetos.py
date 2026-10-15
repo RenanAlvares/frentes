@@ -107,6 +107,7 @@ def test_listar_devolve_resumo(client: TestClient) -> None:
         "progresso",
         "avisos",
         "posicao",
+        "atualizado_em",
     }
 
 
@@ -170,6 +171,25 @@ def test_rn12_concluido_sai_da_home_e_aparece_em_arquivados(client: TestClient) 
 
     assert _ids(client) == [ativo["id"]]
     assert _ids(client, arquivados="true") == [arquivado["id"]]
+
+
+def test_rn12_filtro_arquivados_so_concluidos_na_ordem_com_data_de_conclusao(
+    client: TestClient, relogio: ClockFixo
+) -> None:
+    criar_projeto(client, nome="Ativo")
+    a = criar_projeto(client, nome="A")["id"]
+    b = criar_projeto(client, nome="B")["id"]
+    excluido = criar_projeto(client, nome="Excluído", status="concluido")["id"]
+    client.delete(f"/api/projetos/{excluido}")
+    relogio.definir(date(2026, 10, 20))
+    for projeto_id in (b, a):
+        client.patch(f"/api/projetos/{projeto_id}", json={"status": "concluido"})
+
+    arquivados = client.get("/api/projetos", params={"arquivados": "true"}).json()
+
+    assert [p["nome"] for p in arquivados] == ["A", "B"]
+    assert {p["status"] for p in arquivados} == {"concluido"}
+    assert {p["atualizado_em"] for p in arquivados} == {"2026-10-20T15:00:00Z"}
 
 
 def test_rn12_reabrir_volta_para_a_home_na_posicao_antiga(client: TestClient) -> None:

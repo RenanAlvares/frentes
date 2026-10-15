@@ -458,6 +458,11 @@
             "type": "integer",
             "title": "Posicao"
           },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          },
           "descricao": {
             "type": "string",
             "title": "Descricao"
@@ -478,11 +483,6 @@
             "type": "string",
             "format": "date-time",
             "title": "Criado Em"
-          },
-          "atualizado_em": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Atualizado Em"
           }
         },
         "type": "object",
@@ -496,10 +496,10 @@
           "progresso",
           "avisos",
           "posicao",
+          "atualizado_em",
           "descricao",
           "data_inicio",
-          "criado_em",
-          "atualizado_em"
+          "criado_em"
         ],
         "title": "Projeto"
       },
@@ -694,6 +694,11 @@
           "posicao": {
             "type": "integer",
             "title": "Posicao"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
           }
         },
         "type": "object",
@@ -706,7 +711,8 @@
           "acompanhar_progresso",
           "progresso",
           "avisos",
-          "posicao"
+          "posicao",
+          "atualizado_em"
         ],
         "title": "ProjetoResumo"
       },

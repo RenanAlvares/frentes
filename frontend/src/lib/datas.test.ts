@@ -3,6 +3,7 @@ import {
   anoDe,
   antesDe,
   dataLocalParaIso,
+  formatarCarimbo,
   formatarData,
   formatarDataCurta,
   isoParaDataLocal,
@@ -50,6 +51,12 @@ describe('paraIso e conversão com o calendário', () => {
   it('usa os getters locais, não o UTC', () => {
     // 23h do dia 31 no horário local continua sendo dia 31.
     expect(dataLocalParaIso(new Date(2026, 11, 31, 23, 30))).toBe('2026-12-31')
+  })
+})
+
+describe('formatarCarimbo', () => {
+  it('formata um carimbo UTC como dd/mm/aaaa', () => {
+    expect(formatarCarimbo('2026-10-20T15:00:00Z')).toBe('20/10/2026')
   })
 })
 

@@ -33,8 +33,9 @@ Todos os erros, inclusive de validação, saem neste formato:
 
 ```text
 Progresso      { concluidas: int, total: int }
-ProjetoResumo  { id, nome, status, cor, prazo, acompanhar_progresso, progresso: Progresso|null, avisos: int, posicao }
-Projeto        ProjetoResumo + { descricao, data_inicio, criado_em, atualizado_em }
+ProjetoResumo  { id, nome, status, cor, prazo, acompanhar_progresso, progresso: Progresso|null, avisos: int, posicao,
+                 atualizado_em }   # atualizado_em = data de conclusão em Arquivados (01 §4.7)
+Projeto        ProjetoResumo + { descricao, data_inicio, criado_em }
 Recorrencia    { frequencia, intervalo, dias_semana: int[]|null, dia_mes: int|null, mes: int|null }
 Tarefa         { id, projeto_id, titulo, descricao, status, prioridade, tipo, prazo, recorrencia: Recorrencia|null,
                  recorrencia_descricao: str|null, meta_mensal: int|null, progresso_mes: int|null,

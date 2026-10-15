@@ -75,10 +75,11 @@ class ProjetoResumo(BaseModel):
     progresso: Progresso | None
     avisos: int
     posicao: int
+    # Em Arquivados, é a data de conclusão (01 §4.7).
+    atualizado_em: datetime
 
 
 class Projeto(ProjetoResumo):
     descricao: str
     data_inicio: date | None
     criado_em: datetime
-    atualizado_em: datetime

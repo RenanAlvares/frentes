@@ -44,7 +44,7 @@ Regras:
   Grade de cards, modal de projeto (criar/editar), menu do card, reordenar arrastando (otimista), estado vazio, excluir com Desfazer.
   Aceite: testes de componente do modal; verificação manual dos fluxos.
 
-- [ ] **1.3 Arquivados** · ler: 01 §4.7; 02 RN-12
+- [x] **1.3 Arquivados** · ler: 01 §4.7; 02 RN-12
   Tela Arquivados, reabrir.
   Aceite: teste de API do filtro `arquivados`; fluxo manual.
 

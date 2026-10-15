@@ -143,6 +143,11 @@ export interface components {
             avisos: number;
             /** Posicao */
             posicao: number;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
             /** Descricao */
             descricao: string;
             /** Data Inicio */
@@ -152,11 +157,6 @@ export interface components {
              * Format: date-time
              */
             criado_em: string;
-            /**
-             * Atualizado Em
-             * Format: date-time
-             */
-            atualizado_em: string;
         };
         /**
          * ProjetoAtualizar
@@ -219,6 +219,11 @@ export interface components {
             avisos: number;
             /** Posicao */
             posicao: number;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
         };
         /**
          * ProjetosOrdem
