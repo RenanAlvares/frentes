@@ -1,0 +1,52 @@
+[project]
+name = "frentes"
+version = "0.1.0"
+description = "Gerenciador local de projetos e tarefas."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "python-multipart>=0.0.12",
+    "sqlalchemy>=2.0.36",
+    "alembic>=1.14",
+    "pydantic-settings>=2.6",
+    "tzdata>=2024.2",
+    "platformdirs>=4.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "httpx>=0.27",
+    "ruff>=0.8",
+    "mypy>=1.13",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# DTZ: datas sem fuso; PTH: pathlib; T20: sem print (regras de ouro do CLAUDE.md).
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "N", "C4", "DTZ", "PTH", "T20", "PT", "RUF"]
+# N818: as exceções de negócio têm nomes em português definidos na spec (NaoEncontrado, Conflito...).
+ignore = ["N818"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=app --cov-report=term-missing:skip-covered --cov-fail-under=85"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+branch = true

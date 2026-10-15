@@ -1,0 +1,51 @@
+# Fica verde a partir da tarefa 0.6 do roadmap (antes disso backend/ e frontend/ ainda não existem).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --directory backend --frozen
+      - run: uv run --directory backend ruff check .
+      - run: uv run --directory backend ruff format --check .
+      - run: uv run --directory backend mypy app
+      - run: uv run --directory backend pytest
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm --prefix frontend ci
+      - run: npm --prefix frontend run lint
+      - run: npm --prefix frontend run typecheck
+      - run: npm --prefix frontend run test
+      - run: npm --prefix frontend run build
+
+  contrato:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: uv sync --directory backend --frozen
+      - run: npm --prefix frontend ci
+      - run: uv run --directory backend python -m app.scripts.exportar_openapi ../frontend/openapi.json
+      - run: npm --prefix frontend run gen:api
+      - name: Contrato da API atualizado
+        run: git diff --exit-code -- frontend/openapi.json frontend/src/api/schema.d.ts
