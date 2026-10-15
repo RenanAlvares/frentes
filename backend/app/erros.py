@@ -5,10 +5,11 @@ from collections.abc import Mapping, Sequence
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.schemas.erros import ErroDetalhe, ErroResposta
+from app.spa import responder_spa
 
 logger = logging.getLogger(__name__)
 
@@ -131,8 +132,12 @@ def registrar_handlers(app: FastAPI) -> None:
         return _resposta(422, Validacao.codigo, Validacao.mensagem_padrao, campos)
 
     @app.exception_handler(StarletteHTTPException)
-    async def _erro_http(_request: Request, erro: StarletteHTTPException) -> JSONResponse:
+    async def _erro_http(request: Request, erro: StarletteHTTPException) -> Response:
         if erro.status_code == 404:
+            # Fora de /api e /assets, o 404 é uma rota do React Router (04-api, SPA).
+            spa = responder_spa(request)
+            if spa is not None:
+                return spa
             return _resposta(
                 404, NaoEncontrado.codigo, NaoEncontrado.mensagem_padrao, headers=erro.headers
             )

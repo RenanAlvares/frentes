@@ -2,6 +2,7 @@
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -17,6 +18,7 @@ from app.erros import registrar_handlers
 from app.routers import sistema
 from app.schemas.erros import ErroResposta
 from app.services import configuracoes
+from app.spa import PASTA_STATIC, montar_assets
 
 # Todo erro sai no formato de 04-api; "default" também tira do contrato o 422 padrão do FastAPI.
 RESPOSTAS_ERRO: dict[int | str, dict[str, Any]] = {
@@ -35,7 +37,7 @@ def inicializar(settings: Settings, session_local: sessionmaker[Session]) -> Non
         configuracoes.criar_padroes_faltantes(sessao, clock)
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, pasta_static: Path = PASTA_STATIC) -> FastAPI:
     settings = settings or Settings()
     engine = criar_engine(settings.database_url)
     session_local = criar_session_local(engine)
@@ -52,6 +54,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.session_local = session_local
     registrar_handlers(app)
     app.include_router(sistema.router, prefix="/api", responses=RESPOSTAS_ERRO)
+    montar_assets(app, pasta_static)
     return app
 
 

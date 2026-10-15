@@ -14,6 +14,18 @@ dependencies = [
     "platformdirs>=4.3",
 ]
 
+[project.scripts]
+frentes = "app.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.2,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+# O pacote é `app/` na raiz de backend/ (06 §3), não src/frentes.
+module-name = "app"
+module-root = ""
+
 [dependency-groups]
 dev = [
     "pytest>=8.3",
