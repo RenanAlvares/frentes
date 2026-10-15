@@ -21,10 +21,69 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/projetos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listar Projetos */
+        get: operations["listar_projetos"];
+        put?: never;
+        /** Criar Projeto */
+        post: operations["criar_projeto"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/projetos/ordem": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reordenar Projetos */
+        put: operations["reordenar_projetos"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/projetos/{projeto_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter Projeto */
+        get: operations["obter_projeto"];
+        put?: never;
+        post?: never;
+        /** Excluir Projeto */
+        delete: operations["excluir_projeto"];
+        options?: never;
+        head?: never;
+        /** Atualizar Projeto */
+        patch: operations["atualizar_projeto"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * CorProjeto
+         * @enum {string}
+         */
+        CorProjeto: "azul" | "verde" | "roxo" | "laranja" | "rosa" | "vermelho" | "ciano" | "cinza";
         /** ErroDetalhe */
         ErroDetalhe: {
             /** Codigo */
@@ -39,6 +98,118 @@ export interface components {
         /** ErroResposta */
         ErroResposta: {
             erro: components["schemas"]["ErroDetalhe"];
+        };
+        /** Progresso */
+        Progresso: {
+            /** Concluidas */
+            concluidas: number;
+            /** Total */
+            total: number;
+        };
+        /** Projeto */
+        Projeto: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Nome */
+            nome: string;
+            status: components["schemas"]["StatusProjeto"];
+            cor: components["schemas"]["CorProjeto"];
+            /** Prazo */
+            prazo: string | null;
+            /** Acompanhar Progresso */
+            acompanhar_progresso: boolean;
+            progresso: components["schemas"]["Progresso"] | null;
+            /** Avisos */
+            avisos: number;
+            /** Posicao */
+            posicao: number;
+            /** Descricao */
+            descricao: string;
+            /** Data Inicio */
+            data_inicio: string | null;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
+        };
+        /**
+         * ProjetoAtualizar
+         * @description PATCH: só os campos enviados mudam; `null` só vale para as datas.
+         */
+        ProjetoAtualizar: {
+            /** Nome */
+            nome?: string | null;
+            /** Descricao */
+            descricao?: string | null;
+            status?: components["schemas"]["StatusProjeto"] | null;
+            cor?: components["schemas"]["CorProjeto"] | null;
+            /** Data Inicio */
+            data_inicio?: string | null;
+            /** Prazo */
+            prazo?: string | null;
+            /** Acompanhar Progresso */
+            acompanhar_progresso?: boolean | null;
+        };
+        /** ProjetoCriar */
+        ProjetoCriar: {
+            /** Nome */
+            nome: string;
+            /**
+             * Descricao
+             * @default
+             */
+            descricao: string;
+            /** @default em_andamento */
+            status: components["schemas"]["StatusProjeto"];
+            /** @default azul */
+            cor: components["schemas"]["CorProjeto"];
+            /** Data Inicio */
+            data_inicio?: string | null;
+            /** Prazo */
+            prazo?: string | null;
+            /**
+             * Acompanhar Progresso
+             * @default false
+             */
+            acompanhar_progresso: boolean;
+        };
+        /** ProjetoResumo */
+        ProjetoResumo: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Nome */
+            nome: string;
+            status: components["schemas"]["StatusProjeto"];
+            cor: components["schemas"]["CorProjeto"];
+            /** Prazo */
+            prazo: string | null;
+            /** Acompanhar Progresso */
+            acompanhar_progresso: boolean;
+            progresso: components["schemas"]["Progresso"] | null;
+            /** Avisos */
+            avisos: number;
+            /** Posicao */
+            posicao: number;
+        };
+        /**
+         * ProjetosOrdem
+         * @description RN-15: todos os projetos não arquivados, na nova ordem.
+         */
+        ProjetosOrdem: {
+            /** Ids */
+            ids: string[];
         };
         /** SaudeResposta */
         SaudeResposta: {
@@ -57,6 +228,11 @@ export interface components {
             /** Hoje Simulado */
             hoje_simulado: boolean;
         };
+        /**
+         * StatusProjeto
+         * @enum {string}
+         */
+        StatusProjeto: "planejado" | "em_andamento" | "aguardando" | "concluido";
     };
     responses: never;
     parameters: never;
@@ -82,6 +258,196 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SaudeResposta"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    listar_projetos: {
+        parameters: {
+            query?: {
+                arquivados?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjetoResumo"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    criar_projeto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjetoCriar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Projeto"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    reordenar_projetos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjetosOrdem"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    obter_projeto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Projeto"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    excluir_projeto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    atualizar_projeto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjetoAtualizar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Projeto"];
                 };
             };
             /** @description Erro (04-api, Formato de erro) */

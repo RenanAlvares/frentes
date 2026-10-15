@@ -1,9 +1,21 @@
 """Tipos de coluna próprios (03-dados, convenções)."""
 
 from datetime import UTC, datetime
+from enum import StrEnum
 
-from sqlalchemy import DateTime, Dialect
+from sqlalchemy import DateTime, Dialect, Enum
 from sqlalchemy.types import TypeDecorator
+
+
+def enum_texto(classe: type[StrEnum]) -> Enum:
+    """Enum como VARCHAR(20) + CHECK, igual em SQLite e PostgreSQL (03-dados, convenções)."""
+    return Enum(
+        classe,
+        native_enum=False,
+        create_constraint=True,
+        length=20,
+        values_callable=lambda membros: [membro.value for membro in membros],
+    )
 
 
 class UTCDateTime(TypeDecorator[datetime]):

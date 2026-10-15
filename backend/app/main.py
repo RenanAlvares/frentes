@@ -15,7 +15,7 @@ from app.config import Settings
 from app.db.migracoes import migrar
 from app.db.sessao import criar_engine, criar_session_local
 from app.erros import registrar_handlers
-from app.routers import sistema
+from app.routers import projetos, sistema
 from app.schemas.erros import ErroResposta
 from app.services import configuracoes
 from app.spa import PASTA_STATIC, montar_assets
@@ -53,7 +53,8 @@ def create_app(settings: Settings | None = None, pasta_static: Path = PASTA_STAT
     app.state.engine = engine
     app.state.session_local = session_local
     registrar_handlers(app)
-    app.include_router(sistema.router, prefix="/api", responses=RESPOSTAS_ERRO)
+    for router in (sistema.router, projetos.router):
+        app.include_router(router, prefix="/api", responses=RESPOSTAS_ERRO)
     montar_assets(app, pasta_static)
     return app
 

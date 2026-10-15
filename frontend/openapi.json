@@ -35,10 +35,272 @@
           }
         }
       }
+    },
+    "/api/projetos": {
+      "get": {
+        "tags": [
+          "projetos"
+        ],
+        "summary": "Listar Projetos",
+        "operationId": "listar_projetos",
+        "parameters": [
+          {
+            "name": "arquivados",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Arquivados"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjetoResumo"
+                  },
+                  "title": "Response Listar Projetos"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "projetos"
+        ],
+        "summary": "Criar Projeto",
+        "operationId": "criar_projeto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjetoCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projetos/ordem": {
+      "put": {
+        "tags": [
+          "projetos"
+        ],
+        "summary": "Reordenar Projetos",
+        "operationId": "reordenar_projetos",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjetosOrdem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projetos/{projeto_id}": {
+      "get": {
+        "tags": [
+          "projetos"
+        ],
+        "summary": "Obter Projeto",
+        "operationId": "obter_projeto",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "projetos"
+        ],
+        "summary": "Atualizar Projeto",
+        "operationId": "atualizar_projeto",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjetoAtualizar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "projetos"
+        ],
+        "summary": "Excluir Projeto",
+        "operationId": "excluir_projeto",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CorProjeto": {
+        "type": "string",
+        "enum": [
+          "azul",
+          "verde",
+          "roxo",
+          "laranja",
+          "rosa",
+          "vermelho",
+          "ciano",
+          "cinza"
+        ],
+        "title": "CorProjeto"
+      },
       "ErroDetalhe": {
         "properties": {
           "codigo": {
@@ -83,6 +345,345 @@
         ],
         "title": "ErroResposta"
       },
+      "Progresso": {
+        "properties": {
+          "concluidas": {
+            "type": "integer",
+            "title": "Concluidas"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "concluidas",
+          "total"
+        ],
+        "title": "Progresso"
+      },
+      "Projeto": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusProjeto"
+          },
+          "cor": {
+            "$ref": "#/components/schemas/CorProjeto"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "acompanhar_progresso": {
+            "type": "boolean",
+            "title": "Acompanhar Progresso"
+          },
+          "progresso": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Progresso"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "avisos": {
+            "type": "integer",
+            "title": "Avisos"
+          },
+          "posicao": {
+            "type": "integer",
+            "title": "Posicao"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          },
+          "data_inicio": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Inicio"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "status",
+          "cor",
+          "prazo",
+          "acompanhar_progresso",
+          "progresso",
+          "avisos",
+          "posicao",
+          "descricao",
+          "data_inicio",
+          "criado_em",
+          "atualizado_em"
+        ],
+        "title": "Projeto"
+      },
+      "ProjetoAtualizar": {
+        "properties": {
+          "nome": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nome"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StatusProjeto"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CorProjeto"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "data_inicio": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Inicio"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "acompanhar_progresso": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acompanhar Progresso"
+          }
+        },
+        "type": "object",
+        "title": "ProjetoAtualizar",
+        "description": "PATCH: só os campos enviados mudam; `null` só vale para as datas."
+      },
+      "ProjetoCriar": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "descricao": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Descricao",
+            "default": ""
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusProjeto",
+            "default": "em_andamento"
+          },
+          "cor": {
+            "$ref": "#/components/schemas/CorProjeto",
+            "default": "azul"
+          },
+          "data_inicio": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Inicio"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "acompanhar_progresso": {
+            "type": "boolean",
+            "title": "Acompanhar Progresso",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome"
+        ],
+        "title": "ProjetoCriar"
+      },
+      "ProjetoResumo": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusProjeto"
+          },
+          "cor": {
+            "$ref": "#/components/schemas/CorProjeto"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "acompanhar_progresso": {
+            "type": "boolean",
+            "title": "Acompanhar Progresso"
+          },
+          "progresso": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Progresso"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "avisos": {
+            "type": "integer",
+            "title": "Avisos"
+          },
+          "posicao": {
+            "type": "integer",
+            "title": "Posicao"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "status",
+          "cor",
+          "prazo",
+          "acompanhar_progresso",
+          "progresso",
+          "avisos",
+          "posicao"
+        ],
+        "title": "ProjetoResumo"
+      },
+      "ProjetosOrdem": {
+        "properties": {
+          "ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ids"
+        ],
+        "title": "ProjetosOrdem",
+        "description": "RN-15: todos os projetos não arquivados, na nova ordem."
+      },
       "SaudeResposta": {
         "properties": {
           "status": {
@@ -112,6 +713,16 @@
           "hoje_simulado"
         ],
         "title": "SaudeResposta"
+      },
+      "StatusProjeto": {
+        "type": "string",
+        "enum": [
+          "planejado",
+          "em_andamento",
+          "aguardando",
+          "concluido"
+        ],
+        "title": "StatusProjeto"
       }
     }
   }

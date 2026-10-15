@@ -1,6 +1,7 @@
 from collections.abc import Iterator
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 import pytest
 from fastapi import FastAPI
@@ -46,3 +47,13 @@ def app(settings: Settings, relogio: ClockFixo) -> FastAPI:
 def client(app: FastAPI) -> Iterator[TestClient]:
     with TestClient(app) as cliente:
         yield cliente
+
+
+# Fábricas (07 §2): criam pelo próprio endpoint e devolvem o JSON da resposta.
+
+
+def criar_projeto(client: TestClient, **campos: object) -> dict[str, Any]:
+    resposta = client.post("/api/projetos", json={"nome": "Projeto", **campos})
+    assert resposta.status_code == 201, resposta.text
+    projeto: dict[str, Any] = resposta.json()
+    return projeto

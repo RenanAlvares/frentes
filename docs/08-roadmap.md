@@ -36,7 +36,7 @@ Regras:
 
 ## Fase 1 — Projetos e tarefas simples
 
-- [ ] **1.1 Projetos: modelo e API** · ler: 03 (projetos, convenções); 04 Projetos; 02 RN-10..17, RN-90
+- [x] **1.1 Projetos: modelo e API** · ler: 03 (projetos, convenções); 04 Projetos; 02 RN-10..17, RN-90
   Modelo, migration, schemas, repository, service, router; `busca` preenchida; exclusão lógica; reordenar.
   Aceite: testes de 07 §3.5 (RN-12 parcial, RN-15, RN-16) e CRUD.
 
