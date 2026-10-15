@@ -30,7 +30,7 @@ Regras:
   Build do Vite em `backend/app/static`, `StaticFiles` + fallback da SPA, `cli.py` (`frentes`, `frentes iniciar`) com abertura do navegador e mensagem de porta ocupada; padrões do `QueryClient` (05 §4).
   Aceite: teste do fallback da SPA e do 404 em `/api/inexistente`; execução manual de `frentes` abre o app.
 
-- [ ] **0.6 CI e README de execução** · ler: 07 §6
+- [x] **0.6 CI e README de execução** · ler: 07 §6
   Conferir `.github/workflows/ci.yml` com os comandos reais; README com como rodar.
   Aceite: CI verde no GitHub.
 
