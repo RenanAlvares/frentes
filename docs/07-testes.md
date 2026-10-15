@@ -144,12 +144,12 @@ Rodam contra o app em modo de uso, com pasta de dados temporária:
 
 | Lado | Comando | Regra |
 | --- | --- | --- |
-| Back | `uv run --directory backend ruff check .` | regras `E, F, I, B, UP, SIM, RUF`; linha 100 |
+| Back | `uv run --directory backend ruff check .` | regras `E, W, F, I, B, UP, SIM, N, C4, DTZ, PTH, T20, PT, RUF`; linha 100 |
 | Back | `uv run --directory backend ruff format --check .` | |
 | Back | `uv run --directory backend mypy app` | `strict = true` (com plugin pydantic) |
 | Back | `uv run --directory backend pytest` | cobertura conforme §2 |
 | Front | `npm --prefix frontend run lint` | oxlint sem avisos (`--deny-warnings`) |
-| Front | `npm --prefix frontend run typecheck` | `tsc -b --noEmit` |
+| Front | `npm --prefix frontend run typecheck` | `tsc -b` (`noEmit` nos tsconfigs) |
 | Front | `npm --prefix frontend run test` | `vitest run` |
 | Front | `npm --prefix frontend run build` | |
 | Contrato | exportar openapi + `gen:api` + `git diff --exit-code` | nada a mudar |
