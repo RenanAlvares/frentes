@@ -10,6 +10,7 @@ from app.domain.textos import normalizar_busca
 from app.erros import NaoEncontrado, Validacao
 from app.models.projeto import Projeto as ProjetoModelo
 from app.repositories import projetos as repositorio
+from app.repositories import tarefas as repositorio_tarefas
 from app.schemas.projetos import (
     Progresso,
     Projeto,
@@ -20,20 +21,36 @@ from app.schemas.projetos import (
 )
 
 
-def _campos(projeto: ProjetoModelo) -> dict[str, object]:
-    """Colunas do modelo + campos calculados da resposta."""
+def _progressos(
+    sessao: Session, projetos: list[ProjetoModelo]
+) -> dict[uuid.UUID, Progresso | None]:
+    """RN-13: só para quem acompanha o progresso; uma consulta para todos."""
+    contagens = repositorio_tarefas.progresso_por_projeto(
+        sessao, [projeto.id for projeto in projetos if projeto.acompanhar_progresso]
+    )
+    progressos: dict[uuid.UUID, Progresso | None] = {}
+    for projeto in projetos:
+        concluidas, total = contagens.get(projeto.id, (0, 0))
+        acompanha = projeto.acompanhar_progresso
+        progressos[projeto.id] = (
+            Progresso(concluidas=concluidas, total=total) if acompanha else None
+        )
+    return progressos
+
+
+def _campos(projeto: ProjetoModelo, progresso: Progresso | None) -> dict[str, object]:
+    """Colunas do modelo + campos calculados da resposta (avisos entram na fase 3)."""
     colunas = {coluna.key: getattr(projeto, coluna.key) for coluna in projeto.__table__.columns}
-    # RN-13 conta tarefas simples (tarefas entram na 1.4/1.7); avisos entram na fase 3.
-    progresso = Progresso(concluidas=0, total=0) if projeto.acompanhar_progresso else None
     return {**colunas, "progresso": progresso, "avisos": 0}
 
 
-def _resumo(projeto: ProjetoModelo) -> ProjetoResumo:
-    return ProjetoResumo.model_validate(_campos(projeto))
+def _resumos(sessao: Session, projetos: list[ProjetoModelo]) -> list[ProjetoResumo]:
+    progressos = _progressos(sessao, projetos)
+    return [ProjetoResumo.model_validate(_campos(p, progressos[p.id])) for p in projetos]
 
 
-def _detalhe(projeto: ProjetoModelo) -> Projeto:
-    return Projeto.model_validate(_campos(projeto))
+def _detalhe(sessao: Session, projeto: ProjetoModelo) -> Projeto:
+    return Projeto.model_validate(_campos(projeto, _progressos(sessao, [projeto])[projeto.id]))
 
 
 def _validar_datas(data_inicio: date | None, prazo: date | None) -> None:
@@ -50,11 +67,11 @@ def _buscar(sessao: Session, projeto_id: uuid.UUID) -> ProjetoModelo:
 
 
 def listar_projetos(sessao: Session, *, arquivados: bool) -> list[ProjetoResumo]:
-    return [_resumo(projeto) for projeto in repositorio.listar(sessao, arquivados=arquivados)]
+    return _resumos(sessao, repositorio.listar(sessao, arquivados=arquivados))
 
 
 def obter_projeto(sessao: Session, projeto_id: uuid.UUID) -> Projeto:
-    return _detalhe(_buscar(sessao, projeto_id))
+    return _detalhe(sessao, _buscar(sessao, projeto_id))
 
 
 def criar_projeto(sessao: Session, clock: Clock, dados: ProjetoCriar) -> Projeto:
@@ -69,7 +86,7 @@ def criar_projeto(sessao: Session, clock: Clock, dados: ProjetoCriar) -> Projeto
     )
     sessao.add(projeto)
     sessao.commit()
-    return _detalhe(projeto)
+    return _detalhe(sessao, projeto)
 
 
 def atualizar_projeto(
@@ -85,7 +102,7 @@ def atualizar_projeto(
     projeto.busca = normalizar_busca(projeto.nome, projeto.descricao)
     projeto.atualizado_em = clock.agora_utc()
     sessao.commit()
-    return _detalhe(projeto)
+    return _detalhe(sessao, projeto)
 
 
 def excluir_projeto(sessao: Session, clock: Clock, projeto_id: uuid.UUID) -> None:

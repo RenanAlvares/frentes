@@ -60,7 +60,7 @@ Regras:
   Abrir por `?tarefa=`, editar, concluir, excluir, Desfazer no toast, confirmação ao descartar.
   Aceite: testes de componente; fluxo manual.
 
-- [ ] **1.7 Progresso opcional** · ler: 02 RN-13
+- [x] **1.7 Progresso opcional** · ler: 02 RN-13
   Cálculo no resumo do projeto; barra no card e no cabeçalho só quando ligado.
   Aceite: testes de RN-13.
 

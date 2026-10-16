@@ -2,10 +2,10 @@
 
 import uuid
 
-from sqlalchemy import Select, func, select
+from sqlalchemy import Select, case, func, select
 from sqlalchemy.orm import Session
 
-from app.domain.enums import StatusTarefa
+from app.domain.enums import StatusTarefa, TipoTarefa
 from app.models.projeto import Projeto
 from app.models.tarefa import Tarefa
 
@@ -57,6 +57,27 @@ def concluidas(sessao: Session, projeto_id: uuid.UUID, limite: int | None = None
         .limit(limite)
     )
     return list(sessao.scalars(consulta))
+
+
+def progresso_por_projeto(
+    sessao: Session, projeto_ids: list[uuid.UUID]
+) -> dict[uuid.UUID, tuple[int, int]]:
+    """RN-13: (concluídas, total) das tarefas simples não excluídas de cada projeto."""
+    if not projeto_ids:
+        return {}
+    concluida = case((Tarefa.status == StatusTarefa.CONCLUIDA, 1), else_=0)
+    consulta = (
+        select(Tarefa.projeto_id, func.sum(concluida), func.count())
+        .where(
+            Tarefa.projeto_id.in_(projeto_ids),
+            Tarefa.tipo == TipoTarefa.SIMPLES,
+            Tarefa.excluido_em.is_(None),
+        )
+        .group_by(Tarefa.projeto_id)
+    )
+    return {
+        projeto_id: (int(feitas), total) for projeto_id, feitas, total in sessao.execute(consulta)
+    }
 
 
 def contar_concluidas(sessao: Session, projeto_id: uuid.UUID) -> int:
