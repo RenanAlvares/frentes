@@ -36,3 +36,5 @@ backend/dist/
 Thumbs.db
 .vscode/*
 !.vscode/extensions.json
+
+.claude

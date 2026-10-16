@@ -37,6 +37,8 @@ npm --prefix frontend run build
 uv run --directory backend frentes   # abre http://127.0.0.1:8765
 ```
 
+No Windows, basta dar dois cliques em `executar.bat`: ele faz os dois passos acima (e, na primeira vez, instala as dependências do front-end).
+
 O `frentes` sobe o servidor só em `127.0.0.1` e abre o navegador quando o banco estiver pronto. Se a porta 8765 estiver ocupada (o app já está aberto?), ele avisa e sai; troque com `FRENTES_PORT`.
 
 ## Configuração e dados
