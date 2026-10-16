@@ -57,3 +57,12 @@ def criar_projeto(client: TestClient, **campos: object) -> dict[str, Any]:
     assert resposta.status_code == 201, resposta.text
     projeto: dict[str, Any] = resposta.json()
     return projeto
+
+
+def criar_tarefa(client: TestClient, projeto_id: str, **campos: object) -> dict[str, Any]:
+    resposta = client.post(
+        f"/api/projetos/{projeto_id}/tarefas", json={"titulo": "Tarefa", **campos}
+    )
+    assert resposta.status_code == 201, resposta.text
+    tarefa: dict[str, Any] = resposta.json()
+    return tarefa

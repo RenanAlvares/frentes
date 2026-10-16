@@ -72,8 +72,10 @@ CHECK `tipo_campos` (RN-21):
 ```sql
 (tipo = 'simples'     AND recorrencia IS NULL AND meta_mensal IS NULL) OR
 (tipo = 'repetida'    AND prazo IS NOT NULL AND recorrencia IS NOT NULL AND meta_mensal IS NULL) OR
-(tipo = 'meta_mensal' AND prazo IS NULL AND recorrencia IS NULL AND meta_mensal BETWEEN 1 AND 31)
+(tipo = 'meta_mensal' AND prazo IS NULL AND recorrencia IS NULL AND meta_mensal IS NOT NULL AND meta_mensal BETWEEN 1 AND 31)
 ```
+
+O `meta_mensal IS NOT NULL` é necessário: `NULL BETWEEN 1 AND 31` dá `NULL`, e uma CHECK só rejeita `FALSE`.
 
 Índices: `(projeto_id, status, posicao)`, `(prazo)`.
 

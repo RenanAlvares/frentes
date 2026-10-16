@@ -19,3 +19,21 @@ class CorProjeto(StrEnum):
     VERMELHO = "vermelho"
     CIANO = "ciano"
     CINZA = "cinza"
+
+
+class StatusTarefa(StrEnum):
+    PENDENTE = "pendente"
+    EM_ANDAMENTO = "em_andamento"
+    CONCLUIDA = "concluida"
+
+
+class Prioridade(StrEnum):
+    BAIXA = "baixa"
+    MEDIA = "media"
+    ALTA = "alta"
+
+
+class TipoTarefa(StrEnum):
+    SIMPLES = "simples"
+    REPETIDA = "repetida"
+    META_MENSAL = "meta_mensal"

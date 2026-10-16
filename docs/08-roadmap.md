@@ -48,7 +48,7 @@ Regras:
   Tela Arquivados, reabrir.
   Aceite: teste de API do filtro `arquivados`; fluxo manual.
 
-- [ ] **1.4 Tarefas simples: modelo e API** · ler: 03 (tarefas, tarefa_execucoes); 04 Tarefas; 02 RN-20..22, RN-25..27
+- [x] **1.4 Tarefas simples: modelo e API** · ler: 03 (tarefas, tarefa_execucoes); 04 Tarefas; 02 RN-20..22, RN-25..27
   Modelo com CHECK `tipo_campos` (os três tipos já no modelo), migration, `GET quadro`, criar, editar, excluir, mover com renumeração, concluir/desfazer (simples).
   Aceite: testes de 07 §3.3 para simples (RN-21 inclusive).
 

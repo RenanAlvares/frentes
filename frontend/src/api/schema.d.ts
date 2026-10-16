@@ -75,6 +75,111 @@ export interface paths {
         patch: operations["atualizar_projeto"];
         trace?: never;
     };
+    "/api/projetos/{projeto_id}/tarefas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter Quadro */
+        get: operations["obter_quadro"];
+        put?: never;
+        /** Criar Tarefa */
+        post: operations["criar_tarefa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/projetos/{projeto_id}/tarefas/concluidas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listar Tarefas Concluidas */
+        get: operations["listar_tarefas_concluidas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tarefas/{tarefa_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter Tarefa */
+        get: operations["obter_tarefa"];
+        put?: never;
+        post?: never;
+        /** Excluir Tarefa */
+        delete: operations["excluir_tarefa"];
+        options?: never;
+        head?: never;
+        /** Atualizar Tarefa */
+        patch: operations["atualizar_tarefa"];
+        trace?: never;
+    };
+    "/api/tarefas/{tarefa_id}/mover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mover Tarefa */
+        post: operations["mover_tarefa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tarefas/{tarefa_id}/concluir": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Concluir Tarefa */
+        post: operations["concluir_tarefa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tarefas/{tarefa_id}/desfazer-conclusao": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Desfazer Conclusao Tarefa */
+        post: operations["desfazer_conclusao_tarefa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
         parameters: {
             query?: never;
@@ -116,6 +221,24 @@ export interface components {
         ErroResposta: {
             erro: components["schemas"]["ErroDetalhe"];
         };
+        /** Execucao */
+        Execucao: {
+            /**
+             * Data
+             * Format: date
+             */
+            data: string;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+        };
+        /**
+         * Prioridade
+         * @enum {string}
+         */
+        Prioridade: "baixa" | "media" | "alta";
         /** Progresso */
         Progresso: {
             /** Concluidas */
@@ -233,6 +356,17 @@ export interface components {
             /** Ids */
             ids: string[];
         };
+        /** Quadro */
+        Quadro: {
+            /** Pendente */
+            pendente: components["schemas"]["Tarefa"][];
+            /** Em Andamento */
+            em_andamento: components["schemas"]["Tarefa"][];
+            /** Concluida */
+            concluida: components["schemas"]["Tarefa"][];
+            /** Total Concluidas */
+            total_concluidas: number;
+        };
         /** SaudeResposta */
         SaudeResposta: {
             /**
@@ -256,10 +390,175 @@ export interface components {
          */
         StatusProjeto: "planejado" | "em_andamento" | "aguardando" | "concluido";
         /**
+         * StatusTarefa
+         * @enum {string}
+         */
+        StatusTarefa: "pendente" | "em_andamento" | "concluida";
+        /** Tarefa */
+        Tarefa: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Projeto Id
+             * Format: uuid
+             */
+            projeto_id: string;
+            /** Titulo */
+            titulo: string;
+            /** Descricao */
+            descricao: string;
+            status: components["schemas"]["StatusTarefa"];
+            prioridade: components["schemas"]["Prioridade"];
+            tipo: components["schemas"]["TipoTarefa"];
+            /** Prazo */
+            prazo: string | null;
+            /** Recorrencia */
+            recorrencia: {
+                [key: string]: unknown;
+            } | null;
+            /** Recorrencia Descricao */
+            recorrencia_descricao: string | null;
+            /** Meta Mensal */
+            meta_mensal: number | null;
+            /** Progresso Mes */
+            progresso_mes: number | null;
+            /** Posicao */
+            posicao: number;
+            /** Concluida Em */
+            concluida_em: string | null;
+            /** Atrasada */
+            atrasada: boolean;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
+        };
+        /**
+         * TarefaAtualizar
+         * @description PATCH: só os campos enviados mudam; `null` só vale para os campos opcionais.
+         */
+        TarefaAtualizar: {
+            /** Titulo */
+            titulo?: string | null;
+            /** Descricao */
+            descricao?: string | null;
+            prioridade?: components["schemas"]["Prioridade"] | null;
+            status?: components["schemas"]["StatusTarefa"] | null;
+            /** Tipo */
+            tipo?: "simples" | null;
+            /** Prazo */
+            prazo?: string | null;
+            /** Recorrencia */
+            recorrencia?: {
+                [key: string]: unknown;
+            } | null;
+            /** Meta Mensal */
+            meta_mensal?: number | null;
+        };
+        /** TarefaCriar */
+        TarefaCriar: {
+            /** Titulo */
+            titulo: string;
+            /**
+             * Descricao
+             * @default
+             */
+            descricao: string;
+            /** @default media */
+            prioridade: components["schemas"]["Prioridade"];
+            /**
+             * Tipo
+             * @default simples
+             * @constant
+             */
+            tipo: "simples";
+            /** Prazo */
+            prazo?: string | null;
+            /** Recorrencia */
+            recorrencia?: {
+                [key: string]: unknown;
+            } | null;
+            /** Meta Mensal */
+            meta_mensal?: number | null;
+        };
+        /** TarefaDetalhe */
+        TarefaDetalhe: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Projeto Id
+             * Format: uuid
+             */
+            projeto_id: string;
+            /** Titulo */
+            titulo: string;
+            /** Descricao */
+            descricao: string;
+            status: components["schemas"]["StatusTarefa"];
+            prioridade: components["schemas"]["Prioridade"];
+            tipo: components["schemas"]["TipoTarefa"];
+            /** Prazo */
+            prazo: string | null;
+            /** Recorrencia */
+            recorrencia: {
+                [key: string]: unknown;
+            } | null;
+            /** Recorrencia Descricao */
+            recorrencia_descricao: string | null;
+            /** Meta Mensal */
+            meta_mensal: number | null;
+            /** Progresso Mes */
+            progresso_mes: number | null;
+            /** Posicao */
+            posicao: number;
+            /** Concluida Em */
+            concluida_em: string | null;
+            /** Atrasada */
+            atrasada: boolean;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
+            /** Execucoes */
+            execucoes: components["schemas"]["Execucao"][];
+        };
+        /**
+         * TarefaMover
+         * @description RN-25: coluna de destino e posição nela (limitada ao tamanho da coluna).
+         */
+        TarefaMover: {
+            status: components["schemas"]["StatusTarefa"];
+            /** Indice */
+            indice: number;
+        };
+        /**
          * TipoItemLixeira
          * @enum {string}
          */
         TipoItemLixeira: "projeto";
+        /**
+         * TipoTarefa
+         * @enum {string}
+         */
+        TipoTarefa: "simples" | "repetida" | "meta_mensal";
     };
     responses: never;
     parameters: never;
@@ -475,6 +774,295 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Projeto"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    obter_quadro: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Quadro"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    criar_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TarefaCriar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tarefa"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    listar_tarefas_concluidas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tarefa"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    obter_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TarefaDetalhe"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    excluir_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    atualizar_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TarefaAtualizar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tarefa"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    mover_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TarefaMover"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Quadro"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    concluir_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tarefa"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    desfazer_conclusao_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tarefa"];
                 };
             };
             /** @description Erro (04-api, Formato de erro) */

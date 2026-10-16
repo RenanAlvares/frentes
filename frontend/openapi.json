@@ -284,6 +284,414 @@
         }
       }
     },
+    "/api/projetos/{projeto_id}/tarefas": {
+      "get": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Obter Quadro",
+        "operationId": "obter_quadro",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quadro"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Criar Tarefa",
+        "operationId": "criar_tarefa",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TarefaCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tarefa"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projetos/{projeto_id}/tarefas/concluidas": {
+      "get": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Listar Tarefas Concluidas",
+        "operationId": "listar_tarefas_concluidas",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tarefa"
+                  },
+                  "title": "Response Listar Tarefas Concluidas"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tarefas/{tarefa_id}": {
+      "get": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Obter Tarefa",
+        "operationId": "obter_tarefa",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TarefaDetalhe"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Atualizar Tarefa",
+        "operationId": "atualizar_tarefa",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TarefaAtualizar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tarefa"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Excluir Tarefa",
+        "operationId": "excluir_tarefa",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tarefas/{tarefa_id}/mover": {
+      "post": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Mover Tarefa",
+        "operationId": "mover_tarefa",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TarefaMover"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quadro"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tarefas/{tarefa_id}/concluir": {
+      "post": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Concluir Tarefa",
+        "operationId": "concluir_tarefa",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tarefa"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tarefas/{tarefa_id}/desfazer-conclusao": {
+      "post": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Desfazer Conclusao Tarefa",
+        "operationId": "desfazer_conclusao_tarefa",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tarefa"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
       "post": {
         "tags": [
@@ -388,6 +796,35 @@
           "erro"
         ],
         "title": "ErroResposta"
+      },
+      "Execucao": {
+        "properties": {
+          "data": {
+            "type": "string",
+            "format": "date",
+            "title": "Data"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "criado_em"
+        ],
+        "title": "Execucao"
+      },
+      "Prioridade": {
+        "type": "string",
+        "enum": [
+          "baixa",
+          "media",
+          "alta"
+        ],
+        "title": "Prioridade"
       },
       "Progresso": {
         "properties": {
@@ -734,6 +1171,43 @@
         "title": "ProjetosOrdem",
         "description": "RN-15: todos os projetos não arquivados, na nova ordem."
       },
+      "Quadro": {
+        "properties": {
+          "pendente": {
+            "items": {
+              "$ref": "#/components/schemas/Tarefa"
+            },
+            "type": "array",
+            "title": "Pendente"
+          },
+          "em_andamento": {
+            "items": {
+              "$ref": "#/components/schemas/Tarefa"
+            },
+            "type": "array",
+            "title": "Em Andamento"
+          },
+          "concluida": {
+            "items": {
+              "$ref": "#/components/schemas/Tarefa"
+            },
+            "type": "array",
+            "title": "Concluida"
+          },
+          "total_concluidas": {
+            "type": "integer",
+            "title": "Total Concluidas"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pendente",
+          "em_andamento",
+          "concluida",
+          "total_concluidas"
+        ],
+        "title": "Quadro"
+      },
       "SaudeResposta": {
         "properties": {
           "status": {
@@ -774,12 +1248,496 @@
         ],
         "title": "StatusProjeto"
       },
+      "StatusTarefa": {
+        "type": "string",
+        "enum": [
+          "pendente",
+          "em_andamento",
+          "concluida"
+        ],
+        "title": "StatusTarefa"
+      },
+      "Tarefa": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "projeto_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Projeto Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusTarefa"
+          },
+          "prioridade": {
+            "$ref": "#/components/schemas/Prioridade"
+          },
+          "tipo": {
+            "$ref": "#/components/schemas/TipoTarefa"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia"
+          },
+          "recorrencia_descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia Descricao"
+          },
+          "meta_mensal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta Mensal"
+          },
+          "progresso_mes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progresso Mes"
+          },
+          "posicao": {
+            "type": "integer",
+            "title": "Posicao"
+          },
+          "concluida_em": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concluida Em"
+          },
+          "atrasada": {
+            "type": "boolean",
+            "title": "Atrasada"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "projeto_id",
+          "titulo",
+          "descricao",
+          "status",
+          "prioridade",
+          "tipo",
+          "prazo",
+          "recorrencia",
+          "recorrencia_descricao",
+          "meta_mensal",
+          "progresso_mes",
+          "posicao",
+          "concluida_em",
+          "atrasada",
+          "criado_em",
+          "atualizado_em"
+        ],
+        "title": "Tarefa"
+      },
+      "TarefaAtualizar": {
+        "properties": {
+          "titulo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titulo"
+          },
+          "descricao": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descricao"
+          },
+          "prioridade": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Prioridade"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StatusTarefa"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tipo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "simples"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tipo"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia"
+          },
+          "meta_mensal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta Mensal"
+          }
+        },
+        "type": "object",
+        "title": "TarefaAtualizar",
+        "description": "PATCH: só os campos enviados mudam; `null` só vale para os campos opcionais."
+      },
+      "TarefaCriar": {
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "descricao": {
+            "type": "string",
+            "maxLength": 5000,
+            "title": "Descricao",
+            "default": ""
+          },
+          "prioridade": {
+            "$ref": "#/components/schemas/Prioridade",
+            "default": "media"
+          },
+          "tipo": {
+            "type": "string",
+            "const": "simples",
+            "title": "Tipo",
+            "default": "simples"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia"
+          },
+          "meta_mensal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta Mensal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "titulo"
+        ],
+        "title": "TarefaCriar"
+      },
+      "TarefaDetalhe": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "projeto_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Projeto Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusTarefa"
+          },
+          "prioridade": {
+            "$ref": "#/components/schemas/Prioridade"
+          },
+          "tipo": {
+            "$ref": "#/components/schemas/TipoTarefa"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia"
+          },
+          "recorrencia_descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia Descricao"
+          },
+          "meta_mensal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta Mensal"
+          },
+          "progresso_mes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progresso Mes"
+          },
+          "posicao": {
+            "type": "integer",
+            "title": "Posicao"
+          },
+          "concluida_em": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concluida Em"
+          },
+          "atrasada": {
+            "type": "boolean",
+            "title": "Atrasada"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          },
+          "execucoes": {
+            "items": {
+              "$ref": "#/components/schemas/Execucao"
+            },
+            "type": "array",
+            "title": "Execucoes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "projeto_id",
+          "titulo",
+          "descricao",
+          "status",
+          "prioridade",
+          "tipo",
+          "prazo",
+          "recorrencia",
+          "recorrencia_descricao",
+          "meta_mensal",
+          "progresso_mes",
+          "posicao",
+          "concluida_em",
+          "atrasada",
+          "criado_em",
+          "atualizado_em",
+          "execucoes"
+        ],
+        "title": "TarefaDetalhe"
+      },
+      "TarefaMover": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/StatusTarefa"
+          },
+          "indice": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Indice"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "indice"
+        ],
+        "title": "TarefaMover",
+        "description": "RN-25: coluna de destino e posição nela (limitada ao tamanho da coluna)."
+      },
       "TipoItemLixeira": {
         "type": "string",
         "enum": [
           "projeto"
         ],
         "title": "TipoItemLixeira"
+      },
+      "TipoTarefa": {
+        "type": "string",
+        "enum": [
+          "simples",
+          "repetida",
+          "meta_mensal"
+        ],
+        "title": "TipoTarefa"
       }
     }
   }
