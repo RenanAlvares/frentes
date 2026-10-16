@@ -52,7 +52,7 @@ Regras:
   Modelo com CHECK `tipo_campos` (os três tipos já no modelo), migration, `GET quadro`, criar, editar, excluir, mover com renumeração, concluir/desfazer (simples).
   Aceite: testes de 07 §3.3 para simples (RN-21 inclusive).
 
-- [ ] **1.5 Página do projeto e quadro** · ler: 01 §4.4; 05 §7, §8
+- [x] **1.5 Página do projeto e quadro** · ler: 01 §4.4; 05 §7, §8
   Cabeçalho do projeto, layout de 3 colunas (Lembretes, Documentos e Anotações com estado "em breve"), quadro com dnd-kit (mouse e teclado), criação rápida.
   Aceite: arrastar entre colunas e reordenar persiste após recarregar; layout correto nas 3 larguras.
 

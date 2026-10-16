@@ -76,6 +76,27 @@ export function useRestaurarProjeto() {
   })
 }
 
+/** Excluir com o toast "Movido para a lixeira" + Desfazer por 6 s (01 §5, RN-92). */
+export function useExcluirComDesfazer() {
+  const excluir = useExcluirProjeto()
+  const restaurar = useRestaurarProjeto()
+  return (id: string, aoExcluir?: () => void) =>
+    excluir.mutate(id, {
+      onSuccess: () => {
+        aoExcluir?.()
+        toast('Movido para a lixeira', {
+          duration: 6000,
+          action: {
+            label: 'Desfazer',
+            onClick: () =>
+              restaurar.mutate(id, { onError: (erro) => toast.error(mensagemDoErro(erro)) }),
+          },
+        })
+      },
+      onError: (erro) => toast.error(mensagemDoErro(erro)),
+    })
+}
+
 /** RN-15, otimista (05 §4): a grade muda na hora e volta se a API recusar. */
 export function useReordenarProjetos() {
   const queryClient = useQueryClient()

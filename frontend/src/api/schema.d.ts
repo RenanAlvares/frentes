@@ -307,11 +307,11 @@ export interface components {
              * Descricao
              * @default
              */
-            descricao: string;
+            descricao?: string;
             /** @default em_andamento */
-            status: components["schemas"]["StatusProjeto"];
+            status?: components["schemas"]["StatusProjeto"];
             /** @default azul */
-            cor: components["schemas"]["CorProjeto"];
+            cor?: components["schemas"]["CorProjeto"];
             /** Data Inicio */
             data_inicio?: string | null;
             /** Prazo */
@@ -320,7 +320,7 @@ export interface components {
              * Acompanhar Progresso
              * @default false
              */
-            acompanhar_progresso: boolean;
+            acompanhar_progresso?: boolean;
         };
         /** ProjetoResumo */
         ProjetoResumo: {
@@ -472,15 +472,15 @@ export interface components {
              * Descricao
              * @default
              */
-            descricao: string;
+            descricao?: string;
             /** @default media */
-            prioridade: components["schemas"]["Prioridade"];
+            prioridade?: components["schemas"]["Prioridade"];
             /**
              * Tipo
              * @default simples
              * @constant
              */
-            tipo: "simples";
+            tipo?: "simples";
             /** Prazo */
             prazo?: string | null;
             /** Recorrencia */

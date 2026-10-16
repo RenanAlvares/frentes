@@ -4,6 +4,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Cores das áreas do projeto (05 §5): fundo suave + texto/ícone na cor forte.
+   Viram classes como `bg-area-tarefas-suave` e `text-area-tarefas` (mapa em lib/cores.ts). */
+@theme inline {
+  --color-area-lembretes: var(--color-amber-700);
+  --color-area-lembretes-suave: var(--color-amber-50);
+  --color-area-tarefas: var(--color-blue-700);
+  --color-area-tarefas-suave: var(--color-blue-50);
+  --color-area-documentos: var(--color-emerald-700);
+  --color-area-documentos-suave: var(--color-emerald-50);
+  --color-area-anotacoes: var(--color-violet-700);
+  --color-area-anotacoes-suave: var(--color-violet-50);
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);

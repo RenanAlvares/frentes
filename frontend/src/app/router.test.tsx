@@ -6,8 +6,8 @@ describe('rotas de 01-produto §3', () => {
   it.each([
     ['/', 'Projetos'],
     ['/hoje', 'Tarefas de hoje'],
-    ['/projetos/7', 'Projeto'],
-    ['/projetos/7?tarefa=3', 'Projeto'],
+    ['/projetos/7', 'Reforma'],
+    ['/projetos/7?tarefa=3', 'Reforma'],
     ['/arquivados', 'Arquivados'],
     ['/lixeira', 'Lixeira'],
     ['/configuracoes', 'Configurações'],

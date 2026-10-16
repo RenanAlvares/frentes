@@ -7,4 +7,8 @@ export const chaves = {
     lista: (arquivados: boolean) => ['projetos', 'lista', { arquivados }] as const,
     detalhe: (id: string) => ['projetos', 'detalhe', id] as const,
   },
+  tarefas: {
+    quadro: (projetoId: string) => ['tarefas', 'quadro', projetoId] as const,
+    concluidas: (projetoId: string) => ['tarefas', 'concluidas', projetoId] as const,
+  },
 }

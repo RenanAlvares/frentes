@@ -10,10 +10,16 @@ import { rotas } from '@/app/router'
 
 type Saude = components['schemas']['SaudeResposta']
 type Projeto = components['schemas']['Projeto']
+type Tarefa = components['schemas']['Tarefa']
+type Quadro = components['schemas']['Quadro']
 
-/** Renderiza o app inteiro (providers + rotas) já na URL informada. */
-export function renderizarRota(url = '/') {
-  const router = createMemoryRouter(rotas, { initialEntries: [url] })
+/** Renderiza o app inteiro (providers + rotas) na URL informada (lista = histórico; a última é a atual). */
+export function renderizarRota(url: string | string[] = '/') {
+  const historico = Array.isArray(url) ? url : [url]
+  const router = createMemoryRouter(rotas, {
+    initialEntries: historico,
+    initialIndex: historico.length - 1,
+  })
   return render(
     <Providers>
       <RouterProvider router={router} />
@@ -47,11 +53,16 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
   const todas: Record<string, unknown> = {
     '/api/saude': saude(),
     '/api/projetos': [],
+    '/api/projetos/{projeto_id}': projeto(),
+    '/api/projetos/{projeto_id}/tarefas': quadro(),
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {
     if (!(caminho in todas)) throw new Error(`GET ${caminho} não simulado no teste`)
-    return sucesso(todas[caminho])
+    const valor = todas[caminho]
+    // Aceita os dados (sucesso) ou uma resposta pronta, como `falha(404, ...)`.
+    const pronta = typeof valor === 'object' && valor !== null && 'response' in valor
+    return pronta ? valor : sucesso(valor)
   }) as never)
 }
 
@@ -88,4 +99,31 @@ export function projeto(dados: Partial<Projeto> = {}): Projeto {
     atualizado_em: '2026-10-14T15:00:00Z',
     ...dados,
   }
+}
+
+export function tarefa(dados: Partial<Tarefa> = {}): Tarefa {
+  return {
+    id: 't1',
+    projeto_id: '11111111-1111-4111-8111-111111111111',
+    titulo: 'Comprar tinta',
+    descricao: '',
+    status: 'pendente',
+    prioridade: 'media',
+    tipo: 'simples',
+    prazo: null,
+    recorrencia: null,
+    recorrencia_descricao: null,
+    meta_mensal: null,
+    progresso_mes: null,
+    posicao: 0,
+    concluida_em: null,
+    atrasada: false,
+    criado_em: '2026-10-14T15:00:00Z',
+    atualizado_em: '2026-10-14T15:00:00Z',
+    ...dados,
+  }
+}
+
+export function quadro(dados: Partial<Quadro> = {}): Quadro {
+  return { pendente: [], em_andamento: [], concluida: [], total_concluidas: 0, ...dados }
 }

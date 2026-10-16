@@ -55,7 +55,7 @@ frontend/
 
 ## 3. Contrato com a API
 
-- `npm run gen:api` executa `openapi-typescript openapi.json -o src/api/schema.d.ts`.
+- `npm run gen:api` executa `openapi-typescript openapi.json -o src/api/schema.d.ts --default-non-nullable false` (campos com valor padrão na API ficam opcionais nos tipos de entrada).
 - O `openapi.json` é exportado pelo back-end com `uv run --directory backend python -m app.scripts.exportar_openapi ../frontend/openapi.json` (o caminho é relativo a `backend/`). A saída deve ser determinística: `json.dumps(app.openapi(), indent=2, ensure_ascii=False)` + quebra de linha final, sem depender de banco ou de data.
 - Toda chamada passa pelo `client` tipado. Proibido `fetch` direto (exceto download de arquivo e upload com progresso, que usam `XMLHttpRequest` em `features/documentos/upload.ts`).
 - Os tipos do front vêm de `components["schemas"][...]`. Não redefinir tipos que existem no schema.
@@ -76,7 +76,7 @@ frontend/
   | restaurar / excluir da lixeira | `lixeira()` e tudo do tipo restaurado |
 
 - Atualização otimista **apenas** no arrastar e soltar (tarefas e projetos), com rollback e toast em caso de erro.
-- `QueryClient`: `staleTime` 30 s, `refetchOnWindowFocus: true`, `retry: 1` para queries e 0 para mutações.
+- `QueryClient`: `staleTime` 30 s, `refetchOnWindowFocus: true`, `retry: 1` para queries (exceto erro 4xx da API, que não muda ao repetir) e 0 para mutações.
 
 ## 5. Visual
 
