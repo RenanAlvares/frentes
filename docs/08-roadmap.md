@@ -72,7 +72,7 @@ Regras:
   `domain/recorrencia.py`: modelo Pydantic `Recorrencia` com validação, `proxima_ocorrencia`, `avancar`, `ocorrencias_atrasadas`, `descrever`.
   Aceite: **todos** os casos de 07 §3.1; cobertura ≥ 95% no módulo.
 
-- [ ] **2.2 Tarefa repetida** · ler: 02 RN-21, RN-23, RN-26
+- [x] **2.2 Tarefa repetida** · ler: 02 RN-21, RN-23, RN-26
   Criar/editar com recorrência, concluir avança, mover para Concluída = concluir, desfazer, `recorrencia_descricao`, histórico no detalhe.
   Aceite: testes de 07 §3.3 (repetida).
 

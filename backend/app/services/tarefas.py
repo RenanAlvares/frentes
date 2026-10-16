@@ -1,6 +1,6 @@
-"""Casos de uso de tarefas simples (RN-20..22, RN-25..27, RN-90).
+"""Casos de uso de tarefas simples e repetidas (RN-20..23, RN-25..27, RN-90).
 
-Repetidas (RN-23) e metas (RN-24) entram nas fases 2.2 e 2.3.
+Metas mensais (RN-24) entram na fase 2.3.
 """
 
 import uuid
@@ -10,10 +10,12 @@ from sqlalchemy.orm import Session
 
 from app.clock import Clock
 from app.domain.enums import StatusProjeto, StatusTarefa, TipoTarefa
+from app.domain.recorrencia import Recorrencia, avancar, descrever
 from app.domain.textos import normalizar_busca
 from app.erros import Conflito, NaoEncontrado, Validacao
 from app.models.projeto import Projeto as ProjetoModelo
 from app.models.tarefa import Tarefa as TarefaModelo
+from app.models.tarefa import TarefaExecucao
 from app.repositories import projetos as repositorio_projetos
 from app.repositories import tarefas as repositorio
 from app.schemas.tarefas import (
@@ -26,6 +28,7 @@ from app.schemas.tarefas import (
 )
 
 LIMITE_CONCLUIDAS = 20
+HISTORICO_REPETIDA = 5  # 04-api, TarefaDetalhe
 
 
 def _buscar_projeto(sessao: Session, projeto_id: uuid.UUID) -> ProjetoModelo:
@@ -42,6 +45,11 @@ def _buscar(sessao: Session, tarefa_id: uuid.UUID) -> TarefaModelo:
     return tarefa
 
 
+def _regra(tarefa: TarefaModelo) -> Recorrencia:
+    # O CHECK tipo_campos garante a regra (e o prazo) de toda repetida.
+    return Recorrencia.model_validate(tarefa.recorrencia)
+
+
 def _atrasada(tarefa: TarefaModelo, projeto: ProjetoModelo, hoje: date) -> bool:
     # RN-27 (excluídas e de projeto excluído nem chegam aqui).
     return (
@@ -55,10 +63,12 @@ def _atrasada(tarefa: TarefaModelo, projeto: ProjetoModelo, hoje: date) -> bool:
 
 def _campos(tarefa: TarefaModelo, projeto: ProjetoModelo, hoje: date) -> dict[str, object]:
     colunas = {coluna.key: getattr(tarefa, coluna.key) for coluna in tarefa.__table__.columns}
-    # recorrencia_descricao (2.2) e progresso_mes (2.3) só existem para repetidas e metas.
+    repetida = tarefa.tipo == TipoTarefa.REPETIDA
     calculados = {
         "atrasada": _atrasada(tarefa, projeto, hoje),
-        "recorrencia_descricao": None,
+        # RN-35: o texto oficial da regra vem daqui.
+        "recorrencia_descricao": descrever(_regra(tarefa)) if repetida else None,
+        # progresso_mes (metas) entra na fase 2.3.
         "progresso_mes": None,
     }
     return {**colunas, **calculados}
@@ -68,13 +78,21 @@ def _resposta(tarefa: TarefaModelo, projeto: ProjetoModelo, hoje: date) -> Taref
     return Tarefa.model_validate(_campos(tarefa, projeto, hoje))
 
 
-def _validar_tipo_campos(recorrencia: object, meta_mensal: object) -> None:
-    # RN-21 para simples: sem repetição e sem meta.
+def _validar_tipo_campos(
+    tipo: TipoTarefa, prazo: date | None, recorrencia: object, meta_mensal: object
+) -> None:
+    """RN-21, sobre o estado final (na edição, o enviado junto com o que já está gravado)."""
     campos = {}
-    if recorrencia is not None:
+    if tipo == TipoTarefa.SIMPLES and recorrencia is not None:
         campos["recorrencia"] = "Tarefa simples não tem repetição."
+    if tipo == TipoTarefa.REPETIDA:
+        if prazo is None:
+            campos["prazo"] = "Informe a primeira data."
+        if recorrencia is None:
+            campos["recorrencia"] = "Informe a repetição."
     if meta_mensal is not None:
-        campos["meta_mensal"] = "Tarefa simples não tem meta mensal."
+        nome = "simples" if tipo == TipoTarefa.SIMPLES else "repetida"
+        campos["meta_mensal"] = f"Tarefa {nome} não tem meta mensal."
     if campos:
         raise Validacao(campos=campos)
 
@@ -110,6 +128,28 @@ def _mover(
     tarefa.atualizado_em = agora
 
 
+def _concluir_repetida(sessao: Session, tarefa: TarefaModelo, hoje: date, agora: datetime) -> None:
+    """RN-23: registra a execução, avança o prazo e fica em Pendente (nunca em Concluída)."""
+    atual = tarefa.prazo
+    assert atual is not None  # CHECK tipo_campos
+    sessao.add(
+        TarefaExecucao(tarefa_id=tarefa.id, data=hoje, prazo_referencia=atual, criado_em=agora)
+    )
+    tarefa.prazo = avancar(_regra(tarefa), atual, hoje)
+    if tarefa.status != StatusTarefa.PENDENTE:
+        # Vinda de Em andamento, entra no topo de Pendente; já pendente, fica onde está.
+        _mover(sessao, tarefa, StatusTarefa.PENDENTE, 0, agora)
+    tarefa.atualizado_em = agora
+
+
+def _concluir(sessao: Session, clock: Clock, tarefa: TarefaModelo, indice: int = 0) -> None:
+    """Concluir por botão, edição ou arraste para Concluída: o efeito depende do tipo."""
+    if tarefa.tipo == TipoTarefa.REPETIDA:
+        _concluir_repetida(sessao, tarefa, clock.hoje(), clock.agora_utc())
+    else:
+        _mover(sessao, tarefa, StatusTarefa.CONCLUIDA, indice, clock.agora_utc())
+
+
 def obter_quadro(sessao: Session, clock: Clock, projeto_id: uuid.UUID) -> Quadro:
     projeto = _buscar_projeto(sessao, projeto_id)
     hoje = clock.hoje()
@@ -135,19 +175,28 @@ def listar_concluidas(sessao: Session, clock: Clock, projeto_id: uuid.UUID) -> l
 def obter_tarefa(sessao: Session, clock: Clock, tarefa_id: uuid.UUID) -> TarefaDetalhe:
     tarefa = _buscar(sessao, tarefa_id)
     projeto = _buscar_projeto(sessao, tarefa.projeto_id)
-    # Simples não tem execuções; o histórico de repetidas e metas entra na fase 2.
-    return TarefaDetalhe.model_validate({**_campos(tarefa, projeto, clock.hoje()), "execucoes": []})
+    # Repetida: as últimas 5 execuções. Simples não tem; as metas entram na fase 2.3.
+    historico = (
+        repositorio.execucoes(sessao, tarefa.id, HISTORICO_REPETIDA)
+        if tarefa.tipo == TipoTarefa.REPETIDA
+        else []
+    )
+    execucoes = [{"data": e.data, "criado_em": e.criado_em} for e in historico]
+    return TarefaDetalhe.model_validate(
+        {**_campos(tarefa, projeto, clock.hoje()), "execucoes": execucoes}
+    )
 
 
 def criar_tarefa(
     sessao: Session, clock: Clock, projeto_id: uuid.UUID, dados: TarefaCriar
 ) -> Tarefa:
     projeto = _buscar_projeto(sessao, projeto_id)
-    _validar_tipo_campos(dados.recorrencia, dados.meta_mensal)
+    _validar_tipo_campos(dados.tipo, dados.prazo, dados.recorrencia, dados.meta_mensal)
     agora = clock.agora_utc()
     pendentes = repositorio.da_coluna(sessao, projeto_id, StatusTarefa.PENDENTE)
     tarefa = TarefaModelo(
-        **dados.model_dump(),
+        **dados.model_dump(exclude={"recorrencia"}),
+        recorrencia=dados.recorrencia.model_dump(mode="json") if dados.recorrencia else None,
         projeto_id=projeto_id,
         status=StatusTarefa.PENDENTE,
         # RN-25: entra no topo de Pendente.
@@ -167,15 +216,28 @@ def atualizar_tarefa(
     tarefa = _buscar(sessao, tarefa_id)
     projeto = _buscar_projeto(sessao, tarefa.projeto_id)
     alteracoes = dados.model_dump(exclude_unset=True)
+    if dados.recorrencia is not None:
+        alteracoes["recorrencia"] = dados.recorrencia.model_dump(mode="json")
+    # RN-21: o tipo pode mudar; valida o novo estado. As execuções já registradas ficam.
     _validar_tipo_campos(
+        alteracoes.get("tipo", tarefa.tipo),
+        alteracoes.get("prazo", tarefa.prazo),
         alteracoes.get("recorrencia", tarefa.recorrencia),
         alteracoes.get("meta_mensal", tarefa.meta_mensal),
     )
     agora = clock.agora_utc()
+    pediu_status = "status" in alteracoes
     novo_status = alteracoes.pop("status", tarefa.status)
     for campo, valor in alteracoes.items():
         setattr(tarefa, campo, valor)
-    if novo_status != tarefa.status:
+    repetida = tarefa.tipo == TipoTarefa.REPETIDA
+    if pediu_status and novo_status == StatusTarefa.CONCLUIDA and repetida:
+        # 04-api: PATCH de repetida para Concluída equivale a concluir.
+        _concluir_repetida(sessao, tarefa, clock.hoje(), agora)
+    elif repetida and tarefa.status == StatusTarefa.CONCLUIDA:
+        # Simples concluída que virou repetida: repetida nunca fica em Concluída (RN-23).
+        _mover(sessao, tarefa, StatusTarefa.PENDENTE, 0, agora)
+    elif novo_status != tarefa.status:
         # Mudar o status pela edição põe a tarefa no topo da nova coluna.
         _mover(sessao, tarefa, novo_status, 0, agora)
     tarefa.busca = normalizar_busca(tarefa.titulo, tarefa.descricao)
@@ -193,7 +255,11 @@ def excluir_tarefa(sessao: Session, clock: Clock, tarefa_id: uuid.UUID) -> None:
 
 def mover_tarefa(sessao: Session, clock: Clock, tarefa_id: uuid.UUID, dados: TarefaMover) -> Quadro:
     tarefa = _buscar(sessao, tarefa_id)
-    _mover(sessao, tarefa, dados.status, dados.indice, clock.agora_utc())
+    if dados.status == StatusTarefa.CONCLUIDA:
+        # Arrastar para Concluída = concluir (RN-23 para repetidas).
+        _concluir(sessao, clock, tarefa, dados.indice)
+    else:
+        _mover(sessao, tarefa, dados.status, dados.indice, clock.agora_utc())
     sessao.commit()
     return obter_quadro(sessao, clock, tarefa.projeto_id)
 
@@ -202,16 +268,29 @@ def concluir_tarefa(sessao: Session, clock: Clock, tarefa_id: uuid.UUID) -> Tare
     tarefa = _buscar(sessao, tarefa_id)
     if tarefa.status == StatusTarefa.CONCLUIDA:
         raise Conflito("A tarefa já está concluída.")
-    _mover(sessao, tarefa, StatusTarefa.CONCLUIDA, 0, clock.agora_utc())
+    _concluir(sessao, clock, tarefa)
     sessao.commit()
     return _resposta(tarefa, _buscar_projeto(sessao, tarefa.projeto_id), clock.hoje())
 
 
 def desfazer_conclusao(sessao: Session, clock: Clock, tarefa_id: uuid.UUID) -> Tarefa:
-    # RN-26 (simples): volta para o topo de Pendente; sem conclusão → 409.
+    """RN-26. Simples: volta para o topo de Pendente. Repetida: apaga a última execução e
+    restaura o prazo de antes dela. Sem o que desfazer → 409."""
     tarefa = _buscar(sessao, tarefa_id)
-    if tarefa.status != StatusTarefa.CONCLUIDA:
-        raise Conflito("Não há conclusão para desfazer.")
-    _mover(sessao, tarefa, StatusTarefa.PENDENTE, 0, clock.agora_utc())
+    agora = clock.agora_utc()
+    if tarefa.tipo == TipoTarefa.REPETIDA:
+        ultimas = repositorio.execucoes(sessao, tarefa.id, 1)
+        if not ultimas:
+            raise Conflito("Não há conclusão para desfazer.")
+        (ultima,) = ultimas
+        # Execução de quando a tarefa era meta não tem prazo de referência: o prazo fica.
+        if ultima.prazo_referencia is not None:
+            tarefa.prazo = ultima.prazo_referencia
+        sessao.delete(ultima)
+        tarefa.atualizado_em = agora
+    else:
+        if tarefa.status != StatusTarefa.CONCLUIDA:
+            raise Conflito("Não há conclusão para desfazer.")
+        _mover(sessao, tarefa, StatusTarefa.PENDENTE, 0, agora)
     sessao.commit()
     return _resposta(tarefa, _buscar_projeto(sessao, tarefa.projeto_id), clock.hoje())

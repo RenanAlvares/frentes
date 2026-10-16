@@ -817,6 +817,16 @@
         ],
         "title": "Execucao"
       },
+      "Frequencia": {
+        "type": "string",
+        "enum": [
+          "diaria",
+          "semanal",
+          "mensal",
+          "anual"
+        ],
+        "title": "Frequencia"
+      },
       "Prioridade": {
         "type": "string",
         "enum": [
@@ -1208,6 +1218,68 @@
         ],
         "title": "Quadro"
       },
+      "Recorrencia": {
+        "properties": {
+          "frequencia": {
+            "$ref": "#/components/schemas/Frequencia"
+          },
+          "intervalo": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Intervalo",
+            "default": 1
+          },
+          "dias_semana": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer",
+                  "maximum": 6.0,
+                  "minimum": 0.0
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dias Semana"
+          },
+          "dia_mes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 31.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dia Mes"
+          },
+          "mes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 12.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "frequencia"
+        ],
+        "title": "Recorrencia",
+        "description": "RN-30. Campos que não se aplicam à frequência ficam `null`."
+      },
       "SaudeResposta": {
         "properties": {
           "status": {
@@ -1301,14 +1373,12 @@
           "recorrencia": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/Recorrencia"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Recorrencia"
+            ]
           },
           "recorrencia_descricao": {
             "anyOf": [
@@ -1445,7 +1515,10 @@
             "anyOf": [
               {
                 "type": "string",
-                "const": "simples"
+                "enum": [
+                  "simples",
+                  "repetida"
+                ]
               },
               {
                 "type": "null"
@@ -1468,14 +1541,12 @@
           "recorrencia": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/Recorrencia"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Recorrencia"
+            ]
           },
           "meta_mensal": {
             "anyOf": [
@@ -1511,7 +1582,10 @@
           },
           "tipo": {
             "type": "string",
-            "const": "simples",
+            "enum": [
+              "simples",
+              "repetida"
+            ],
             "title": "Tipo",
             "default": "simples"
           },
@@ -1530,14 +1604,12 @@
           "recorrencia": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/Recorrencia"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Recorrencia"
+            ]
           },
           "meta_mensal": {
             "anyOf": [
@@ -1601,14 +1673,12 @@
           "recorrencia": {
             "anyOf": [
               {
-                "additionalProperties": true,
-                "type": "object"
+                "$ref": "#/components/schemas/Recorrencia"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Recorrencia"
+            ]
           },
           "recorrencia_descricao": {
             "anyOf": [

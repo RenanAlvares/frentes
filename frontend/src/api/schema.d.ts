@@ -235,6 +235,11 @@ export interface components {
             criado_em: string;
         };
         /**
+         * Frequencia
+         * @enum {string}
+         */
+        Frequencia: "diaria" | "semanal" | "mensal" | "anual";
+        /**
          * Prioridade
          * @enum {string}
          */
@@ -367,6 +372,24 @@ export interface components {
             /** Total Concluidas */
             total_concluidas: number;
         };
+        /**
+         * Recorrencia
+         * @description RN-30. Campos que não se aplicam à frequência ficam `null`.
+         */
+        Recorrencia: {
+            frequencia: components["schemas"]["Frequencia"];
+            /**
+             * Intervalo
+             * @default 1
+             */
+            intervalo?: number;
+            /** Dias Semana */
+            dias_semana?: number[] | null;
+            /** Dia Mes */
+            dia_mes?: number | null;
+            /** Mes */
+            mes?: number | null;
+        };
         /** SaudeResposta */
         SaudeResposta: {
             /**
@@ -415,10 +438,7 @@ export interface components {
             tipo: components["schemas"]["TipoTarefa"];
             /** Prazo */
             prazo: string | null;
-            /** Recorrencia */
-            recorrencia: {
-                [key: string]: unknown;
-            } | null;
+            recorrencia: components["schemas"]["Recorrencia"] | null;
             /** Recorrencia Descricao */
             recorrencia_descricao: string | null;
             /** Meta Mensal */
@@ -454,13 +474,10 @@ export interface components {
             prioridade?: components["schemas"]["Prioridade"] | null;
             status?: components["schemas"]["StatusTarefa"] | null;
             /** Tipo */
-            tipo?: "simples" | null;
+            tipo?: ("simples" | "repetida") | null;
             /** Prazo */
             prazo?: string | null;
-            /** Recorrencia */
-            recorrencia?: {
-                [key: string]: unknown;
-            } | null;
+            recorrencia?: components["schemas"]["Recorrencia"] | null;
             /** Meta Mensal */
             meta_mensal?: number | null;
         };
@@ -478,15 +495,12 @@ export interface components {
             /**
              * Tipo
              * @default simples
-             * @constant
+             * @enum {string}
              */
-            tipo?: "simples";
+            tipo?: "simples" | "repetida";
             /** Prazo */
             prazo?: string | null;
-            /** Recorrencia */
-            recorrencia?: {
-                [key: string]: unknown;
-            } | null;
+            recorrencia?: components["schemas"]["Recorrencia"] | null;
             /** Meta Mensal */
             meta_mensal?: number | null;
         };
@@ -511,10 +525,7 @@ export interface components {
             tipo: components["schemas"]["TipoTarefa"];
             /** Prazo */
             prazo: string | null;
-            /** Recorrencia */
-            recorrencia: {
-                [key: string]: unknown;
-            } | null;
+            recorrencia: components["schemas"]["Recorrencia"] | null;
             /** Recorrencia Descricao */
             recorrencia_descricao: string | null;
             /** Meta Mensal */

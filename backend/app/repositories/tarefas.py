@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.domain.enums import StatusTarefa, TipoTarefa
 from app.models.projeto import Projeto
-from app.models.tarefa import Tarefa
+from app.models.tarefa import Tarefa, TarefaExecucao
 
 _VISIVEL = (Tarefa.excluido_em.is_(None), Projeto.excluido_em.is_(None))
 
@@ -78,6 +78,17 @@ def progresso_por_projeto(
     return {
         projeto_id: (int(feitas), total) for projeto_id, feitas, total in sessao.execute(consulta)
     }
+
+
+def execucoes(sessao: Session, tarefa_id: uuid.UUID, limite: int) -> list[TarefaExecucao]:
+    """Mais recentes primeiro (`criado_em` desempata no mesmo dia, 03-dados)."""
+    consulta = (
+        select(TarefaExecucao)
+        .where(TarefaExecucao.tarefa_id == tarefa_id)
+        .order_by(TarefaExecucao.data.desc(), TarefaExecucao.criado_em.desc())
+        .limit(limite)
+    )
+    return list(sessao.scalars(consulta))
 
 
 def contar_concluidas(sessao: Session, projeto_id: uuid.UUID) -> int:

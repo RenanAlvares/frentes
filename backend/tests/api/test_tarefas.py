@@ -128,9 +128,9 @@ def test_rn121_busca_gravada(client: TestClient, app: FastAPI, projeto_id: str) 
 # RN-21: tipo e campos
 
 
-def test_rn21_por_enquanto_so_tipo_simples(client: TestClient, projeto_id: str) -> None:
+def test_rn21_meta_mensal_ainda_nao_e_aceita(client: TestClient, projeto_id: str) -> None:
     resposta = client.post(
-        f"/api/projetos/{projeto_id}/tarefas", json={"titulo": "A", "tipo": "repetida"}
+        f"/api/projetos/{projeto_id}/tarefas", json={"titulo": "A", "tipo": "meta_mensal"}
     )
 
     assert _campos_invalidos(resposta) == {"tipo": "Valor não permitido."}

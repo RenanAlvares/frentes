@@ -2,11 +2,12 @@
 
 import uuid
 from datetime import date, datetime
-from typing import Annotated, Any, Literal
+from typing import Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, Field, field_validator
 
 from app.domain.enums import Prioridade, StatusTarefa, TipoTarefa
+from app.domain.recorrencia import Recorrencia
 
 
 def _titulo_preenchido(valor: str) -> str:
@@ -20,10 +21,8 @@ def _titulo_preenchido(valor: str) -> str:
 
 TituloTarefa = Annotated[str, AfterValidator(_titulo_preenchido)]
 DescricaoTarefa = Annotated[str, Field(max_length=5000)]
-# Por enquanto só simples; repetida e meta_mensal entram nas fases 2.2 e 2.3.
-TipoAceito = Literal[TipoTarefa.SIMPLES]
-# Formato de RN-30 validado a partir da fase 2.1.
-RecorrenciaJson = dict[str, Any]
+# Por enquanto simples e repetida; meta_mensal entra na fase 2.3.
+TipoAceito = Literal[TipoTarefa.SIMPLES, TipoTarefa.REPETIDA]
 
 
 class TarefaCriar(BaseModel):
@@ -32,7 +31,7 @@ class TarefaCriar(BaseModel):
     prioridade: Prioridade = Prioridade.MEDIA
     tipo: TipoAceito = TipoTarefa.SIMPLES
     prazo: date | None = None
-    recorrencia: RecorrenciaJson | None = None
+    recorrencia: Recorrencia | None = None
     meta_mensal: int | None = None
 
 
@@ -45,7 +44,7 @@ class TarefaAtualizar(BaseModel):
     status: StatusTarefa | None = None
     tipo: TipoAceito | None = None
     prazo: date | None = None
-    recorrencia: RecorrenciaJson | None = None
+    recorrencia: Recorrencia | None = None
     meta_mensal: int | None = None
 
     @field_validator("titulo", "descricao", "prioridade", "status", "tipo", mode="before")
@@ -72,7 +71,7 @@ class Tarefa(BaseModel):
     prioridade: Prioridade
     tipo: TipoTarefa
     prazo: date | None
-    recorrencia: RecorrenciaJson | None
+    recorrencia: Recorrencia | None
     recorrencia_descricao: str | None
     meta_mensal: int | None
     progresso_mes: int | None
