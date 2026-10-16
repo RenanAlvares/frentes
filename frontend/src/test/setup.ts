@@ -4,8 +4,8 @@ import { toast } from 'sonner'
 import { afterEach } from 'vitest'
 
 // Modais e menus do Radix são pesados no jsdom; com a suíte inteira em paralelo, 1 s
-// (padrão de findBy/waitFor) às vezes não basta.
-configure({ asyncUtilTimeout: 3000 })
+// (padrão de findBy/waitFor) às vezes não basta; com os modais da fase 2, nem 3 s.
+configure({ asyncUtilTimeout: 5000 })
 
 // Os toasts ficam num estado global do sonner: sem isto, os de um teste aparecem no seguinte.
 afterEach(() => {

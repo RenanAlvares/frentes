@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, type ReactNode } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 import { camposDoErro, mensagemDoErro } from '@/api/erros'
-import { CampoData } from '@/components/comum/CampoData'
 import { CampoForm } from '@/components/comum/CampoForm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,33 +15,38 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { CamposDoTipo, Chip } from '@/features/tarefas/components/CamposDoTipo'
 import {
   esquemaTarefa,
   LISTA_PRIORIDADES,
+  LISTA_TIPOS,
   ROTULO_PRIORIDADE,
   ROTULO_TIPO,
+  type Sujos,
   type ValoresTarefa,
 } from '@/features/tarefas/formulario'
-import { COLUNAS, ROTULO_COLUNA, type Tarefa } from '@/features/tarefas/quadro'
+import { COLUNAS, ROTULO_COLUNA } from '@/features/tarefas/quadro'
 import { atributosDeErro } from '@/lib/formulario'
 
 type Campo = keyof ValoresTarefa
 
 type Props = {
   inicial: ValoresTarefa
-  /** Ausente na criação (a tarefa nova nasce Pendente e simples). */
-  tipo?: Tarefa['tipo']
-  /** Recebe todos os valores e só os alterados (para o PATCH). */
-  onSalvar: (valores: ValoresTarefa, alterados: Partial<ValoresTarefa>) => Promise<void>
+  edicao: boolean
+  /** Recebe os valores e os campos alterados (para montar o PATCH). */
+  onSalvar: (valores: ValoresTarefa, sujos: Sujos) => Promise<void>
   onSujoChange: (sujo: boolean) => void
-  /** Botões à esquerda e antes do Salvar (Excluir, Concluir), só na edição. */
+  /** Botões à esquerda e antes do Salvar (Excluir, Concluir, +1), só na edição. */
   acoesEsquerda?: ReactNode
   acoesDireita?: ReactNode
 }
 
-/** 01 §4.5: título, chips de status, prioridade e prazo, tipo e descrição; Salvar (RN-85). */
+/** Erro 422 da API no campo do formulário (a regra de repetição fica no editor). */
+const campoDoFormulario = (campo: string) => (campo.startsWith('recorrencia') ? 'editor' : campo)
+
+/** 01 §4.5 e §4.6: título, status, prioridade, tipo, campos do tipo e descrição; Salvar (RN-85). */
 export function FormularioTarefa(props: Props) {
-  const { inicial, tipo, onSalvar, onSujoChange } = props
+  const { inicial, edicao, onSalvar, onSujoChange } = props
   const {
     register,
     control,
@@ -53,17 +57,17 @@ export function FormularioTarefa(props: Props) {
     resolver: zodResolver(esquemaTarefa),
     defaultValues: inicial,
   })
+  const [tipo, prazo] = useWatch({ control, name: ['tipo', 'prazo'] })
 
   useEffect(() => onSujoChange(isDirty), [isDirty, onSujoChange])
 
   const enviar = handleSubmit(async (valores) => {
-    const alterados = Object.fromEntries(
-      Object.entries(valores).filter(([campo]) => dirtyFields[campo as Campo]),
-    )
     try {
-      await onSalvar(valores, alterados)
+      await onSalvar(valores, dirtyFields)
     } catch (erro) {
-      const campos = Object.entries(camposDoErro(erro)).filter(([campo]) => campo in inicial)
+      const campos = Object.entries(camposDoErro(erro))
+        .map(([campo, mensagem]) => [campoDoFormulario(campo), mensagem] as const)
+        .filter(([campo]) => campo in inicial)
       campos.forEach(([campo, mensagem]) => setError(campo as Campo, { message: mensagem }))
       if (campos.length === 0) toast.error(mensagemDoErro(erro))
     }
@@ -84,7 +88,8 @@ export function FormularioTarefa(props: Props) {
         />
       </CampoForm>
       <div className="flex flex-wrap items-start gap-2">
-        {tipo !== undefined && (
+        {/* RN-24: a coluna da meta vem das execuções; não há status para escolher. */}
+        {edicao && tipo !== 'meta_mensal' && (
           <Controller
             control={control}
             name="status"
@@ -128,26 +133,30 @@ export function FormularioTarefa(props: Props) {
         />
         <Controller
           control={control}
-          name="prazo"
+          name="tipo"
           render={({ field }) => (
-            <Chip id="prazo" rotulo="Prazo" erro={erro('prazo')}>
-              <CampoData
-                id="prazo"
-                valor={field.value}
-                onChange={field.onChange}
-                invalido={Boolean(erro('prazo'))}
-              />
+            <Chip id="tipo" rotulo="Tipo">
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger id="tipo" size="sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LISTA_TIPOS.map((opcao) => (
+                    <SelectItem key={opcao} value={opcao}>
+                      {ROTULO_TIPO[opcao]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Chip>
           )}
         />
-        <span className="self-center text-sm text-muted-foreground">
-          Tipo: {ROTULO_TIPO[tipo ?? 'simples']}
-        </span>
       </div>
+      <CamposDoTipo control={control} errors={errors} tipo={tipo} prazo={prazo} edicao={edicao} />
       <CampoForm id="descricao" rotulo="Descrição" erro={erro('descricao')}>
         <Textarea
           id="descricao"
-          rows={5}
+          rows={4}
           {...register('descricao')}
           {...atributosDeErro('descricao', erro('descricao'))}
         />
@@ -162,13 +171,5 @@ export function FormularioTarefa(props: Props) {
         </div>
       </div>
     </form>
-  )
-}
-
-function Chip(props: { id: string; rotulo: string; erro?: string; children: ReactNode }) {
-  return (
-    <CampoForm id={props.id} rotulo={props.rotulo} rotuloOculto erro={props.erro} className="gap-1">
-      {props.children}
-    </CampoForm>
   )
 }

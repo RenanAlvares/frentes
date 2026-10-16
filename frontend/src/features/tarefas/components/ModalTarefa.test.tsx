@@ -40,7 +40,7 @@ describe('ModalTarefa (01 §4.5)', () => {
     expect(modal.getByLabelText('Status')).toHaveTextContent('Pendente')
     expect(modal.getByLabelText('Prioridade')).toHaveTextContent('Prioridade alta')
     expect(modal.getByLabelText('Prazo')).toHaveTextContent('20/10/2026')
-    expect(modal.getByText('Tipo: Simples')).toBeInTheDocument()
+    expect(modal.getByLabelText('Tipo')).toHaveTextContent('Simples')
     expect(modal.getByLabelText('Descrição')).toHaveValue('Branco gelo')
     expect(client.GET).toHaveBeenCalledWith('/api/tarefas/{tarefa_id}', {
       params: { path: { tarefa_id: 't1' } },
@@ -204,7 +204,10 @@ describe('ModalTarefa: criação ("Mais opções")', () => {
           titulo: 'Pintar a sala',
           descricao: 'Duas demãos',
           prioridade: 'media',
+          tipo: 'simples',
           prazo: null,
+          recorrencia: null,
+          meta_mensal: null,
         },
       }),
     )

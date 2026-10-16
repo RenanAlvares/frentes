@@ -88,6 +88,8 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
     const id = String(active.id)
     const alvo = String(over.id)
     if (colunaDe(arrastando.colunas, id) === colunaDe(arrastando.colunas, alvo)) return
+    // RN-24: meta não troca de coluna (só reordena dentro da sua).
+    if (tarefas.get(id)?.tipo === 'meta_mensal') return
     setArrastando({
       id,
       colunas: reposicionar(arrastando.colunas, id, alvo, depoisDe(active, over)),
@@ -111,7 +113,10 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
     const antes = pedidoDeMover(colunasDoQuadro(quadro), id)
     if (!pedido || (antes && antes.status === pedido.status && antes.indice === pedido.indice))
       return
-    mover.mutate({ tarefaId: id, ...pedido, previsto: aplicarNoQuadro(quadro, final, id) })
+    // RN-23: repetida solta em Concluída continua em Pendente (com o próximo prazo, da API).
+    const repetida = tarefas.get(id)?.tipo === 'repetida' && pedido.status === 'concluida'
+    const previsto = repetida ? quadro : aplicarNoQuadro(quadro, final, id)
+    mover.mutate({ tarefaId: id, ...pedido, previsto })
   }
 
   const anuncios: Announcements = {

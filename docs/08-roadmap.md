@@ -80,7 +80,7 @@ Regras:
   +1, −1, `progresso_mes`, status derivado, bloqueio de troca de coluna, execuções do mês no detalhe.
   Aceite: testes de 07 §3.3 (meta), incluindo virada de mês.
 
-- [ ] **2.4 Interface de recorrência e metas** · ler: 01 §4.4 (Tarefas), §4.5, §4.6 (editor); 05 §8
+- [x] **2.4 Interface de recorrência e metas** · ler: 01 §4.4 (Tarefas), §4.5, §4.6 (editor); 05 §8
   `EditorRecorrencia` (reutilizável), campos por tipo no modal, selos "repete"/"meta 2/4", botões +1/−1.
   Aceite: testes unitários do editor (07 §4).
 

@@ -85,6 +85,12 @@ export const useConcluirTarefa = (projetoId: string) =>
     exigir(client.POST('/api/tarefas/{tarefa_id}/concluir', caminho(id))),
   )
 
+/** Meta mensal "−1" (RN-24); "+1" é o mesmo `concluir`. */
+export const useMenosUm = (projetoId: string) =>
+  useAcaoTarefa(projetoId, (id) =>
+    exigir(client.POST('/api/tarefas/{tarefa_id}/execucoes/remover-ultima', caminho(id))),
+  )
+
 export const useDesfazerConclusao = (projetoId: string) =>
   useAcaoTarefa(projetoId, (id) =>
     exigir(client.POST('/api/tarefas/{tarefa_id}/desfazer-conclusao', caminho(id))),

@@ -1,4 +1,4 @@
-import { CheckCheck, Trash2 } from 'lucide-react'
+import { CheckCheck, Plus, Trash2 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { ErroApi, mensagemDoErro } from '@/api/erros'
@@ -7,7 +7,15 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FormularioTarefa } from '@/features/tarefas/components/FormularioTarefa'
-import { TAREFA_VAZIA, valoresDaTarefa, type ValoresTarefa } from '@/features/tarefas/formulario'
+import { ResumoTarefa } from '@/features/tarefas/components/ResumoTarefa'
+import {
+  corpoAtualizar,
+  corpoCriar,
+  TAREFA_VAZIA,
+  valoresDaTarefa,
+  type Sujos,
+  type ValoresTarefa,
+} from '@/features/tarefas/formulario'
 import {
   avisarComDesfazer,
   useAtualizarTarefa,
@@ -57,14 +65,19 @@ export function ModalTarefa({ projetoId, aberto, tarefaId, onFechar }: Props) {
     else acao()
   }
 
-  async function salvar(valores: ValoresTarefa, alterados: Partial<ValoresTarefa>) {
+  async function salvar(valores: ValoresTarefa, sujos: Sujos) {
     if (!edicao) {
-      const { status: _status, ...nova } = valores
-      await criar.mutateAsync(nova)
-    } else if (Object.keys(alterados).length > 0) {
-      await atualizar.mutateAsync({ id: tarefaId, dados: alterados })
+      await criar.mutateAsync(corpoCriar(valores))
+    } else {
+      const corpo = corpoAtualizar(valores, sujos)
+      if (Object.keys(corpo).length > 0) await atualizar.mutateAsync({ id: tarefaId, dados: corpo })
     }
     fechar()
+  }
+
+  /** Meta "+1": o modal continua aberto e o resumo do mês se atualiza. */
+  function maisUm(id: string) {
+    concluir.mutate(id, { onError: (erro) => toast.error(mensagemDoErro(erro)) })
   }
 
   function concluirTarefa(id: string) {
@@ -90,7 +103,12 @@ export function ModalTarefa({ projetoId, aberto, tarefaId, onFechar }: Props) {
   let conteudo
   if (!edicao) {
     conteudo = (
-      <FormularioTarefa inicial={TAREFA_VAZIA} onSalvar={salvar} onSujoChange={marcarSujo} />
+      <FormularioTarefa
+        inicial={TAREFA_VAZIA}
+        edicao={false}
+        onSalvar={salvar}
+        onSujoChange={marcarSujo}
+      />
     )
   } else if (isError) {
     conteudo = (
@@ -103,34 +121,44 @@ export function ModalTarefa({ projetoId, aberto, tarefaId, onFechar }: Props) {
   } else if (!tarefa) {
     conteudo = <Skeleton className="h-72 w-full" />
   } else {
+    const meta = tarefa.tipo === 'meta_mensal'
     conteudo = (
-      <FormularioTarefa
-        inicial={valoresDaTarefa(tarefa)}
-        tipo={tarefa.tipo}
-        onSalvar={salvar}
-        onSujoChange={marcarSujo}
-        acoesEsquerda={
-          <Button
-            type="button"
-            variant="ghost"
-            className="text-destructive"
-            onClick={() => confirmandoDescarte(() => excluirTarefa(tarefa.id))}
-          >
-            <Trash2 /> Excluir
-          </Button>
-        }
-        acoesDireita={
-          tarefa.status !== 'concluida' && (
+      <div className="grid gap-4">
+        <ResumoTarefa tarefa={tarefa} />
+        <FormularioTarefa
+          inicial={valoresDaTarefa(tarefa)}
+          edicao
+          onSalvar={salvar}
+          onSujoChange={marcarSujo}
+          acoesEsquerda={
             <Button
               type="button"
-              variant="outline"
-              onClick={() => confirmandoDescarte(() => concluirTarefa(tarefa.id))}
+              variant="ghost"
+              className="text-destructive"
+              onClick={() => confirmandoDescarte(() => excluirTarefa(tarefa.id))}
             >
-              <CheckCheck /> Concluir
+              <Trash2 /> Excluir
             </Button>
-          )
-        }
-      />
+          }
+          acoesDireita={
+            meta ? (
+              <Button type="button" variant="outline" onClick={() => maisUm(tarefa.id)}>
+                <Plus /> +1
+              </Button>
+            ) : (
+              tarefa.status !== 'concluida' && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => confirmandoDescarte(() => concluirTarefa(tarefa.id))}
+                >
+                  <CheckCheck /> Concluir
+                </Button>
+              )
+            )
+          }
+        />
+      </div>
     )
   }
 
