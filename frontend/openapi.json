@@ -1726,7 +1726,8 @@
       "TipoItemLixeira": {
         "type": "string",
         "enum": [
-          "projeto"
+          "projeto",
+          "tarefa"
         ],
         "title": "TipoItemLixeira"
       },

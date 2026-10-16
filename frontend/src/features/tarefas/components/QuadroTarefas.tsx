@@ -42,8 +42,16 @@ function depoisDe(active: Active, over: Over): boolean {
     : false
 }
 
+type Props = {
+  projetoId: string
+  /** Clique ou Enter no card (abre o modal da tarefa). */
+  onAbrirTarefa: (tarefaId: string) => void
+  /** "Mais opções" da criação rápida. */
+  onNovaTarefa: () => void
+}
+
 /** 01 §4.4 e 05 §8: três colunas; soltar chama `mover` com `status` e `indice` (RN-25). */
-export function QuadroTarefas({ projetoId }: { projetoId: string }) {
+export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props) {
   const { data: quadro, isPending, isError, error } = useQuadro(projetoId)
   const { data: saude } = useSaude()
   const mover = useMoverTarefa(projetoId)
@@ -121,7 +129,7 @@ export function QuadroTarefas({ projetoId }: { projetoId: string }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <CriacaoRapida projetoId={projetoId} />
+      <CriacaoRapida projetoId={projetoId} onMaisOpcoes={onNovaTarefa} />
       <DndContext
         sensors={sensores}
         collisionDetection={closestCorners}
@@ -150,6 +158,7 @@ export function QuadroTarefas({ projetoId }: { projetoId: string }) {
                 tarefas={lista}
                 total={concluida ? quadro.total_concluidas : lista.length}
                 hoje={saude?.hoje}
+                onAbrir={onAbrirTarefa}
                 rodape={
                   concluida && quadro.total_concluidas > quadro.concluida.length ? (
                     <Button variant="ghost" size="sm" onClick={() => setVerTodas(true)}>

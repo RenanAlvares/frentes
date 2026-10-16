@@ -6,8 +6,11 @@ import { cn } from '@/lib/utils'
 
 type Props = { tarefa: Tarefa; hoje: string | undefined }
 
-/** Card arrastável do quadro (RN-25): mouse com limiar de 5 px e teclado com Espaço. */
-export function CardTarefa({ tarefa, hoje }: Props) {
+/**
+ * Card arrastável do quadro (RN-25): mouse com limiar de 5 px e teclado com Espaço.
+ * Clique ou Enter abre o modal da tarefa (depois de um arraste o dnd-kit descarta o clique).
+ */
+export function CardTarefa({ tarefa, hoje, onAbrir }: Props & { onAbrir: () => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: tarefa.id,
   })
@@ -24,6 +27,11 @@ export function CardTarefa({ tarefa, hoje }: Props) {
       )}
       {...attributes}
       {...listeners}
+      onClick={onAbrir}
+      onKeyDown={(evento) => {
+        listeners?.onKeyDown?.(evento)
+        if (evento.key === 'Enter') onAbrir()
+      }}
     >
       <ConteudoCard tarefa={tarefa} hoje={hoje} />
     </div>

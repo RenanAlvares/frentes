@@ -10,5 +10,6 @@ export const chaves = {
   tarefas: {
     quadro: (projetoId: string) => ['tarefas', 'quadro', projetoId] as const,
     concluidas: (projetoId: string) => ['tarefas', 'concluidas', projetoId] as const,
+    detalhe: (id: string) => ['tarefas', 'detalhe', id] as const,
   },
 }

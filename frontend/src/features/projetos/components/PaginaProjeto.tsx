@@ -1,5 +1,6 @@
 import { Bell, Folder, FolderX, SquareCheck, StickyNote } from 'lucide-react'
-import { Link, useParams } from 'react-router'
+import { useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router'
 import { ErroApi, mensagemDoErro } from '@/api/erros'
 import { EstadoVazio } from '@/components/comum/EstadoVazio'
 import { Button } from '@/components/ui/button'
@@ -7,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AreaProjeto } from '@/features/projetos/components/AreaProjeto'
 import { CabecalhoProjeto } from '@/features/projetos/components/CabecalhoProjeto'
 import { useProjeto } from '@/features/projetos/hooks/useProjetos'
+import { ModalTarefa } from '@/features/tarefas/components/ModalTarefa'
 import { QuadroTarefas } from '@/features/tarefas/components/QuadroTarefas'
 
 function EmBreve() {
@@ -21,6 +23,20 @@ function EmBreve() {
 export function PaginaProjeto() {
   const { id = '' } = useParams()
   const { data: projeto, isPending, isError, error } = useProjeto(id)
+  // 01 §3: `?tarefa=:id` abre o modal da tarefa (link direto também funciona).
+  const [parametros, setParametros] = useSearchParams()
+  const tarefaAberta = parametros.get('tarefa') ?? undefined
+  const [criandoTarefa, setCriandoTarefa] = useState(false)
+
+  const trocarTarefa = (tarefaId: string | null) =>
+    setParametros(
+      (atuais) => {
+        if (tarefaId) atuais.set('tarefa', tarefaId)
+        else atuais.delete('tarefa')
+        return atuais
+      },
+      { replace: true },
+    )
 
   if (isPending) return <Skeleton className="h-32 rounded-xl" />
   if (isError) {
@@ -50,7 +66,11 @@ export function PaginaProjeto() {
           icone={SquareCheck}
           className="md:col-span-2 xl:col-span-1 xl:col-start-2 xl:row-start-1"
         >
-          <QuadroTarefas projetoId={projeto.id} />
+          <QuadroTarefas
+            projetoId={projeto.id}
+            onAbrirTarefa={trocarTarefa}
+            onNovaTarefa={() => setCriandoTarefa(true)}
+          />
         </AreaProjeto>
         <AreaProjeto
           area="lembretes"
@@ -69,6 +89,15 @@ export function PaginaProjeto() {
           </AreaProjeto>
         </div>
       </div>
+      <ModalTarefa
+        projetoId={projeto.id}
+        aberto={tarefaAberta !== undefined || criandoTarefa}
+        tarefaId={tarefaAberta}
+        onFechar={() => {
+          setCriandoTarefa(false)
+          trocarTarefa(null)
+        }}
+      />
     </div>
   )
 }

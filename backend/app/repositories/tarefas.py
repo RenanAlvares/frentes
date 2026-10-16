@@ -24,6 +24,20 @@ def obter(sessao: Session, tarefa_id: uuid.UUID) -> Tarefa | None:
     return sessao.scalar(_visiveis().where(Tarefa.id == tarefa_id))
 
 
+def obter_excluida(sessao: Session, tarefa_id: uuid.UUID) -> Tarefa | None:
+    """Só para a Lixeira: excluída, com o projeto fora da lixeira (RN-91)."""
+    consulta = (
+        select(Tarefa)
+        .join(Projeto, Tarefa.projeto_id == Projeto.id)
+        .where(
+            Tarefa.id == tarefa_id,
+            Tarefa.excluido_em.is_not(None),
+            Projeto.excluido_em.is_(None),
+        )
+    )
+    return sessao.scalar(consulta)
+
+
 def da_coluna(sessao: Session, projeto_id: uuid.UUID, status: StatusTarefa) -> list[Tarefa]:
     """Pendente e Em andamento: `posicao` crescente (RN-25)."""
     consulta = (

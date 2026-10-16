@@ -56,7 +56,7 @@ Regras:
   Cabeçalho do projeto, layout de 3 colunas (Lembretes, Documentos e Anotações com estado "em breve"), quadro com dnd-kit (mouse e teclado), criação rápida.
   Aceite: arrastar entre colunas e reordenar persiste após recarregar; layout correto nas 3 larguras.
 
-- [ ] **1.6 Modal da tarefa** · ler: 01 §4.5; 02 RN-85
+- [x] **1.6 Modal da tarefa** · ler: 01 §4.5; 02 RN-85
   Abrir por `?tarefa=`, editar, concluir, excluir, Desfazer no toast, confirmação ao descartar.
   Aceite: testes de componente; fluxo manual.
 

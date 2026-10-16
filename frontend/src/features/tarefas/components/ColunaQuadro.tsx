@@ -11,11 +11,12 @@ type Props = {
   /** Contador do título (Concluída mostra o total, não só as 20 exibidas). */
   total: number
   hoje: string | undefined
+  onAbrir: (tarefaId: string) => void
   rodape?: ReactNode
 }
 
 /** Uma coluna do quadro. A área toda recebe tarefas, mesmo vazia. */
-export function ColunaQuadro({ status, tarefas, total, hoje, rodape }: Props) {
+export function ColunaQuadro({ status, tarefas, total, hoje, onAbrir, rodape }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
   return (
     <section
@@ -35,7 +36,12 @@ export function ColunaQuadro({ status, tarefas, total, hoje, rodape }: Props) {
           )}
         >
           {tarefas.map((tarefa) => (
-            <CardTarefa key={tarefa.id} tarefa={tarefa} hoje={hoje} />
+            <CardTarefa
+              key={tarefa.id}
+              tarefa={tarefa}
+              hoje={hoje}
+              onAbrir={() => onAbrir(tarefa.id)}
+            />
           ))}
         </div>
       </SortableContext>

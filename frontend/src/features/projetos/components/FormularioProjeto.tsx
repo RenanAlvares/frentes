@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 import { camposDoErro, mensagemDoErro } from '@/api/erros'
 import { CampoData } from '@/components/comum/CampoData'
+import { CampoForm } from '@/components/comum/CampoForm'
 import { SeletorCor } from '@/components/comum/SeletorCor'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +21,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { esquemaProjeto, type ValoresProjeto } from '@/features/projetos/formulario'
 import { LISTA_STATUS, ROTULO_STATUS } from '@/features/projetos/status'
+import { atributosDeErro } from '@/lib/formulario'
 
 type Campo = keyof ValoresProjeto
 
@@ -64,14 +66,19 @@ export function FormularioProjeto({ inicial, onSalvar, onCancelar, onSujoChange 
   return (
     <form onSubmit={enviar} noValidate className="grid gap-4">
       <CampoForm id="nome" rotulo="Nome *" erro={erro('nome')}>
-        <Input id="nome" autoFocus {...register('nome')} {...acessivel('nome', erro('nome'))} />
+        <Input
+          id="nome"
+          autoFocus
+          {...register('nome')}
+          {...atributosDeErro('nome', erro('nome'))}
+        />
       </CampoForm>
       <CampoForm id="descricao" rotulo="Descrição" erro={erro('descricao')}>
         <Textarea
           id="descricao"
           rows={3}
           {...register('descricao')}
-          {...acessivel('descricao', erro('descricao'))}
+          {...atributosDeErro('descricao', erro('descricao'))}
         />
       </CampoForm>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -84,7 +91,7 @@ export function FormularioProjeto({ inicial, onSalvar, onCancelar, onSujoChange 
                 <SelectTrigger
                   id="status"
                   className="w-full"
-                  {...acessivel('status', erro('status'))}
+                  {...atributosDeErro('status', erro('status'))}
                 >
                   <SelectValue />
                 </SelectTrigger>
@@ -154,23 +161,5 @@ export function FormularioProjeto({ inicial, onSalvar, onCancelar, onSujoChange 
         </Button>
       </div>
     </form>
-  )
-}
-
-function acessivel(campo: string, erro: string | undefined) {
-  return { 'aria-invalid': Boolean(erro), 'aria-describedby': erro ? `${campo}-erro` : undefined }
-}
-
-function CampoForm(props: { id: string; rotulo: string; erro?: string; children: ReactNode }) {
-  return (
-    <div className="grid gap-1.5">
-      <Label htmlFor={props.id}>{props.rotulo}</Label>
-      {props.children}
-      {props.erro && (
-        <p id={`${props.id}-erro`} className="text-sm text-destructive">
-          {props.erro}
-        </p>
-      )}
-    </div>
   )
 }

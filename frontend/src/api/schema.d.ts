@@ -553,7 +553,7 @@ export interface components {
          * TipoItemLixeira
          * @enum {string}
          */
-        TipoItemLixeira: "projeto";
+        TipoItemLixeira: "projeto" | "tarefa";
         /**
          * TipoTarefa
          * @enum {string}
