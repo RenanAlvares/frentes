@@ -2,7 +2,7 @@
 
 import uuid
 from datetime import date, datetime
-from typing import Annotated, Literal
+from typing import Annotated
 
 from pydantic import AfterValidator, BaseModel, Field, field_validator
 
@@ -21,18 +21,18 @@ def _titulo_preenchido(valor: str) -> str:
 
 TituloTarefa = Annotated[str, AfterValidator(_titulo_preenchido)]
 DescricaoTarefa = Annotated[str, Field(max_length=5000)]
-# Por enquanto simples e repetida; meta_mensal entra na fase 2.3.
-TipoAceito = Literal[TipoTarefa.SIMPLES, TipoTarefa.REPETIDA]
+# RN-21: as vezes por mês de uma meta.
+MetaMensal = Annotated[int, Field(ge=1, le=31)]
 
 
 class TarefaCriar(BaseModel):
     titulo: TituloTarefa
     descricao: DescricaoTarefa = ""
     prioridade: Prioridade = Prioridade.MEDIA
-    tipo: TipoAceito = TipoTarefa.SIMPLES
+    tipo: TipoTarefa = TipoTarefa.SIMPLES
     prazo: date | None = None
     recorrencia: Recorrencia | None = None
-    meta_mensal: int | None = None
+    meta_mensal: MetaMensal | None = None
 
 
 class TarefaAtualizar(BaseModel):
@@ -42,10 +42,10 @@ class TarefaAtualizar(BaseModel):
     descricao: DescricaoTarefa | None = None
     prioridade: Prioridade | None = None
     status: StatusTarefa | None = None
-    tipo: TipoAceito | None = None
+    tipo: TipoTarefa | None = None
     prazo: date | None = None
     recorrencia: Recorrencia | None = None
-    meta_mensal: int | None = None
+    meta_mensal: MetaMensal | None = None
 
     @field_validator("titulo", "descricao", "prioridade", "status", "tipo", mode="before")
     @classmethod

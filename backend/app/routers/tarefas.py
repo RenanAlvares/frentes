@@ -83,6 +83,16 @@ def concluir_tarefa(tarefa_id: uuid.UUID, sessao: SessaoDep, clock: ClockDep) ->
 
 
 @router.post(
+    "/tarefas/{tarefa_id}/execucoes/remover-ultima",
+    operation_id="remover_ultima_execucao",
+    response_model=Tarefa,
+)
+def remover_ultima_execucao(tarefa_id: uuid.UUID, sessao: SessaoDep, clock: ClockDep) -> Tarefa:
+    """Meta mensal "-1" (RN-24)."""
+    return servico.remover_ultima_execucao(sessao, clock, tarefa_id)
+
+
+@router.post(
     "/tarefas/{tarefa_id}/desfazer-conclusao",
     operation_id="desfazer_conclusao_tarefa",
     response_model=Tarefa,

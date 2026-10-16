@@ -649,6 +649,50 @@
         }
       }
     },
+    "/api/tarefas/{tarefa_id}/execucoes/remover-ultima": {
+      "post": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Remover Ultima Execucao",
+        "description": "Meta mensal \"-1\" (RN-24).",
+        "operationId": "remover_ultima_execucao",
+        "parameters": [
+          {
+            "name": "tarefa_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Tarefa Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tarefa"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tarefas/{tarefa_id}/desfazer-conclusao": {
       "post": {
         "tags": [
@@ -1514,17 +1558,12 @@
           "tipo": {
             "anyOf": [
               {
-                "type": "string",
-                "enum": [
-                  "simples",
-                  "repetida"
-                ]
+                "$ref": "#/components/schemas/TipoTarefa"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Tipo"
+            ]
           },
           "prazo": {
             "anyOf": [
@@ -1551,7 +1590,9 @@
           "meta_mensal": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 31.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -1581,12 +1622,7 @@
             "default": "media"
           },
           "tipo": {
-            "type": "string",
-            "enum": [
-              "simples",
-              "repetida"
-            ],
-            "title": "Tipo",
+            "$ref": "#/components/schemas/TipoTarefa",
             "default": "simples"
           },
           "prazo": {
@@ -1614,7 +1650,9 @@
           "meta_mensal": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 31.0,
+                "minimum": 1.0
               },
               {
                 "type": "null"

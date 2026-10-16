@@ -1,6 +1,7 @@
 """Consultas de tarefas. Excluídas (RN-90) e as de projeto excluído (RN-91) ficam de fora."""
 
 import uuid
+from datetime import date
 
 from sqlalchemy import Select, case, func, select
 from sqlalchemy.orm import Session
@@ -89,6 +90,27 @@ def execucoes(sessao: Session, tarefa_id: uuid.UUID, limite: int) -> list[Tarefa
         .limit(limite)
     )
     return list(sessao.scalars(consulta))
+
+
+def execucoes_no_periodo(
+    sessao: Session, tarefa_ids: list[uuid.UUID], inicio: date, fim: date
+) -> dict[uuid.UUID, list[TarefaExecucao]]:
+    """Execuções com `data` em [inicio, fim] (intervalo de datas, 03-dados), por tarefa."""
+    if not tarefa_ids:
+        return {}
+    consulta = (
+        select(TarefaExecucao)
+        .where(
+            TarefaExecucao.tarefa_id.in_(tarefa_ids),
+            TarefaExecucao.data >= inicio,
+            TarefaExecucao.data <= fim,
+        )
+        .order_by(TarefaExecucao.criado_em)
+    )
+    por_tarefa: dict[uuid.UUID, list[TarefaExecucao]] = {id_: [] for id_ in tarefa_ids}
+    for execucao in sessao.scalars(consulta):
+        por_tarefa[execucao.tarefa_id].append(execucao)
+    return por_tarefa
 
 
 def contar_concluidas(sessao: Session, projeto_id: uuid.UUID) -> int:

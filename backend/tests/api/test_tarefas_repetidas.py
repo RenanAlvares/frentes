@@ -268,3 +268,15 @@ def test_rn35_descricao_acompanha_a_edicao_da_regra(client: TestClient, projeto_
 
     assert resposta.json()["recorrencia_descricao"] == "a cada 3 meses, no dia 10"
     assert _tarefa(client, tarefa)["recorrencia"]["dia_mes"] == 10
+
+
+def test_editar_repetida_em_andamento_nao_muda_de_coluna(
+    client: TestClient, projeto_id: str
+) -> None:
+    tarefa = _repetida(client, projeto_id)
+    url = f"/api/tarefas/{tarefa['id']}"
+    client.post(f"{url}/mover", json={"status": "em_andamento", "indice": 0})
+
+    resposta = client.patch(url, json={"titulo": "Outro título"})
+
+    assert resposta.json()["status"] == "em_andamento"

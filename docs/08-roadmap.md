@@ -76,7 +76,7 @@ Regras:
   Criar/editar com recorrência, concluir avança, mover para Concluída = concluir, desfazer, `recorrencia_descricao`, histórico no detalhe.
   Aceite: testes de 07 §3.3 (repetida).
 
-- [ ] **2.3 Meta mensal** · ler: 02 RN-24, RN-26
+- [x] **2.3 Meta mensal** · ler: 02 RN-24, RN-26
   +1, −1, `progresso_mes`, status derivado, bloqueio de troca de coluna, execuções do mês no detalhe.
   Aceite: testes de 07 §3.3 (meta), incluindo virada de mês.
 

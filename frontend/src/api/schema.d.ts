@@ -163,6 +163,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tarefas/{tarefa_id}/execucoes/remover-ultima": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remover Ultima Execucao
+         * @description Meta mensal "-1" (RN-24).
+         */
+        post: operations["remover_ultima_execucao"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tarefas/{tarefa_id}/desfazer-conclusao": {
         parameters: {
             query?: never;
@@ -473,8 +493,7 @@ export interface components {
             descricao?: string | null;
             prioridade?: components["schemas"]["Prioridade"] | null;
             status?: components["schemas"]["StatusTarefa"] | null;
-            /** Tipo */
-            tipo?: ("simples" | "repetida") | null;
+            tipo?: components["schemas"]["TipoTarefa"] | null;
             /** Prazo */
             prazo?: string | null;
             recorrencia?: components["schemas"]["Recorrencia"] | null;
@@ -492,12 +511,8 @@ export interface components {
             descricao?: string;
             /** @default media */
             prioridade?: components["schemas"]["Prioridade"];
-            /**
-             * Tipo
-             * @default simples
-             * @enum {string}
-             */
-            tipo?: "simples" | "repetida";
+            /** @default simples */
+            tipo?: components["schemas"]["TipoTarefa"];
             /** Prazo */
             prazo?: string | null;
             recorrencia?: components["schemas"]["Recorrencia"] | null;
@@ -1026,6 +1041,37 @@ export interface operations {
         };
     };
     concluir_tarefa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tarefa_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tarefa"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    remover_ultima_execucao: {
         parameters: {
             query?: never;
             header?: never;
