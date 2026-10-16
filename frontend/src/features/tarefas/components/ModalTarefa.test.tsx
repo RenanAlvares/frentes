@@ -65,13 +65,13 @@ describe('ModalTarefa (01 §4.5)', () => {
     const titulo = await within(await dialogo()).findByLabelText('Título')
 
     await usuario.clear(titulo)
-    await usuario.type(titulo, 'Comprar tinta acrílica')
+    await usuario.type(titulo, 'Pincel')
     await usuario.click(salvar())
 
     await waitFor(() =>
       expect(patch).toHaveBeenCalledWith('/api/tarefas/{tarefa_id}', {
         params: { path: { tarefa_id: 't1' } },
-        body: { titulo: 'Comprar tinta acrílica' },
+        body: { titulo: 'Pincel' },
       }),
     )
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())

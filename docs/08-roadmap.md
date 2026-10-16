@@ -68,7 +68,7 @@ Regras:
 
 ## Fase 2 — Recorrência e metas
 
-- [ ] **2.1 Domínio de recorrência** · ler: 02 RN-30..36; 07 §3.1
+- [x] **2.1 Domínio de recorrência** · ler: 02 RN-30..36; 07 §3.1
   `domain/recorrencia.py`: modelo Pydantic `Recorrencia` com validação, `proxima_ocorrencia`, `avancar`, `ocorrencias_atrasadas`, `descrever`.
   Aceite: **todos** os casos de 07 §3.1; cobertura ≥ 95% no módulo.
 

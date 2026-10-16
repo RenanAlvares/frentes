@@ -22,6 +22,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     restoreMocks: true,
+    // Testes de modal (Radix + user-event) passam de 5 s com a suíte inteira em paralelo.
+    testTimeout: 10_000,
     css: false,
   },
 })

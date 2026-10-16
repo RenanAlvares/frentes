@@ -37,3 +37,10 @@ class TipoTarefa(StrEnum):
     SIMPLES = "simples"
     REPETIDA = "repetida"
     META_MENSAL = "meta_mensal"
+
+
+class Frequencia(StrEnum):
+    DIARIA = "diaria"
+    SEMANAL = "semanal"
+    MENSAL = "mensal"
+    ANUAL = "anual"
