@@ -66,3 +66,11 @@ def criar_tarefa(client: TestClient, projeto_id: str, **campos: object) -> dict[
     assert resposta.status_code == 201, resposta.text
     tarefa: dict[str, Any] = resposta.json()
     return tarefa
+
+
+def criar_lembrete(client: TestClient, projeto_id: str, **campos: object) -> dict[str, Any]:
+    dados: dict[str, object] = {"titulo": "Lembrete", "vencimento": "2026-10-20", **campos}
+    resposta = client.post(f"/api/projetos/{projeto_id}/lembretes", json=dados)
+    assert resposta.status_code == 201, resposta.text
+    lembrete: dict[str, Any] = resposta.json()
+    return lembrete

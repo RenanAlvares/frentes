@@ -736,6 +736,273 @@
         }
       }
     },
+    "/api/projetos/{projeto_id}/lembretes": {
+      "get": {
+        "tags": [
+          "lembretes"
+        ],
+        "summary": "Listar Lembretes",
+        "operationId": "listar_lembretes",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListaLembretes"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "lembretes"
+        ],
+        "summary": "Criar Lembrete",
+        "operationId": "criar_lembrete",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LembreteCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lembrete"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lembretes/{lembrete_id}": {
+      "patch": {
+        "tags": [
+          "lembretes"
+        ],
+        "summary": "Atualizar Lembrete",
+        "operationId": "atualizar_lembrete",
+        "parameters": [
+          {
+            "name": "lembrete_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lembrete Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LembreteAtualizar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lembrete"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "lembretes"
+        ],
+        "summary": "Excluir Lembrete",
+        "operationId": "excluir_lembrete",
+        "parameters": [
+          {
+            "name": "lembrete_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lembrete Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lembretes/{lembrete_id}/baixa": {
+      "post": {
+        "tags": [
+          "lembretes"
+        ],
+        "summary": "Dar Baixa Lembrete",
+        "operationId": "dar_baixa_lembrete",
+        "parameters": [
+          {
+            "name": "lembrete_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lembrete Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lembrete"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lembretes/{lembrete_id}/desfazer-baixa": {
+      "post": {
+        "tags": [
+          "lembretes"
+        ],
+        "summary": "Desfazer Baixa Lembrete",
+        "operationId": "desfazer_baixa_lembrete",
+        "parameters": [
+          {
+            "name": "lembrete_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lembrete Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lembrete"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
       "post": {
         "tags": [
@@ -870,6 +1137,247 @@
           "anual"
         ],
         "title": "Frequencia"
+      },
+      "Lembrete": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "projeto_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Projeto Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "observacao": {
+            "type": "string",
+            "title": "Observacao"
+          },
+          "vencimento": {
+            "type": "string",
+            "format": "date",
+            "title": "Vencimento"
+          },
+          "antecedencia_dias": {
+            "type": "integer",
+            "title": "Antecedencia Dias"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Recorrencia"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recorrencia_descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia Descricao"
+          },
+          "dias_restantes": {
+            "type": "integer",
+            "title": "Dias Restantes"
+          },
+          "na_janela": {
+            "type": "boolean",
+            "title": "Na Janela"
+          },
+          "ocorrencias_atrasadas": {
+            "type": "integer",
+            "title": "Ocorrencias Atrasadas"
+          },
+          "concluido_em": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concluido Em"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "projeto_id",
+          "titulo",
+          "observacao",
+          "vencimento",
+          "antecedencia_dias",
+          "recorrencia",
+          "recorrencia_descricao",
+          "dias_restantes",
+          "na_janela",
+          "ocorrencias_atrasadas",
+          "concluido_em",
+          "criado_em",
+          "atualizado_em"
+        ],
+        "title": "Lembrete"
+      },
+      "LembreteAtualizar": {
+        "properties": {
+          "titulo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titulo"
+          },
+          "observacao": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observacao"
+          },
+          "vencimento": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vencimento"
+          },
+          "antecedencia_dias": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 60.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Antecedencia Dias"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Recorrencia"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "LembreteAtualizar",
+        "description": "PATCH: só os campos enviados mudam; `recorrencia: null` remove a repetição."
+      },
+      "LembreteCriar": {
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "observacao": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Observacao",
+            "default": ""
+          },
+          "vencimento": {
+            "type": "string",
+            "format": "date",
+            "title": "Vencimento"
+          },
+          "antecedencia_dias": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 60.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Antecedencia Dias"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Recorrencia"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "titulo",
+          "vencimento"
+        ],
+        "title": "LembreteCriar"
+      },
+      "ListaLembretes": {
+        "properties": {
+          "ativos": {
+            "items": {
+              "$ref": "#/components/schemas/Lembrete"
+            },
+            "type": "array",
+            "title": "Ativos"
+          },
+          "concluidos": {
+            "items": {
+              "$ref": "#/components/schemas/Lembrete"
+            },
+            "type": "array",
+            "title": "Concluidos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ativos",
+          "concluidos"
+        ],
+        "title": "ListaLembretes"
       },
       "Prioridade": {
         "type": "string",
@@ -1835,7 +2343,8 @@
         "type": "string",
         "enum": [
           "projeto",
-          "tarefa"
+          "tarefa",
+          "lembrete"
         ],
         "title": "TipoItemLixeira"
       },

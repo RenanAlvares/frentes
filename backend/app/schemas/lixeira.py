@@ -4,6 +4,7 @@ from enum import StrEnum
 
 
 class TipoItemLixeira(StrEnum):
-    # Lembrete, documento e anotação entram com as fases 3, 4 e 5.1.
+    # Documento e anotação entram com as fases 4 e 5.1.
     PROJETO = "projeto"
     TAREFA = "tarefa"
+    LEMBRETE = "lembrete"

@@ -86,7 +86,7 @@ Regras:
 
 ## Fase 3 — Lembretes, avisos e Tarefas de hoje
 
-- [ ] **3.1 Lembretes: modelo e API** · ler: 03 (lembretes, lembrete_baixas); 04 Lembretes; 02 RN-40..46
+- [x] **3.1 Lembretes: modelo e API** · ler: 03 (lembretes, lembrete_baixas); 04 Lembretes; 02 RN-40..46
   Aceite: testes de 07 §3.4.
 
 - [ ] **3.2 Área de lembretes no projeto** · ler: 01 §4.4 (Lembretes), §4.6 (Lembrete)

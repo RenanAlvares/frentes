@@ -200,6 +200,76 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/projetos/{projeto_id}/lembretes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listar Lembretes */
+        get: operations["listar_lembretes"];
+        put?: never;
+        /** Criar Lembrete */
+        post: operations["criar_lembrete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lembretes/{lembrete_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Excluir Lembrete */
+        delete: operations["excluir_lembrete"];
+        options?: never;
+        head?: never;
+        /** Atualizar Lembrete */
+        patch: operations["atualizar_lembrete"];
+        trace?: never;
+    };
+    "/api/lembretes/{lembrete_id}/baixa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dar Baixa Lembrete */
+        post: operations["dar_baixa_lembrete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lembretes/{lembrete_id}/desfazer-baixa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Desfazer Baixa Lembrete */
+        post: operations["desfazer_baixa_lembrete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
         parameters: {
             query?: never;
@@ -259,6 +329,91 @@ export interface components {
          * @enum {string}
          */
         Frequencia: "diaria" | "semanal" | "mensal" | "anual";
+        /** Lembrete */
+        Lembrete: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Projeto Id
+             * Format: uuid
+             */
+            projeto_id: string;
+            /** Titulo */
+            titulo: string;
+            /** Observacao */
+            observacao: string;
+            /**
+             * Vencimento
+             * Format: date
+             */
+            vencimento: string;
+            /** Antecedencia Dias */
+            antecedencia_dias: number;
+            recorrencia: components["schemas"]["Recorrencia"] | null;
+            /** Recorrencia Descricao */
+            recorrencia_descricao: string | null;
+            /** Dias Restantes */
+            dias_restantes: number;
+            /** Na Janela */
+            na_janela: boolean;
+            /** Ocorrencias Atrasadas */
+            ocorrencias_atrasadas: number;
+            /** Concluido Em */
+            concluido_em: string | null;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
+        };
+        /**
+         * LembreteAtualizar
+         * @description PATCH: só os campos enviados mudam; `recorrencia: null` remove a repetição.
+         */
+        LembreteAtualizar: {
+            /** Titulo */
+            titulo?: string | null;
+            /** Observacao */
+            observacao?: string | null;
+            /** Vencimento */
+            vencimento?: string | null;
+            /** Antecedencia Dias */
+            antecedencia_dias?: number | null;
+            recorrencia?: components["schemas"]["Recorrencia"] | null;
+        };
+        /** LembreteCriar */
+        LembreteCriar: {
+            /** Titulo */
+            titulo: string;
+            /**
+             * Observacao
+             * @default
+             */
+            observacao?: string;
+            /**
+             * Vencimento
+             * Format: date
+             */
+            vencimento: string;
+            /** Antecedencia Dias */
+            antecedencia_dias?: number | null;
+            recorrencia?: components["schemas"]["Recorrencia"] | null;
+        };
+        /** ListaLembretes */
+        ListaLembretes: {
+            /** Ativos */
+            ativos: components["schemas"]["Lembrete"][];
+            /** Concluidos */
+            concluidos: components["schemas"]["Lembrete"][];
+        };
         /**
          * Prioridade
          * @enum {string}
@@ -579,7 +734,7 @@ export interface components {
          * TipoItemLixeira
          * @enum {string}
          */
-        TipoItemLixeira: "projeto" | "tarefa";
+        TipoItemLixeira: "projeto" | "tarefa" | "lembrete";
         /**
          * TipoTarefa
          * @enum {string}
@@ -1120,6 +1275,198 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Tarefa"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    listar_lembretes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListaLembretes"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    criar_lembrete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LembreteCriar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Lembrete"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    excluir_lembrete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lembrete_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    atualizar_lembrete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lembrete_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LembreteAtualizar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Lembrete"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    dar_baixa_lembrete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lembrete_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Lembrete"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    desfazer_baixa_lembrete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lembrete_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Lembrete"];
                 };
             };
             /** @description Erro (04-api, Formato de erro) */
