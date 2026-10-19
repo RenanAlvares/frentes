@@ -54,36 +54,41 @@ export function CabecalhoProjeto({ projeto }: Props) {
     <div className="flex flex-col gap-3 overflow-hidden rounded-xl border bg-white">
       <div className={cn('h-1.5', CORES_PROJETO[projeto.cor].fundo)} />
       <div className="flex flex-col gap-3 px-4 pb-4">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        {/* Voltar e o menu ficam nas pontas; só o meio (nome, status, datas) quebra linha (05 §7). */}
+        <div className="flex items-start gap-x-3">
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={voltar}>
             <ArrowLeft />
           </Button>
-          <h1 className="text-xl font-semibold break-words">{projeto.nome}</h1>
+          <div className="flex min-h-9 min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-2">
+            <h1 className="text-xl font-semibold break-words">{projeto.nome}</h1>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="h-6 rounded-full px-2.5 text-xs"
+                  aria-label={`Status: ${ROTULO_STATUS[projeto.status]}. Trocar status`}
+                >
+                  {ROTULO_STATUS[projeto.status]} <ChevronDown />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuRadioGroup value={projeto.status} onValueChange={trocarStatus}>
+                  {LISTA_STATUS.map((status) => (
+                    <DropdownMenuRadioItem key={status} value={status}>
+                      {ROTULO_STATUS[status]}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {datas.length > 0 && (
+              <p className="text-sm text-muted-foreground">{datas.join(' · ')}</p>
+            )}
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="h-6 rounded-full px-2.5 text-xs"
-                aria-label={`Status: ${ROTULO_STATUS[projeto.status]}. Trocar status`}
-              >
-                {ROTULO_STATUS[projeto.status]} <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuRadioGroup value={projeto.status} onValueChange={trocarStatus}>
-                {LISTA_STATUS.map((status) => (
-                  <DropdownMenuRadioItem key={status} value={status}>
-                    {ROTULO_STATUS[status]}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {datas.length > 0 && <p className="text-sm text-muted-foreground">{datas.join(' · ')}</p>}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Ações do projeto" className="ml-auto">
+              <Button variant="ghost" size="icon" aria-label="Ações do projeto">
                 <Ellipsis />
               </Button>
             </DropdownMenuTrigger>
