@@ -31,7 +31,9 @@ export default defineConfig({
     timeout: 240_000,
     stdout: 'ignore',
     stderr: 'pipe',
+    // Variáveis do ambiente valem mais que o .env: nada aponta para os dados reais.
     env: {
+      FRENTES_DATABASE_URL: '',
       FRENTES_DATA_DIR: process.env.FRENTES_E2E_DADOS,
       FRENTES_PORT: String(PORTA),
       FRENTES_ABRIR_NAVEGADOR: 'false',
