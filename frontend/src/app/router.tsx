@@ -1,5 +1,7 @@
 import type { RouteObject } from 'react-router'
+import { ErroInesperado } from '@/app/ErroInesperado'
 import { Layout } from '@/app/layout/Layout'
+import { PaginaNaoEncontrada } from '@/app/PaginaNaoEncontrada'
 import { PaginaConfiguracoes } from '@/features/configuracoes/components/PaginaConfiguracoes'
 import { PaginaHoje } from '@/features/hoje/components/PaginaHoje'
 import { PaginaLixeira } from '@/features/lixeira/components/PaginaLixeira'
@@ -11,6 +13,7 @@ import { PaginaProjetos } from '@/features/projetos/components/PaginaProjetos'
 export const rotas: RouteObject[] = [
   {
     element: <Layout />,
+    errorElement: <ErroInesperado />,
     children: [
       { index: true, element: <PaginaProjetos /> },
       { path: 'hoje', element: <PaginaHoje /> },
@@ -18,6 +21,7 @@ export const rotas: RouteObject[] = [
       { path: 'arquivados', element: <PaginaArquivados /> },
       { path: 'lixeira', element: <PaginaLixeira /> },
       { path: 'configuracoes', element: <PaginaConfiguracoes /> },
+      { path: '*', element: <PaginaNaoEncontrada /> },
     ],
   },
 ]

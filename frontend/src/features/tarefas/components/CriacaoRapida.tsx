@@ -1,9 +1,10 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 import { camposDoErro, mensagemDoErro } from '@/api/erros'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useCriarTarefa } from '@/features/tarefas/hooks/useTarefas'
+import { useAtalho } from '@/lib/atalhos'
 
 type Props = {
   projetoId: string
@@ -16,6 +17,9 @@ export function CriacaoRapida({ projetoId, onMaisOpcoes }: Props) {
   const criar = useCriarTarefa(projetoId)
   const [titulo, setTitulo] = useState('')
   const [erro, setErro] = useState<string>()
+  const campo = useRef<HTMLInputElement>(null)
+  // RN-130: `N` = nova tarefa (foca este campo).
+  useAtalho('n', () => campo.current?.focus())
 
   function enviar(evento: FormEvent) {
     evento.preventDefault()
@@ -41,6 +45,7 @@ export function CriacaoRapida({ projetoId, onMaisOpcoes }: Props) {
     <form onSubmit={enviar} className="grid gap-1">
       <div className="flex gap-2">
         <Input
+          ref={campo}
           aria-label="Nova tarefa"
           placeholder="Nova tarefa (Enter para criar)"
           value={titulo}

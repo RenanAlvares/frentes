@@ -101,7 +101,7 @@ export function FormularioAnotacao({ inicial, onSalvar, onSujoChange, acoesEsque
       </div>
       <div className="flex items-center gap-2 pt-2">
         {acoesEsquerda}
-        <Button type="submit" className="ml-auto" disabled={isSubmitting}>
+        <Button type="submit" className="ml-auto" carregando={isSubmitting}>
           Salvar
         </Button>
       </div>

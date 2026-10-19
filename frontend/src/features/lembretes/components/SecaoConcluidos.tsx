@@ -47,7 +47,7 @@ export function SecaoConcluidos({
                 variant="outline"
                 size="sm"
                 aria-label={`Reativar ${lembrete.titulo}`}
-                disabled={reativar.isPending}
+                carregando={reativar.isPending}
                 onClick={() =>
                   reativar.mutate(lembrete.id, {
                     onError: (erro) => toast.error(mensagemDoErro(erro)),

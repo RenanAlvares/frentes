@@ -138,7 +138,7 @@ Regras:
   `domain/textos.normalizar_busca`, endpoint, caixa de busca com `Ctrl+K`.
   Aceite: busca ignora acentos e maiúsculas; não retorna excluídos.
 
-- [ ] **6.2 Atalhos e estados** · ler: 02 RN-130; 05 §9
+- [x] **6.2 Atalhos e estados** · ler: 02 RN-130; 05 §9
   Atalhos, estados vazios de todas as telas, skeletons, mensagens de erro.
 
 - [ ] **6.3 Revisão de responsividade e acessibilidade** · ler: 05 §7, §9

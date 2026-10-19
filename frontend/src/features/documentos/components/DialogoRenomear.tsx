@@ -77,7 +77,7 @@ export function DialogoRenomear({ documento, aberto, onFechar }: Props) {
             <Button type="button" variant="outline" onClick={onFechar}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" carregando={isSubmitting}>
               Salvar
             </Button>
           </DialogFooter>

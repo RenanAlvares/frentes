@@ -111,7 +111,7 @@ function FormularioConfiguracoes({ inicial }: { inicial: Configuracoes }) {
         )
       })}
       <div className="flex justify-end">
-        <Button type="submit" disabled={!isDirty || isSubmitting}>
+        <Button type="submit" disabled={!isDirty} carregando={isSubmitting}>
           Salvar
         </Button>
       </div>

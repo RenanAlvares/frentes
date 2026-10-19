@@ -57,7 +57,7 @@ export function PaginaArquivados() {
                 <Button
                   size="sm"
                   aria-label={`Reabrir ${projeto.nome}`}
-                  disabled={atualizar.isPending && atualizar.variables.id === projeto.id}
+                  carregando={atualizar.isPending && atualizar.variables.id === projeto.id}
                   onClick={() => reabrir(projeto.id)}
                 >
                   Reabrir

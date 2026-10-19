@@ -104,7 +104,7 @@ function AcoesLembrete({ aviso, onTratado }: PropsAcoes) {
       <Button
         size="sm"
         variant="outline"
-        disabled={baixa.isPending}
+        carregando={baixa.isPending}
         onClick={() => void darBaixa()}
       >
         Dar baixa
@@ -130,7 +130,12 @@ function AcoesTarefa({ aviso, onTratado }: PropsAcoes) {
     )
   return (
     <>
-      <Button size="sm" variant="outline" disabled={concluir.isPending} onClick={() => void agir()}>
+      <Button
+        size="sm"
+        variant="outline"
+        carregando={concluir.isPending}
+        onClick={() => void agir()}
+      >
         {meta ? '+1' : 'Concluir'}
       </Button>
       <Button size="sm" variant="ghost" asChild>

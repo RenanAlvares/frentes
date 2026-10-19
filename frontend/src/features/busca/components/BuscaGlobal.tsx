@@ -22,6 +22,7 @@ import {
   useAtrasado,
   useBusca,
 } from '@/features/busca/hooks/useBusca'
+import { useAtalho } from '@/lib/atalhos'
 
 type Grupo = keyof ResultadoBusca
 
@@ -40,7 +41,7 @@ function destino(grupo: Grupo, item: ItemBusca) {
   return `/projetos/${item.projeto.id}`
 }
 
-/** Busca global do cabeçalho (01 §3; RN-120..121). `Ctrl+K` abre (RN-130). */
+/** Busca global do cabeçalho (01 §3; RN-120..121). `/` ou `Ctrl+K` abre (RN-130). */
 export function BuscaGlobal() {
   const [aberta, setAberta] = useState(false)
   const [termo, setTermo] = useState('')
@@ -57,6 +58,8 @@ export function BuscaGlobal() {
     window.addEventListener('keydown', atalho)
     return () => window.removeEventListener('keydown', atalho)
   }, [])
+  // `/` é atalho de uma tecla: não vale com o foco num campo de texto.
+  useAtalho('/', () => setAberta(true))
 
   function alternar(abrir: boolean) {
     setAberta(abrir)

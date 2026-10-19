@@ -94,6 +94,7 @@ export function ModalAnotacao({ projetoId, aberto, anotacao, onFechar }: Props) 
                   type="button"
                   variant="ghost"
                   className="text-destructive"
+                  carregando={excluir.isPending}
                   onClick={() => confirmandoDescarte(() => excluirAnotacao(anotacao.id))}
                 >
                   <Trash2 /> Excluir

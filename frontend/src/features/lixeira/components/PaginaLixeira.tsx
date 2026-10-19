@@ -118,7 +118,7 @@ export function PaginaLixeira() {
           <Button
             variant="outline"
             className="ml-auto text-destructive"
-            disabled={esvaziar.isPending}
+            carregando={esvaziar.isPending}
             onClick={() => confirmarEsvaziar(itens.length)}
           >
             <Trash2 /> Esvaziar lixeira
@@ -171,7 +171,7 @@ function LinhaLixeira({ item, onExcluir }: { item: ItemLixeira; onExcluir: () =>
         <Button
           size="sm"
           variant="outline"
-          disabled={restaurar.isPending}
+          carregando={restaurar.isPending}
           onClick={() =>
             restaurar.mutate(
               { tipo: item.tipo, id: item.id },

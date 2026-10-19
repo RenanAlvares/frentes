@@ -144,7 +144,7 @@ export function FormularioLembrete({ inicial, edicao, onSalvar, onSujoChange }: 
         />
       )}
       <div className="flex justify-end pt-2">
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" carregando={isSubmitting}>
           Salvar
         </Button>
       </div>

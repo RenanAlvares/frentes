@@ -162,7 +162,7 @@ export function FormularioProjeto({ inicial, onSalvar, onCancelar, onSujoChange 
         <Button type="button" variant="outline" onClick={onCancelar}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" carregando={isSubmitting}>
           Salvar
         </Button>
       </div>

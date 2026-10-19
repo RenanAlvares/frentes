@@ -135,6 +135,7 @@ export function ModalTarefa({ projetoId, aberto, tarefaId, onFechar }: Props) {
               type="button"
               variant="ghost"
               className="text-destructive"
+              carregando={excluir.isPending}
               onClick={() => confirmandoDescarte(() => excluirTarefa(tarefa.id))}
             >
               <Trash2 /> Excluir
@@ -142,7 +143,12 @@ export function ModalTarefa({ projetoId, aberto, tarefaId, onFechar }: Props) {
           }
           acoesDireita={
             meta ? (
-              <Button type="button" variant="outline" onClick={() => maisUm(tarefa.id)}>
+              <Button
+                type="button"
+                variant="outline"
+                carregando={concluir.isPending}
+                onClick={() => maisUm(tarefa.id)}
+              >
                 <Plus /> +1
               </Button>
             ) : (
@@ -150,6 +156,7 @@ export function ModalTarefa({ projetoId, aberto, tarefaId, onFechar }: Props) {
                 <Button
                   type="button"
                   variant="outline"
+                  carregando={concluir.isPending}
                   onClick={() => confirmandoDescarte(() => concluirTarefa(tarefa.id))}
                 >
                   <CheckCheck /> Concluir

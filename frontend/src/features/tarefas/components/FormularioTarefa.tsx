@@ -165,7 +165,7 @@ export function FormularioTarefa(props: Props) {
         {props.acoesEsquerda}
         <div className="ml-auto flex gap-2">
           {props.acoesDireita}
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" carregando={isSubmitting}>
             Salvar
           </Button>
         </div>
