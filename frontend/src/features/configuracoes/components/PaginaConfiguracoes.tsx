@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Download } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -8,6 +9,7 @@ import { CampoForm } from '@/components/comum/CampoForm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { COMANDO_RESTAURAR, URL_BACKUP } from '@/features/configuracoes/backup'
 import {
   type Configuracoes,
   useAtualizarConfiguracoes,
@@ -33,7 +35,7 @@ const CAMPOS: { campo: Campo; rotulo: string }[] = [
   { campo: 'antecedencia_padrao_lembretes', rotulo: 'Antecedência padrão de novos lembretes' },
 ]
 
-/** Configurações (01 §4.9). A seção de backup entra com a 5.3. */
+/** Configurações (01 §4.9): os prazos de RN-100, o backup (RN-110/111) e a versão. */
 export function PaginaConfiguracoes() {
   const { data: configuracoes, isPending, isError, error } = useConfiguracoes()
   const { data: saude } = useSaude()
@@ -55,6 +57,7 @@ export function PaginaConfiguracoes() {
     <div className="mx-auto grid max-w-2xl gap-4">
       <h1 className="text-xl font-semibold">Configurações</h1>
       {conteudo}
+      <SecaoBackup />
       {saude && <p className="text-sm text-muted-foreground">Frentes versão {saude.versao}</p>}
     </div>
   )
@@ -113,5 +116,36 @@ function FormularioConfiguracoes({ inicial }: { inicial: Configuracoes }) {
         </Button>
       </div>
     </form>
+  )
+}
+
+/** RN-110: exportar baixa o zip; RN-111: restaurar só pela linha de comando. */
+function SecaoBackup() {
+  return (
+    <section
+      aria-labelledby="titulo-backup"
+      className="grid gap-3 rounded-xl border bg-white p-4 text-sm"
+    >
+      <h2 id="titulo-backup" className="font-semibold">
+        Backup
+      </h2>
+      <p className="text-muted-foreground">
+        O backup é um arquivo .zip com o banco de dados e todos os documentos.
+      </p>
+      <Button variant="outline" className="justify-self-start" asChild>
+        <a href={URL_BACKUP} download="">
+          <Download /> Exportar backup
+        </a>
+      </Button>
+      <p className="text-muted-foreground">
+        Para restaurar, feche o Frentes e rode, na pasta do projeto:
+      </p>
+      <code className="rounded-md bg-muted px-3 py-2 font-mono text-xs break-all">
+        {COMANDO_RESTAURAR}
+      </code>
+      <p className="text-muted-foreground">
+        Os dados atuais ficam guardados na pasta de backups antes da troca.
+      </p>
+    </section>
   )
 }

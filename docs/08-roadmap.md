@@ -128,7 +128,7 @@ Regras:
 - [x] **5.2 Configurações** · ler: 02 RN-100; 04 Configurações; 01 §4.9
   Aceite: teste de API; alterar `aviso_tarefas_dias` muda os avisos.
 
-- [ ] **5.3 Backup e restauração** · ler: 02 RN-110..112; 06 §11
+- [x] **5.3 Backup e restauração** · ler: 02 RN-110..112; 06 §11
   `GET /api/backup`, botão em Configurações e no menu, `frentes backup`, `frentes restaurar`.
   Aceite: casos de backup/restauração de 07 §3.8.
 

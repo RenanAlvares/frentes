@@ -5,10 +5,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { URL_BACKUP } from '@/features/configuracoes/backup'
 
-// 01-produto §3. "Exportar backup" entra com o backup (fase 5.3).
+// 01-produto §3.
 const ITENS = [
   { para: '/arquivados', rotulo: 'Arquivados' },
   { para: '/lixeira', rotulo: 'Lixeira' },
@@ -29,6 +31,13 @@ export function MenuGeral() {
             <Link to={para}>{rotulo}</Link>
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          {/* RN-110: a API manda o zip como anexo; o navegador baixa. */}
+          <a href={URL_BACKUP} download="">
+            Exportar backup
+          </a>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

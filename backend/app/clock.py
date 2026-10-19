@@ -26,6 +26,10 @@ class Clock:
             return self._hoje_simulado
         return datetime.now(self._fuso).date()
 
+    def agora_local(self) -> datetime:
+        """Agora no fuso configurado (nomes de arquivo de backup, RN-110/112)."""
+        return self.agora_utc().astimezone(self._fuso)
+
     def data_local(self, momento: datetime) -> date:
         """A data de um carimbo UTC no fuso configurado (para contar dias contra `hoje`)."""
         return momento.astimezone(self._fuso).date()

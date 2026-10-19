@@ -1702,6 +1702,34 @@
           }
         }
       }
+    },
+    "/api/backup": {
+      "get": {
+        "tags": [
+          "backup"
+        ],
+        "summary": "Exportar Backup",
+        "description": "RN-110: `frentes.db` + `anexos/` + `manifest.json`; o temporário sai depois do envio.",
+        "operationId": "exportar_backup",
+        "responses": {
+          "200": {
+            "description": "O zip (RN-110).",
+            "content": {
+              "application/zip": {}
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
