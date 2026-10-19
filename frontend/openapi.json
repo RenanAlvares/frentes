@@ -1067,6 +1067,237 @@
         }
       }
     },
+    "/api/projetos/{projeto_id}/documentos": {
+      "get": {
+        "tags": [
+          "documentos"
+        ],
+        "summary": "Listar Documentos",
+        "description": "RN-73: mais recentes primeiro.",
+        "operationId": "listar_documentos",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Documento"
+                  },
+                  "title": "Response Listar Documentos"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "documentos"
+        ],
+        "summary": "Enviar Documentos",
+        "operationId": "enviar_documentos",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_enviar_documentos"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Documento"
+                  },
+                  "title": "Response Enviar Documentos"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/documentos/{documento_id}/arquivo": {
+      "get": {
+        "tags": [
+          "documentos"
+        ],
+        "summary": "Baixar Documento",
+        "description": "RN-71: `inline` só para os tipos seguros; sempre `nosniff`; nome em `filename*`.",
+        "operationId": "baixar_documento",
+        "parameters": [
+          {
+            "name": "documento_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Documento Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "O arquivo.",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/documentos/{documento_id}": {
+      "patch": {
+        "tags": [
+          "documentos"
+        ],
+        "summary": "Atualizar Documento",
+        "description": "RN-72: renomear mantém a extensão original.",
+        "operationId": "atualizar_documento",
+        "parameters": [
+          {
+            "name": "documento_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Documento Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentoAtualizar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Documento"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "documentos"
+        ],
+        "summary": "Excluir Documento",
+        "operationId": "excluir_documento",
+        "parameters": [
+          {
+            "name": "documento_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Documento Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
       "post": {
         "tags": [
@@ -1194,6 +1425,24 @@
         ],
         "title": "Avisos"
       },
+      "Body_enviar_documentos": {
+        "properties": {
+          "arquivos": {
+            "items": {
+              "type": "string",
+              "contentMediaType": "application/octet-stream"
+            },
+            "type": "array",
+            "title": "Arquivos",
+            "description": "Um ou mais arquivos (RN-70)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "arquivos"
+        ],
+        "title": "Body_enviar_documentos"
+      },
       "CorProjeto": {
         "type": "string",
         "enum": [
@@ -1207,6 +1456,70 @@
           "cinza"
         ],
         "title": "CorProjeto"
+      },
+      "Documento": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "projeto_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Projeto Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "extensao": {
+            "type": "string",
+            "title": "Extensao"
+          },
+          "mime": {
+            "type": "string",
+            "title": "Mime"
+          },
+          "tamanho_bytes": {
+            "type": "integer",
+            "title": "Tamanho Bytes"
+          },
+          "abre_no_navegador": {
+            "type": "boolean",
+            "title": "Abre No Navegador"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "projeto_id",
+          "nome",
+          "extensao",
+          "mime",
+          "tamanho_bytes",
+          "abre_no_navegador",
+          "criado_em"
+        ],
+        "title": "Documento"
+      },
+      "DocumentoAtualizar": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome"
+        ],
+        "title": "DocumentoAtualizar"
       },
       "ErroDetalhe": {
         "properties": {
@@ -2696,7 +3009,8 @@
         "enum": [
           "projeto",
           "tarefa",
-          "lembrete"
+          "lembrete",
+          "documento"
         ],
         "title": "TipoItemLixeira"
       },

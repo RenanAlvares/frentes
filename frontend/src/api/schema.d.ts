@@ -310,6 +310,68 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/projetos/{projeto_id}/documentos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar Documentos
+         * @description RN-73: mais recentes primeiro.
+         */
+        get: operations["listar_documentos"];
+        put?: never;
+        /** Enviar Documentos */
+        post: operations["enviar_documentos"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/documentos/{documento_id}/arquivo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Baixar Documento
+         * @description RN-71: `inline` só para os tipos seguros; sempre `nosniff`; nome em `filename*`.
+         */
+        get: operations["baixar_documento"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/documentos/{documento_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Excluir Documento */
+        delete: operations["excluir_documento"];
+        options?: never;
+        head?: never;
+        /**
+         * Atualizar Documento
+         * @description RN-72: renomear mantém a extensão original.
+         */
+        patch: operations["atualizar_documento"];
+        trace?: never;
+    };
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
         parameters: {
             query?: never;
@@ -364,11 +426,52 @@ export interface components {
             /** Itens */
             itens: components["schemas"]["Aviso"][];
         };
+        /** Body_enviar_documentos */
+        Body_enviar_documentos: {
+            /**
+             * Arquivos
+             * @description Um ou mais arquivos (RN-70).
+             */
+            arquivos: string[];
+        };
         /**
          * CorProjeto
          * @enum {string}
          */
         CorProjeto: "azul" | "verde" | "roxo" | "laranja" | "rosa" | "vermelho" | "ciano" | "cinza";
+        /** Documento */
+        Documento: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Projeto Id
+             * Format: uuid
+             */
+            projeto_id: string;
+            /** Nome */
+            nome: string;
+            /** Extensao */
+            extensao: string;
+            /** Mime */
+            mime: string;
+            /** Tamanho Bytes */
+            tamanho_bytes: number;
+            /** Abre No Navegador */
+            abre_no_navegador: boolean;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+        };
+        /** DocumentoAtualizar */
+        DocumentoAtualizar: {
+            /** Nome */
+            nome: string;
+        };
         /** ErroDetalhe */
         ErroDetalhe: {
             /** Codigo */
@@ -884,7 +987,7 @@ export interface components {
          * TipoItemLixeira
          * @enum {string}
          */
-        TipoItemLixeira: "projeto" | "tarefa" | "lembrete";
+        TipoItemLixeira: "projeto" | "tarefa" | "lembrete" | "documento";
         /**
          * TipoTarefa
          * @enum {string}
@@ -1675,6 +1778,167 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Avisos"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    listar_documentos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Documento"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    enviar_documentos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_enviar_documentos"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Documento"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    baixar_documento: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                documento_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description O arquivo. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": unknown;
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    excluir_documento: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                documento_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    atualizar_documento: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                documento_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentoAtualizar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Documento"];
                 };
             };
             /** @description Erro (04-api, Formato de erro) */

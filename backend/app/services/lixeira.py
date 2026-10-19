@@ -6,21 +6,24 @@ from collections.abc import Callable
 from sqlalchemy.orm import Session
 
 from app.erros import NaoEncontrado
+from app.models.documento import Documento
 from app.models.lembrete import Lembrete
 from app.models.projeto import Projeto
 from app.models.tarefa import Tarefa
+from app.repositories import documentos as repositorio_documentos
 from app.repositories import lembretes as repositorio_lembretes
 from app.repositories import projetos as repositorio_projetos
 from app.repositories import tarefas as repositorio_tarefas
 from app.schemas.lixeira import TipoItemLixeira
 
-Item = Projeto | Tarefa | Lembrete
+Item = Projeto | Tarefa | Lembrete | Documento
 
 # Cada tipo sabe achar o seu item excluído (itens de projeto excluído ficam de fora, RN-91).
 _EXCLUIDOS: dict[TipoItemLixeira, Callable[[Session, uuid.UUID], Item | None]] = {
     TipoItemLixeira.PROJETO: repositorio_projetos.obter_excluido,
     TipoItemLixeira.TAREFA: repositorio_tarefas.obter_excluida,
     TipoItemLixeira.LEMBRETE: repositorio_lembretes.obter_excluido,
+    TipoItemLixeira.DOCUMENTO: repositorio_documentos.obter_excluido,
 }
 
 

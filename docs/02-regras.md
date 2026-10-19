@@ -136,8 +136,8 @@ Cada regra tem um código. Testes devem citar o código no nome ou docstring (ex
 
 - **RN-70** Upload de um ou mais arquivos por vez; cada arquivo até `FRENTES_MAX_UPLOAD_MB` (padrão 50). Qualquer tipo. O nome original é preservado para exibição; no disco o arquivo é salvo como `{uuid}{extensão}` em `dados/anexos/{projeto_id}/`. O nome enviado pelo usuário **nunca** é usado para montar caminho.
 - **RN-71** Abrir no navegador (`inline`) somente: PDF, PNG, JPG/JPEG, GIF, WEBP e TXT. Todos os outros tipos (incluindo SVG e HTML) são baixados (`attachment`). Sempre com `X-Content-Type-Options: nosniff`.
-- **RN-72** Renomear altera só o nome exibido (1–255 caracteres, sem `/` ou `\`); a extensão original é mantida. Excluir manda para a lixeira.
-- **RN-73** Lista ordenada por `criado_em` decrescente.
+- **RN-72** Renomear altera só o nome exibido (1–255 caracteres, sem `/` ou `\`); a extensão original é mantida: se o novo nome não terminar nela (sem diferenciar maiúsculas), ela é acrescentada ("Novo" → "Novo.pdf"). Excluir manda para a lixeira.
+- **RN-73** Lista ordenada por `criado_em` decrescente (enviados juntos: pelo nome).
 
 ## Anotações
 
