@@ -97,7 +97,7 @@ Regras:
   `domain/avisos.py` + `GET /api/avisos` + contador `avisos` no resumo do projeto (RN-57).
   Aceite: todos os casos de 07 §3.2.
 
-- [ ] **3.4 Painel de avisos e sino** · ler: 01 §3, §4.1; 05 §8 (PainelAvisos)
+- [x] **3.4 Painel de avisos e sino** · ler: 01 §3, §4.1; 05 §8 (PainelAvisos)
   Aceite: testes de componente de 07 §4; teste manual da reabertura ao mudar o dia usando `FRENTES_HOJE_SIMULADO` (06 §6).
 
 - [ ] **3.5 Tarefas de hoje** · ler: 01 §4.3; 02 RN-60..63; 04 `GET /tarefas/hoje`

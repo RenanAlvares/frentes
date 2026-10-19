@@ -18,13 +18,13 @@ export function useLembretes(projetoId: string) {
   })
 }
 
-// 05 §4: lembrete (qualquer) invalida a lista do projeto e os projetos (contador de avisos).
-// `avisos()` entra junto com o painel de avisos (3.4).
+// 05 §4: lembrete (qualquer) invalida a lista do projeto, os avisos e os projetos (contador).
 function useInvalidarLembretes(projetoId: string) {
   const queryClient = useQueryClient()
   return () =>
     Promise.all([
       queryClient.invalidateQueries({ queryKey: chaves.lembretes.lista(projetoId) }),
+      queryClient.invalidateQueries({ queryKey: chaves.avisos() }),
       queryClient.invalidateQueries({ queryKey: chaves.projetos.todos() }),
     ])
 }

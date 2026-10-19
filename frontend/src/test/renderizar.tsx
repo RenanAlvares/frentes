@@ -57,6 +57,7 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
     '/api/projetos/{projeto_id}/tarefas': quadro(),
     '/api/tarefas/{tarefa_id}': { ...tarefa(), execucoes: [] },
     '/api/projetos/{projeto_id}/lembretes': { ativos: [], concluidos: [] },
+    '/api/avisos': { total: 0, itens: [] },
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {
@@ -130,6 +131,7 @@ export function quadro(dados: Partial<Quadro> = {}): Quadro {
   return { pendente: [], em_andamento: [], concluida: [], total_concluidas: 0, ...dados }
 }
 
+type Aviso = components['schemas']['Aviso']
 type Lembrete = components['schemas']['Lembrete']
 
 export function lembrete(dados: Partial<Lembrete> = {}): Lembrete {
@@ -150,4 +152,22 @@ export function lembrete(dados: Partial<Lembrete> = {}): Lembrete {
     atualizado_em: '2026-10-14T15:00:00Z',
     ...dados,
   }
+}
+
+export function aviso(dados: Partial<Aviso> = {}): Aviso {
+  return {
+    tipo: 'lembrete',
+    id: 'a1',
+    titulo: 'Pagar IPTU',
+    projeto: { id: '11111111-1111-4111-8111-111111111111', nome: 'Reforma', cor: 'azul' },
+    vencimento: '2026-10-17',
+    dias_restantes: 3,
+    ocorrencias_atrasadas: 0,
+    meta: null,
+    ...dados,
+  }
+}
+
+export function avisos(...itens: Aviso[]) {
+  return { total: itens.length, itens }
 }

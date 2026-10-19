@@ -15,4 +15,5 @@ export const chaves = {
   lembretes: {
     lista: (projetoId: string) => ['lembretes', 'lista', projetoId] as const,
   },
+  avisos: () => ['avisos'] as const,
 }
