@@ -101,6 +101,20 @@ O `frentes` só aceita conexões da própria máquina e abre o navegador quando 
 
 **Backup e restauração.** "Exportar backup" (em Configurações ou no menu ⋯) baixa um `.zip`; pela linha de comando, `uv run --directory backend frentes backup`. Para restaurar, com o app fechado: `uv run --directory backend frentes restaurar caminho/do/backup.zip` (os dados atuais ficam guardados em `backups/`).
 
+### Executável para Windows (opcional)
+
+Para usar o app num computador sem uv nem Node, gere uma pasta com o `Frentes.exe`:
+
+```bash
+npm --prefix frontend run build
+uv run --directory backend pyinstaller frentes.spec --noconfirm
+```
+
+O resultado fica em `backend/dist/Frentes/` (cerca de 45 MB). Copie a pasta inteira para onde quiser e dê dois cliques em `Frentes.exe`: abre uma janela de console (fechá-la encerra o app) e o navegador no endereço do app. Os comandos são os mesmos da linha de comando: `Frentes.exe backup` e `Frentes.exe restaurar caminho\do\backup.zip`.
+
+- Os dados ficam na pasta de dados do sistema (veja abaixo). Para outra pasta ou porta, crie um `.env` ao lado do `Frentes.exe` com `FRENTES_DATA_DIR` ou `FRENTES_PORT`.
+- O executável não é assinado: o Windows SmartScreen pode mostrar "O Windows protegeu o computador" (clique em **Mais informações** › **Executar assim mesmo**), e alguns antivírus podem bloqueá-lo. Se preferir, rode pelo código-fonte, como acima.
+
 ### Configuração e dados
 
 Todas as variáveis são opcionais e começam com `FRENTES_` (lista em [`.env.example`](.env.example) e em [`docs/06-arquitetura.md`](docs/06-arquitetura.md) §6).

@@ -152,7 +152,7 @@ Regras:
 - [x] **7.2 README de portfólio**
   GIF de 20–30 s, funcionalidades, decisões técnicas (resumo de 09), arquitetura, como rodar, testes.
 
-- [ ] **7.3 Executável (opcional)** · ler: 06 §11
+- [x] **7.3 Executável (opcional)** · ler: 06 §11
   PyInstaller `onedir`; instruções no README.
 
 > **Marco 3:** projeto publicado no GitHub e no LinkedIn.
