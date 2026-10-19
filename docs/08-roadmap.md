@@ -146,7 +146,7 @@ Regras:
 
 ## Fase 7 — Distribuição e portfólio
 
-- [ ] **7.1 Testes ponta a ponta** · ler: 07 §5
+- [x] **7.1 Testes ponta a ponta** · ler: 07 §5
   Playwright com os 6 fluxos; script `npm --prefix frontend run e2e`.
 
 - [ ] **7.2 README de portfólio**

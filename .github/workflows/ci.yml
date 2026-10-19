@@ -1,4 +1,4 @@
-# Mesmas verificações da skill `verify` (07 §6).
+# Mesmas verificações da skill `verify` (07 §6), mais os testes ponta a ponta (07 §5).
 name: CI
 
 on:
@@ -60,3 +60,30 @@ jobs:
       - run: npm --prefix frontend run gen:api
       - name: Contrato da API atualizado
         run: git diff --exit-code -- frontend/openapi.json frontend/src/api/schema.d.ts
+
+  # 07 §5: os 6 fluxos no app de verdade (build + back-end), com Chromium.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0 # o setup-uv só publica tags de versão completa
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: uv sync --directory backend --frozen
+      - run: npm --prefix frontend ci
+      - run: npx --prefix frontend playwright install --with-deps chromium
+      - run: npm --prefix frontend run e2e
+      - name: Relatório do Playwright (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7

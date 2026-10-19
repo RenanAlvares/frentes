@@ -33,6 +33,8 @@ export function CardTarefa({ tarefa, hoje, onAbrir }: Props & { onAbrir: () => v
       )}
       {...attributes}
       {...listeners}
+      // O texto fica num <article>: sem isto o Chromium não dá nome ao "botão" do card.
+      aria-label={tarefa.titulo}
       onClick={onAbrir}
       onKeyDown={(evento) => {
         listeners?.onKeyDown?.(evento)
