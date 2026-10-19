@@ -1,33 +1,45 @@
 import { Check } from 'lucide-react'
-import { CORES_PROJETO, LISTA_CORES_PROJETO, type CorProjeto } from '@/lib/cores'
 import { cn } from '@/lib/utils'
 
-type Props = {
-  id?: string
-  valor: CorProjeto
-  onChange: (cor: CorProjeto) => void
+export type OpcaoDeCor = {
+  rotulo: string
+  /** Classes da amostra (fundo, e borda se houver). */
+  fundo: string
+  /** Cor do ✓ sobre a amostra; padrão branco. */
+  texto?: string
 }
 
-/** As 8 cores de projeto (RN-11) como grupo de opções. */
-export function SeletorCor({ id, valor, onChange }: Props) {
+type Props<C extends string> = {
+  id?: string
+  valor: C
+  onChange: (cor: C) => void
+  /** Ex.: `CORES_PROJETO` (RN-11) ou `CORES_ANOTACAO` (RN-80). */
+  paleta: Record<C, OpcaoDeCor>
+}
+
+/** As cores da paleta como grupo de opções. */
+export function SeletorCor<C extends string>({ id, valor, onChange, paleta }: Props<C>) {
+  const cores = Object.keys(paleta) as C[]
   return (
     <div id={id} role="radiogroup" aria-label="Cor" className="flex flex-wrap gap-2">
-      {LISTA_CORES_PROJETO.map((cor) => {
+      {cores.map((cor) => {
         const selecionada = cor === valor
+        const { rotulo, fundo, texto = 'text-white' } = paleta[cor]
         return (
           <button
             key={cor}
             type="button"
             role="radio"
             aria-checked={selecionada}
-            aria-label={CORES_PROJETO[cor].rotulo}
-            title={CORES_PROJETO[cor].rotulo}
+            aria-label={rotulo}
+            title={rotulo}
             onClick={() => onChange(cor)}
             className={cn(
-              'flex size-7 items-center justify-center rounded-full text-white outline-none',
+              'flex size-7 items-center justify-center rounded-full outline-none',
               'focus-visible:ring-3 focus-visible:ring-ring/50',
               selecionada && 'ring-2 ring-foreground ring-offset-2',
-              CORES_PROJETO[cor].fundo,
+              fundo,
+              texto,
             )}
           >
             {selecionada && <Check className="size-4" />}

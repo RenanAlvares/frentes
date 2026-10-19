@@ -115,7 +115,7 @@ Regras:
   Soltar arquivos, progresso por arquivo (`XMLHttpRequest`), lista, abrir/baixar, renomear, excluir.
   Aceite: fluxo manual com PDF, imagem e .xlsx.
 
-- [ ] **4.3 Anotações** · ler: 03 (anotacoes); 04 Anotações; 02 RN-80..81; 01 §4.4, §4.6
+- [x] **4.3 Anotações** · ler: 03 (anotacoes); 04 Anotações; 02 RN-80..81; 01 §4.4, §4.6
   Modelo, API, área com cards coloridos, modal, fixar.
   Aceite: testes de API (ordem RN-81) e fluxo manual.
 

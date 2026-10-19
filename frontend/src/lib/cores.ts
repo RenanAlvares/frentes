@@ -25,3 +25,32 @@ export const CORES_AREA: Record<AreaProjeto, { fundo: string; texto: string }> =
   documentos: { fundo: 'bg-area-documentos-suave', texto: 'text-area-documentos' },
   anotacoes: { fundo: 'bg-area-anotacoes-suave', texto: 'text-area-anotacoes' },
 }
+
+export type CorAnotacao = components['schemas']['CorAnotacao']
+
+// 05-frontend §5 / RN-80: fundo -100 e borda -300 (amber, blue, emerald, pink, violet, slate).
+export const CORES_ANOTACAO: Record<CorAnotacao, { rotulo: string; fundo: string; texto: string }> =
+  {
+    amarelo: {
+      rotulo: 'Amarelo',
+      fundo: 'border border-amber-300 bg-amber-100',
+      texto: 'text-foreground',
+    },
+    azul: { rotulo: 'Azul', fundo: 'border border-blue-300 bg-blue-100', texto: 'text-foreground' },
+    verde: {
+      rotulo: 'Verde',
+      fundo: 'border border-emerald-300 bg-emerald-100',
+      texto: 'text-foreground',
+    },
+    rosa: { rotulo: 'Rosa', fundo: 'border border-pink-300 bg-pink-100', texto: 'text-foreground' },
+    roxo: {
+      rotulo: 'Roxo',
+      fundo: 'border border-violet-300 bg-violet-100',
+      texto: 'text-foreground',
+    },
+    cinza: {
+      rotulo: 'Cinza',
+      fundo: 'border border-slate-300 bg-slate-100',
+      texto: 'text-foreground',
+    },
+  }

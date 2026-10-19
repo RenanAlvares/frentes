@@ -60,6 +60,7 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
     '/api/avisos': { total: 0, itens: [] },
     '/api/tarefas/hoje': { atrasadas: [], hoje: [] },
     '/api/projetos/{projeto_id}/documentos': [],
+    '/api/projetos/{projeto_id}/anotacoes': [],
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {
@@ -196,6 +197,22 @@ export function documento(dados: Partial<Documento> = {}): Documento {
     tamanho_bytes: 1_258_291,
     abre_no_navegador: true,
     criado_em: '2026-10-14T15:00:00Z',
+    ...dados,
+  }
+}
+
+type Anotacao = components['schemas']['Anotacao']
+
+export function anotacao(dados: Partial<Anotacao> = {}): Anotacao {
+  return {
+    id: 'n1',
+    projeto_id: '11111111-1111-4111-8111-111111111111',
+    titulo: 'Medidas',
+    texto: 'Sala: 4 x 5 m',
+    cor: 'amarelo',
+    fixada: false,
+    criado_em: '2026-10-14T15:00:00Z',
+    atualizado_em: '2026-10-14T15:00:00Z',
     ...dados,
   }
 }

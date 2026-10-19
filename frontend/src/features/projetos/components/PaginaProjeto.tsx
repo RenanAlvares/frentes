@@ -1,10 +1,11 @@
-import { FolderX, SquareCheck, StickyNote } from 'lucide-react'
+import { FolderX, SquareCheck } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { ErroApi, mensagemDoErro } from '@/api/erros'
 import { EstadoVazio } from '@/components/comum/EstadoVazio'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AreaAnotacoes } from '@/features/anotacoes/components/AreaAnotacoes'
 import { AreaDocumentos } from '@/features/documentos/components/AreaDocumentos'
 import { AreaProjeto } from '@/features/projetos/components/AreaProjeto'
 import { AreaLembretes } from '@/features/lembretes/components/AreaLembretes'
@@ -12,10 +13,6 @@ import { CabecalhoProjeto } from '@/features/projetos/components/CabecalhoProjet
 import { useProjeto } from '@/features/projetos/hooks/useProjetos'
 import { ModalTarefa } from '@/features/tarefas/components/ModalTarefa'
 import { QuadroTarefas } from '@/features/tarefas/components/QuadroTarefas'
-
-function EmBreve() {
-  return <p className="px-1 text-sm text-muted-foreground">Em breve.</p>
-}
 
 /**
  * Projeto aberto (01 §4.4). Layout de 05 §7:
@@ -77,9 +74,7 @@ export function PaginaProjeto() {
         <AreaLembretes projetoId={projeto.id} className="xl:col-start-1 xl:row-start-1" />
         <div className="flex min-w-0 flex-col gap-4 xl:col-start-3 xl:row-start-1">
           <AreaDocumentos projetoId={projeto.id} />
-          <AreaProjeto area="anotacoes" titulo="Anotações" icone={StickyNote}>
-            <EmBreve />
-          </AreaProjeto>
+          <AreaAnotacoes projetoId={projeto.id} />
         </div>
       </div>
       <ModalTarefa

@@ -39,6 +39,15 @@ class TipoTarefa(StrEnum):
     META_MENSAL = "meta_mensal"
 
 
+class CorAnotacao(StrEnum):
+    AMARELO = "amarelo"
+    AZUL = "azul"
+    VERDE = "verde"
+    ROSA = "rosa"
+    ROXO = "roxo"
+    CINZA = "cinza"
+
+
 class Frequencia(StrEnum):
     DIARIA = "diaria"
     SEMANAL = "semanal"

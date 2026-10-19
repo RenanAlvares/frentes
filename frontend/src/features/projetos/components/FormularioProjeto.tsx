@@ -21,6 +21,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { esquemaProjeto, type ValoresProjeto } from '@/features/projetos/formulario'
 import { LISTA_STATUS, ROTULO_STATUS } from '@/features/projetos/status'
+import { CORES_PROJETO } from '@/lib/cores'
 import { atributosDeErro } from '@/lib/formulario'
 
 type Campo = keyof ValoresProjeto
@@ -111,7 +112,12 @@ export function FormularioProjeto({ inicial, onSalvar, onCancelar, onSujoChange 
             control={control}
             name="cor"
             render={({ field }) => (
-              <SeletorCor id="cor" valor={field.value} onChange={field.onChange} />
+              <SeletorCor
+                id="cor"
+                valor={field.value}
+                onChange={field.onChange}
+                paleta={CORES_PROJETO}
+              />
             )}
           />
         </CampoForm>

@@ -142,7 +142,7 @@ Cada regra tem um código. Testes devem citar o código no nome ou docstring (ex
 ## Anotações
 
 - **RN-80** Campos: `titulo` (opcional, até 120), `texto` (1–10000, obrigatório), `cor` (`amarelo`, `azul`, `verde`, `rosa`, `roxo`, `cinza`; padrão `amarelo`), `fixada` (padrão `false`).
-- **RN-81** Ordem: fixadas primeiro; dentro de cada grupo, `atualizado_em` decrescente.
+- **RN-81** Ordem: fixadas primeiro; dentro de cada grupo, `atualizado_em` decrescente. Toda alteração atualiza `atualizado_em`, inclusive fixar e desafixar.
 
 ## Edição em modais
 

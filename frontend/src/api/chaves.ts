@@ -20,4 +20,7 @@ export const chaves = {
   documentos: {
     lista: (projetoId: string) => ['documentos', 'lista', projetoId] as const,
   },
+  anotacoes: {
+    lista: (projetoId: string) => ['anotacoes', 'lista', projetoId] as const,
+  },
 }

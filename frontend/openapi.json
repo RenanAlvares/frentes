@@ -1298,6 +1298,192 @@
         }
       }
     },
+    "/api/projetos/{projeto_id}/anotacoes": {
+      "get": {
+        "tags": [
+          "anotacoes"
+        ],
+        "summary": "Listar Anotacoes",
+        "description": "RN-81: fixadas primeiro, depois as alteradas mais recentemente.",
+        "operationId": "listar_anotacoes",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Anotacao"
+                  },
+                  "title": "Response Listar Anotacoes"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "anotacoes"
+        ],
+        "summary": "Criar Anotacao",
+        "operationId": "criar_anotacao",
+        "parameters": [
+          {
+            "name": "projeto_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Projeto Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnotacaoCriar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Anotacao"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/anotacoes/{anotacao_id}": {
+      "patch": {
+        "tags": [
+          "anotacoes"
+        ],
+        "summary": "Atualizar Anotacao",
+        "operationId": "atualizar_anotacao",
+        "parameters": [
+          {
+            "name": "anotacao_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Anotacao Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnotacaoAtualizar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Anotacao"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "anotacoes"
+        ],
+        "summary": "Excluir Anotacao",
+        "operationId": "excluir_anotacao",
+        "parameters": [
+          {
+            "name": "anotacao_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Anotacao Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
       "post": {
         "tags": [
@@ -1345,6 +1531,134 @@
   },
   "components": {
     "schemas": {
+      "Anotacao": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "projeto_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Projeto Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "texto": {
+            "type": "string",
+            "title": "Texto"
+          },
+          "cor": {
+            "$ref": "#/components/schemas/CorAnotacao"
+          },
+          "fixada": {
+            "type": "boolean",
+            "title": "Fixada"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "projeto_id",
+          "titulo",
+          "texto",
+          "cor",
+          "fixada",
+          "criado_em",
+          "atualizado_em"
+        ],
+        "title": "Anotacao"
+      },
+      "AnotacaoAtualizar": {
+        "properties": {
+          "titulo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Titulo"
+          },
+          "texto": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Texto"
+          },
+          "cor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CorAnotacao"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fixada": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fixada"
+          }
+        },
+        "type": "object",
+        "title": "AnotacaoAtualizar",
+        "description": "PATCH: só os campos enviados mudam (fixar no card é um PATCH de `fixada`, RN-85)."
+      },
+      "AnotacaoCriar": {
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "title": "Titulo",
+            "default": ""
+          },
+          "texto": {
+            "type": "string",
+            "title": "Texto"
+          },
+          "cor": {
+            "$ref": "#/components/schemas/CorAnotacao",
+            "default": "amarelo"
+          },
+          "fixada": {
+            "type": "boolean",
+            "title": "Fixada",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "texto"
+        ],
+        "title": "AnotacaoCriar"
+      },
       "Aviso": {
         "properties": {
           "tipo": {
@@ -1442,6 +1756,18 @@
           "arquivos"
         ],
         "title": "Body_enviar_documentos"
+      },
+      "CorAnotacao": {
+        "type": "string",
+        "enum": [
+          "amarelo",
+          "azul",
+          "verde",
+          "rosa",
+          "roxo",
+          "cinza"
+        ],
+        "title": "CorAnotacao"
       },
       "CorProjeto": {
         "type": "string",
@@ -3010,7 +3336,8 @@
           "projeto",
           "tarefa",
           "lembrete",
-          "documento"
+          "documento",
+          "anotacao"
         ],
         "title": "TipoItemLixeira"
       },

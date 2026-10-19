@@ -15,7 +15,16 @@ from app.config import Settings
 from app.db.migracoes import migrar
 from app.db.sessao import criar_engine, criar_session_local
 from app.erros import registrar_handlers
-from app.routers import avisos, documentos, lembretes, lixeira, projetos, sistema, tarefas
+from app.routers import (
+    anotacoes,
+    avisos,
+    documentos,
+    lembretes,
+    lixeira,
+    projetos,
+    sistema,
+    tarefas,
+)
 from app.schemas.erros import ErroResposta
 from app.services import configuracoes
 from app.spa import PASTA_STATIC, montar_assets
@@ -53,7 +62,7 @@ def create_app(settings: Settings | None = None, pasta_static: Path = PASTA_STAT
     app.state.engine = engine
     app.state.session_local = session_local
     registrar_handlers(app)
-    rotas = (sistema, projetos, tarefas, lembretes, avisos, documentos, lixeira)
+    rotas = (sistema, projetos, tarefas, lembretes, avisos, documentos, anotacoes, lixeira)
     for router in (modulo.router for modulo in rotas):
         app.include_router(router, prefix="/api", responses=RESPOSTAS_ERRO)
     montar_assets(app, pasta_static)

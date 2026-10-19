@@ -372,6 +372,45 @@ export interface paths {
         patch: operations["atualizar_documento"];
         trace?: never;
     };
+    "/api/projetos/{projeto_id}/anotacoes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar Anotacoes
+         * @description RN-81: fixadas primeiro, depois as alteradas mais recentemente.
+         */
+        get: operations["listar_anotacoes"];
+        put?: never;
+        /** Criar Anotacao */
+        post: operations["criar_anotacao"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/anotacoes/{anotacao_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Excluir Anotacao */
+        delete: operations["excluir_anotacao"];
+        options?: never;
+        head?: never;
+        /** Atualizar Anotacao */
+        patch: operations["atualizar_anotacao"];
+        trace?: never;
+    };
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
         parameters: {
             query?: never;
@@ -393,6 +432,66 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** Anotacao */
+        Anotacao: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Projeto Id
+             * Format: uuid
+             */
+            projeto_id: string;
+            /** Titulo */
+            titulo: string;
+            /** Texto */
+            texto: string;
+            cor: components["schemas"]["CorAnotacao"];
+            /** Fixada */
+            fixada: boolean;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
+        };
+        /**
+         * AnotacaoAtualizar
+         * @description PATCH: só os campos enviados mudam (fixar no card é um PATCH de `fixada`, RN-85).
+         */
+        AnotacaoAtualizar: {
+            /** Titulo */
+            titulo?: string | null;
+            /** Texto */
+            texto?: string | null;
+            cor?: components["schemas"]["CorAnotacao"] | null;
+            /** Fixada */
+            fixada?: boolean | null;
+        };
+        /** AnotacaoCriar */
+        AnotacaoCriar: {
+            /**
+             * Titulo
+             * @default
+             */
+            titulo?: string;
+            /** Texto */
+            texto: string;
+            /** @default amarelo */
+            cor?: components["schemas"]["CorAnotacao"];
+            /**
+             * Fixada
+             * @default false
+             */
+            fixada?: boolean;
+        };
         /** Aviso */
         Aviso: {
             /**
@@ -434,6 +533,11 @@ export interface components {
              */
             arquivos: string[];
         };
+        /**
+         * CorAnotacao
+         * @enum {string}
+         */
+        CorAnotacao: "amarelo" | "azul" | "verde" | "rosa" | "roxo" | "cinza";
         /**
          * CorProjeto
          * @enum {string}
@@ -987,7 +1091,7 @@ export interface components {
          * TipoItemLixeira
          * @enum {string}
          */
-        TipoItemLixeira: "projeto" | "tarefa" | "lembrete" | "documento";
+        TipoItemLixeira: "projeto" | "tarefa" | "lembrete" | "documento" | "anotacao";
         /**
          * TipoTarefa
          * @enum {string}
@@ -1939,6 +2043,136 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Documento"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    listar_anotacoes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Anotacao"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    criar_anotacao: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projeto_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnotacaoCriar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Anotacao"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    excluir_anotacao: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                anotacao_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    atualizar_anotacao: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                anotacao_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnotacaoAtualizar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Anotacao"];
                 };
             };
             /** @description Erro (04-api, Formato de erro) */
