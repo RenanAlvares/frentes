@@ -111,7 +111,7 @@ Regras:
 - [x] **4.1 Storage e API de documentos** · ler: 06 §8, §12; 03 (documentos); 04 Documentos; 02 RN-70..73
   Aceite: todos os casos de 07 §3.7.
 
-- [ ] **4.2 Área de documentos** · ler: 01 §4.4 (Documentos)
+- [x] **4.2 Área de documentos** · ler: 01 §4.4 (Documentos)
   Soltar arquivos, progresso por arquivo (`XMLHttpRequest`), lista, abrir/baixar, renomear, excluir.
   Aceite: fluxo manual com PDF, imagem e .xlsx.
 

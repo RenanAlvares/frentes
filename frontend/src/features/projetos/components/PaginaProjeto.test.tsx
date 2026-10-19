@@ -99,15 +99,18 @@ describe('PaginaProjeto: cabeçalho (01 §4.4)', () => {
 })
 
 describe('PaginaProjeto: áreas e erros', () => {
-  it('mostra as quatro áreas; Documentos e Anotações em breve', async () => {
+  it('mostra as quatro áreas; Anotações em breve', async () => {
     simularGet()
 
     renderizarRota(URL)
 
-    for (const area of ['Documentos', 'Anotações']) {
-      const secao = await screen.findByRole('region', { name: area })
-      expect(within(secao).getByText('Em breve.')).toBeInTheDocument()
-    }
+    const anotacoes = await screen.findByRole('region', { name: 'Anotações' })
+    expect(within(anotacoes).getByText('Em breve.')).toBeInTheDocument()
+    expect(
+      await within(screen.getByRole('region', { name: 'Documentos' })).findByText(
+        'Nenhum documento.',
+      ),
+    ).toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Tarefas' })).toBeInTheDocument()
     expect(
       within(screen.getByRole('region', { name: 'Lembretes' })).getByText('Nenhum lembrete.'),

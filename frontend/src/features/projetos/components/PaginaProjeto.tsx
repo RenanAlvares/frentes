@@ -1,10 +1,11 @@
-import { Folder, FolderX, SquareCheck, StickyNote } from 'lucide-react'
+import { FolderX, SquareCheck, StickyNote } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { ErroApi, mensagemDoErro } from '@/api/erros'
 import { EstadoVazio } from '@/components/comum/EstadoVazio'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AreaDocumentos } from '@/features/documentos/components/AreaDocumentos'
 import { AreaProjeto } from '@/features/projetos/components/AreaProjeto'
 import { AreaLembretes } from '@/features/lembretes/components/AreaLembretes'
 import { CabecalhoProjeto } from '@/features/projetos/components/CabecalhoProjeto'
@@ -75,9 +76,7 @@ export function PaginaProjeto() {
         </AreaProjeto>
         <AreaLembretes projetoId={projeto.id} className="xl:col-start-1 xl:row-start-1" />
         <div className="flex min-w-0 flex-col gap-4 xl:col-start-3 xl:row-start-1">
-          <AreaProjeto area="documentos" titulo="Documentos" icone={Folder}>
-            <EmBreve />
-          </AreaProjeto>
+          <AreaDocumentos projetoId={projeto.id} />
           <AreaProjeto area="anotacoes" titulo="Anotações" icone={StickyNote}>
             <EmBreve />
           </AreaProjeto>
