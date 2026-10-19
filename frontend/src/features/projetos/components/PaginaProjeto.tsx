@@ -1,4 +1,4 @@
-import { Bell, Folder, FolderX, SquareCheck, StickyNote } from 'lucide-react'
+import { Folder, FolderX, SquareCheck, StickyNote } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { ErroApi, mensagemDoErro } from '@/api/erros'
@@ -6,6 +6,7 @@ import { EstadoVazio } from '@/components/comum/EstadoVazio'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AreaProjeto } from '@/features/projetos/components/AreaProjeto'
+import { AreaLembretes } from '@/features/lembretes/components/AreaLembretes'
 import { CabecalhoProjeto } from '@/features/projetos/components/CabecalhoProjeto'
 import { useProjeto } from '@/features/projetos/hooks/useProjetos'
 import { ModalTarefa } from '@/features/tarefas/components/ModalTarefa'
@@ -72,14 +73,7 @@ export function PaginaProjeto() {
             onNovaTarefa={() => setCriandoTarefa(true)}
           />
         </AreaProjeto>
-        <AreaProjeto
-          area="lembretes"
-          titulo="Lembretes"
-          icone={Bell}
-          className="xl:col-start-1 xl:row-start-1"
-        >
-          <EmBreve />
-        </AreaProjeto>
+        <AreaLembretes projetoId={projeto.id} className="xl:col-start-1 xl:row-start-1" />
         <div className="flex min-w-0 flex-col gap-4 xl:col-start-3 xl:row-start-1">
           <AreaProjeto area="documentos" titulo="Documentos" icone={Folder}>
             <EmBreve />

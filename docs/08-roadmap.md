@@ -89,7 +89,7 @@ Regras:
 - [x] **3.1 Lembretes: modelo e API** · ler: 03 (lembretes, lembrete_baixas); 04 Lembretes; 02 RN-40..46
   Aceite: testes de 07 §3.4.
 
-- [ ] **3.2 Área de lembretes no projeto** · ler: 01 §4.4 (Lembretes), §4.6 (Lembrete)
+- [x] **3.2 Área de lembretes no projeto** · ler: 01 §4.4 (Lembretes), §4.6 (Lembrete)
   Lista, destaque de janela/vencido, modal, dar baixa com Desfazer, seção Concluídos com Reativar.
   Aceite: fluxo manual; teste de componente do item.
 

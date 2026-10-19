@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FormularioTarefa } from '@/features/tarefas/components/FormularioTarefa'
+import { avisarComDesfazer } from '@/lib/desfazer'
 import { ResumoTarefa } from '@/features/tarefas/components/ResumoTarefa'
 import {
   corpoAtualizar,
@@ -17,7 +18,6 @@ import {
   type ValoresTarefa,
 } from '@/features/tarefas/formulario'
 import {
-  avisarComDesfazer,
   useAtualizarTarefa,
   useConcluirTarefa,
   useCriarTarefa,

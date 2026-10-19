@@ -1,4 +1,5 @@
 import type { components } from '@/api/schema'
+import { z } from 'zod'
 import { isoParaDataLocal } from '@/lib/datas'
 
 export type Recorrencia = components['schemas']['Recorrencia']
@@ -146,3 +147,11 @@ export function descreverRecorrencia(regra: Recorrencia): string {
   const data = `${String(dia).padStart(2, '0')}/${String(regra.mes ?? 1).padStart(2, '0')}`
   return n === 1 ? `todo ano em ${data}` : `a cada ${n} anos em ${data}`
 }
+
+/** Estado do editor nos formulários (react-hook-form + zod). */
+export const esquemaEditor = z.object({
+  intervalo: z.number(),
+  unidade: z.enum(['dias', 'semanas', 'meses', 'anos']),
+  diasSemana: z.array(z.number()),
+  diaMes: z.number().nullable(),
+})

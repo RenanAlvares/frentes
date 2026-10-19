@@ -99,16 +99,19 @@ describe('PaginaProjeto: cabeçalho (01 §4.4)', () => {
 })
 
 describe('PaginaProjeto: áreas e erros', () => {
-  it('mostra as quatro áreas; Lembretes, Documentos e Anotações em breve', async () => {
+  it('mostra as quatro áreas; Documentos e Anotações em breve', async () => {
     simularGet()
 
     renderizarRota(URL)
 
-    for (const area of ['Lembretes', 'Documentos', 'Anotações']) {
+    for (const area of ['Documentos', 'Anotações']) {
       const secao = await screen.findByRole('region', { name: area })
       expect(within(secao).getByText('Em breve.')).toBeInTheDocument()
     }
     expect(screen.getByRole('region', { name: 'Tarefas' })).toBeInTheDocument()
+    expect(
+      within(screen.getByRole('region', { name: 'Lembretes' })).getByText('Nenhum lembrete.'),
+    ).toBeInTheDocument()
   })
 
   it('projeto inexistente ou na lixeira mostra "Projeto não encontrado."', async () => {

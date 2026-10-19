@@ -2,6 +2,7 @@ import { z } from 'zod'
 import type { components } from '@/api/schema'
 import type { StatusTarefa, Tarefa } from '@/features/tarefas/quadro'
 import {
+  esquemaEditor,
   ESTADO_INICIAL,
   erroDoEditor,
   estadoDaRegra,
@@ -27,13 +28,6 @@ export const ROTULO_TIPO: Record<Tipo, string> = {
 }
 export const LISTA_TIPOS = Object.keys(ROTULO_TIPO) as Tipo[]
 
-const estadoEditor = z.object({
-  intervalo: z.number(),
-  unidade: z.enum(['dias', 'semanas', 'meses', 'anos']),
-  diasSemana: z.array(z.number()),
-  diaMes: z.number().nullable(),
-})
-
 // RN-20 e RN-21 por tipo. A API valida de novo; aqui é para o erro aparecer antes de enviar.
 export const esquemaTarefa = z
   .object({
@@ -47,7 +41,7 @@ export const esquemaTarefa = z
     prioridade: z.enum(LISTA_PRIORIDADES as [Prioridade, ...Prioridade[]]),
     tipo: z.enum(LISTA_TIPOS as [Tipo, ...Tipo[]]),
     prazo: z.string().nullable(),
-    editor: estadoEditor,
+    editor: esquemaEditor,
     meta_mensal: z.number().nullable(),
   })
   .superRefine((valores, contexto) => {

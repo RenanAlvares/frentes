@@ -8,6 +8,7 @@ import {
   formatarDataCurta,
   isoParaDataLocal,
   paraIso,
+  textoRelativo,
 } from '@/lib/datas'
 
 describe('formatarData', () => {
@@ -70,5 +71,18 @@ describe('anoDe e antesDe', () => {
 
   it('rejeita data fora do formato', () => {
     expect(() => antesDe('14/10/2026', '2026-10-14')).toThrow('AAAA-MM-DD')
+  })
+})
+
+describe('textoRelativo (RN-03, 01 §5)', () => {
+  it.each([
+    [-1, 'vencido há 1 dia'],
+    [-5, 'vencido há 5 dias'],
+    [0, 'vence hoje'],
+    [1, 'vence amanhã'],
+    [2, 'vence em 2 dias'],
+    [30, 'vence em 30 dias'],
+  ])('%i → %s', (dias, texto) => {
+    expect(textoRelativo(dias)).toBe(texto)
   })
 })

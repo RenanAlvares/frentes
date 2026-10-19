@@ -56,6 +56,7 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
     '/api/projetos/{projeto_id}': projeto(),
     '/api/projetos/{projeto_id}/tarefas': quadro(),
     '/api/tarefas/{tarefa_id}': { ...tarefa(), execucoes: [] },
+    '/api/projetos/{projeto_id}/lembretes': { ativos: [], concluidos: [] },
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {
@@ -127,4 +128,26 @@ export function tarefa(dados: Partial<Tarefa> = {}): Tarefa {
 
 export function quadro(dados: Partial<Quadro> = {}): Quadro {
   return { pendente: [], em_andamento: [], concluida: [], total_concluidas: 0, ...dados }
+}
+
+type Lembrete = components['schemas']['Lembrete']
+
+export function lembrete(dados: Partial<Lembrete> = {}): Lembrete {
+  return {
+    id: 'l1',
+    projeto_id: '11111111-1111-4111-8111-111111111111',
+    titulo: 'Pagar IPTU',
+    observacao: '',
+    vencimento: '2026-10-20',
+    antecedencia_dias: 3,
+    recorrencia: null,
+    recorrencia_descricao: null,
+    dias_restantes: 6,
+    na_janela: false,
+    ocorrencias_atrasadas: 0,
+    concluido_em: null,
+    criado_em: '2026-10-14T15:00:00Z',
+    atualizado_em: '2026-10-14T15:00:00Z',
+    ...dados,
+  }
 }

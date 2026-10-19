@@ -12,4 +12,7 @@ export const chaves = {
     concluidas: (projetoId: string) => ['tarefas', 'concluidas', projetoId] as const,
     detalhe: (id: string) => ['tarefas', 'detalhe', id] as const,
   },
+  lembretes: {
+    lista: (projetoId: string) => ['lembretes', 'lista', projetoId] as const,
+  },
 }

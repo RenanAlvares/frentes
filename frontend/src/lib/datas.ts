@@ -61,3 +61,14 @@ export function antesDe(iso: string, outra: string): boolean {
   partes(outra)
   return iso < outra
 }
+
+/** RN-03 / 01 §5: texto relativo a partir de `dias_restantes` da API (o front não calcula). */
+export function textoRelativo(diasRestantes: number): string {
+  if (diasRestantes < 0) {
+    const dias = -diasRestantes
+    return `vencido há ${dias} ${dias === 1 ? 'dia' : 'dias'}`
+  }
+  if (diasRestantes === 0) return 'vence hoje'
+  if (diasRestantes === 1) return 'vence amanhã'
+  return `vence em ${diasRestantes} dias`
+}
