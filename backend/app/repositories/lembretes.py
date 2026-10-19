@@ -63,3 +63,13 @@ def obter_excluido(sessao: Session, lembrete_id: uuid.UUID) -> Lembrete | None:
         )
     )
     return sessao.scalar(consulta)
+
+
+def ativos_dos_projetos(sessao: Session, projeto_ids: list[uuid.UUID]) -> list[Lembrete]:
+    """Sem baixa definitiva (RN-41), dos projetos dados (candidatos a aviso, RN-50)."""
+    if not projeto_ids:
+        return []
+    consulta = _visiveis().where(
+        Lembrete.projeto_id.in_(projeto_ids), Lembrete.concluido_em.is_(None)
+    )
+    return list(sessao.scalars(consulta))

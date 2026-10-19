@@ -22,8 +22,10 @@ ClockDep = Annotated[Clock, Depends(get_clock)]
 
 
 @router.get("", operation_id="listar_projetos", response_model=list[ProjetoResumo])
-def listar_projetos(sessao: SessaoDep, arquivados: bool = False) -> list[ProjetoResumo]:
-    return servico.listar_projetos(sessao, arquivados=arquivados)
+def listar_projetos(
+    sessao: SessaoDep, clock: ClockDep, arquivados: bool = False
+) -> list[ProjetoResumo]:
+    return servico.listar_projetos(sessao, clock, arquivados=arquivados)
 
 
 @router.post(
@@ -43,8 +45,8 @@ def reordenar_projetos(dados: ProjetosOrdem, sessao: SessaoDep) -> Response:
 
 
 @router.get("/{projeto_id}", operation_id="obter_projeto", response_model=Projeto)
-def obter_projeto(projeto_id: uuid.UUID, sessao: SessaoDep) -> Projeto:
-    return servico.obter_projeto(sessao, projeto_id)
+def obter_projeto(projeto_id: uuid.UUID, sessao: SessaoDep, clock: ClockDep) -> Projeto:
+    return servico.obter_projeto(sessao, clock, projeto_id)
 
 
 @router.patch("/{projeto_id}", operation_id="atualizar_projeto", response_model=Projeto)

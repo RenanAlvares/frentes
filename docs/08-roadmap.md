@@ -93,7 +93,7 @@ Regras:
   Lista, destaque de janela/vencido, modal, dar baixa com Desfazer, seção Concluídos com Reativar.
   Aceite: fluxo manual; teste de componente do item.
 
-- [ ] **3.3 Domínio e API de avisos** · ler: 02 RN-50..58; 07 §3.2
+- [x] **3.3 Domínio e API de avisos** · ler: 02 RN-50..58; 07 §3.2
   `domain/avisos.py` + `GET /api/avisos` + contador `avisos` no resumo do projeto (RN-57).
   Aceite: todos os casos de 07 §3.2.
 

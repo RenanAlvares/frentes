@@ -121,3 +121,13 @@ def contar_concluidas(sessao: Session, projeto_id: uuid.UUID) -> int:
         .where(Tarefa.projeto_id == projeto_id, Tarefa.status == StatusTarefa.CONCLUIDA, *_VISIVEL)
     )
     return sessao.scalar(consulta) or 0
+
+
+def nao_concluidas_dos_projetos(sessao: Session, projeto_ids: list[uuid.UUID]) -> list[Tarefa]:
+    """Candidatas a aviso (RN-50): não concluídas (metas estão sempre pendentes no banco)."""
+    if not projeto_ids:
+        return []
+    consulta = _visiveis().where(
+        Tarefa.projeto_id.in_(projeto_ids), Tarefa.status != StatusTarefa.CONCLUIDA
+    )
+    return list(sessao.scalars(consulta))

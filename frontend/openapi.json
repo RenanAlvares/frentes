@@ -1003,6 +1003,38 @@
         }
       }
     },
+    "/api/avisos": {
+      "get": {
+        "tags": [
+          "avisos"
+        ],
+        "summary": "Listar Avisos",
+        "description": "RN-50, RN-51: avisos de todos os projetos ativos, mais atrasado primeiro.",
+        "operationId": "listar_avisos",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Avisos"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
       "post": {
         "tags": [
@@ -1050,6 +1082,86 @@
   },
   "components": {
     "schemas": {
+      "Aviso": {
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "lembrete",
+              "tarefa"
+            ],
+            "title": "Tipo"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "projeto": {
+            "$ref": "#/components/schemas/ProjetoDoAviso"
+          },
+          "vencimento": {
+            "type": "string",
+            "format": "date",
+            "title": "Vencimento"
+          },
+          "dias_restantes": {
+            "type": "integer",
+            "title": "Dias Restantes"
+          },
+          "ocorrencias_atrasadas": {
+            "type": "integer",
+            "title": "Ocorrencias Atrasadas"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MetaDoAviso"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "tipo",
+          "id",
+          "titulo",
+          "projeto",
+          "vencimento",
+          "dias_restantes",
+          "ocorrencias_atrasadas",
+          "meta"
+        ],
+        "title": "Aviso"
+      },
+      "Avisos": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/components/schemas/Aviso"
+            },
+            "type": "array",
+            "title": "Itens"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "itens"
+        ],
+        "title": "Avisos"
+      },
       "CorProjeto": {
         "type": "string",
         "enum": [
@@ -1379,6 +1491,24 @@
         ],
         "title": "ListaLembretes"
       },
+      "MetaDoAviso": {
+        "properties": {
+          "feitas": {
+            "type": "integer",
+            "title": "Feitas"
+          },
+          "meta": {
+            "type": "integer",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feitas",
+          "meta"
+        ],
+        "title": "MetaDoAviso"
+      },
       "Prioridade": {
         "type": "string",
         "enum": [
@@ -1642,6 +1772,29 @@
           "nome"
         ],
         "title": "ProjetoCriar"
+      },
+      "ProjetoDoAviso": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "cor": {
+            "$ref": "#/components/schemas/CorProjeto"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "cor"
+        ],
+        "title": "ProjetoDoAviso"
       },
       "ProjetoResumo": {
         "properties": {

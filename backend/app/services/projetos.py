@@ -19,6 +19,7 @@ from app.schemas.projetos import (
     ProjetoResumo,
     ProjetosOrdem,
 )
+from app.services import avisos as servico_avisos
 
 
 def _progressos(
@@ -38,19 +39,24 @@ def _progressos(
     return progressos
 
 
-def _campos(projeto: ProjetoModelo, progresso: Progresso | None) -> dict[str, object]:
-    """Colunas do modelo + campos calculados da resposta (avisos entram na fase 3)."""
+def _campos(projeto: ProjetoModelo, progresso: Progresso | None, avisos: int) -> dict[str, object]:
+    """Colunas do modelo + campos calculados da resposta (RN-13, RN-57)."""
     colunas = {coluna.key: getattr(projeto, coluna.key) for coluna in projeto.__table__.columns}
-    return {**colunas, "progresso": progresso, "avisos": 0}
+    return {**colunas, "progresso": progresso, "avisos": avisos}
 
 
-def _resumos(sessao: Session, projetos: list[ProjetoModelo]) -> list[ProjetoResumo]:
+def _resumos(sessao: Session, hoje: date, projetos: list[ProjetoModelo]) -> list[ProjetoResumo]:
     progressos = _progressos(sessao, projetos)
-    return [ProjetoResumo.model_validate(_campos(p, progressos[p.id])) for p in projetos]
+    avisos = servico_avisos.contar_por_projeto(sessao, hoje, projetos)
+    return [
+        ProjetoResumo.model_validate(_campos(p, progressos[p.id], avisos[p.id])) for p in projetos
+    ]
 
 
-def _detalhe(sessao: Session, projeto: ProjetoModelo) -> Projeto:
-    return Projeto.model_validate(_campos(projeto, _progressos(sessao, [projeto])[projeto.id]))
+def _detalhe(sessao: Session, hoje: date, projeto: ProjetoModelo) -> Projeto:
+    progresso = _progressos(sessao, [projeto])[projeto.id]
+    avisos = servico_avisos.contar_por_projeto(sessao, hoje, [projeto])[projeto.id]
+    return Projeto.model_validate(_campos(projeto, progresso, avisos))
 
 
 def _validar_datas(data_inicio: date | None, prazo: date | None) -> None:
@@ -66,12 +72,12 @@ def _buscar(sessao: Session, projeto_id: uuid.UUID) -> ProjetoModelo:
     return projeto
 
 
-def listar_projetos(sessao: Session, *, arquivados: bool) -> list[ProjetoResumo]:
-    return _resumos(sessao, repositorio.listar(sessao, arquivados=arquivados))
+def listar_projetos(sessao: Session, clock: Clock, *, arquivados: bool) -> list[ProjetoResumo]:
+    return _resumos(sessao, clock.hoje(), repositorio.listar(sessao, arquivados=arquivados))
 
 
-def obter_projeto(sessao: Session, projeto_id: uuid.UUID) -> Projeto:
-    return _detalhe(sessao, _buscar(sessao, projeto_id))
+def obter_projeto(sessao: Session, clock: Clock, projeto_id: uuid.UUID) -> Projeto:
+    return _detalhe(sessao, clock.hoje(), _buscar(sessao, projeto_id))
 
 
 def criar_projeto(sessao: Session, clock: Clock, dados: ProjetoCriar) -> Projeto:
@@ -86,7 +92,7 @@ def criar_projeto(sessao: Session, clock: Clock, dados: ProjetoCriar) -> Projeto
     )
     sessao.add(projeto)
     sessao.commit()
-    return _detalhe(sessao, projeto)
+    return _detalhe(sessao, clock.hoje(), projeto)
 
 
 def atualizar_projeto(
@@ -102,7 +108,7 @@ def atualizar_projeto(
     projeto.busca = normalizar_busca(projeto.nome, projeto.descricao)
     projeto.atualizado_em = clock.agora_utc()
     sessao.commit()
-    return _detalhe(sessao, projeto)
+    return _detalhe(sessao, clock.hoje(), projeto)
 
 
 def excluir_projeto(sessao: Session, clock: Clock, projeto_id: uuid.UUID) -> None:
