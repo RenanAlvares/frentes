@@ -1730,6 +1730,50 @@
           }
         }
       }
+    },
+    "/api/busca": {
+      "get": {
+        "tags": [
+          "busca"
+        ],
+        "summary": "Buscar",
+        "description": "RN-120..121: ignora acentos e maiúsculas; até 10 por tipo; nada da lixeira.",
+        "operationId": "buscar",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoBusca"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2174,6 +2218,34 @@
           "anual"
         ],
         "title": "Frequencia"
+      },
+      "ItemBusca": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "projeto": {
+            "$ref": "#/components/schemas/ProjetoRef"
+          },
+          "arquivado": {
+            "type": "boolean",
+            "title": "Arquivado"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "titulo",
+          "projeto",
+          "arquivado"
+        ],
+        "title": "ItemBusca"
       },
       "ItemLixeira": {
         "properties": {
@@ -2962,6 +3034,54 @@
         ],
         "title": "Recorrencia",
         "description": "RN-30. Campos que não se aplicam à frequência ficam `null`."
+      },
+      "ResultadoBusca": {
+        "properties": {
+          "projetos": {
+            "items": {
+              "$ref": "#/components/schemas/ItemBusca"
+            },
+            "type": "array",
+            "title": "Projetos"
+          },
+          "tarefas": {
+            "items": {
+              "$ref": "#/components/schemas/ItemBusca"
+            },
+            "type": "array",
+            "title": "Tarefas"
+          },
+          "lembretes": {
+            "items": {
+              "$ref": "#/components/schemas/ItemBusca"
+            },
+            "type": "array",
+            "title": "Lembretes"
+          },
+          "anotacoes": {
+            "items": {
+              "$ref": "#/components/schemas/ItemBusca"
+            },
+            "type": "array",
+            "title": "Anotacoes"
+          },
+          "documentos": {
+            "items": {
+              "$ref": "#/components/schemas/ItemBusca"
+            },
+            "type": "array",
+            "title": "Documentos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "projetos",
+          "tarefas",
+          "lembretes",
+          "anotacoes",
+          "documentos"
+        ],
+        "title": "ResultadoBusca"
       },
       "SaudeResposta": {
         "properties": {

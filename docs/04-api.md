@@ -152,6 +152,8 @@ Upload: o limite vale **por arquivo**; se um passar do limite, nenhum arquivo da
 | --- | --- |
 | `GET /api/busca?q=termo` | `{ projetos: [...], tarefas: [...], lembretes: [...], anotacoes: [...], documentos: [...] }`, cada item com `id`, `titulo`, `projeto: {id, nome, cor}`, `arquivado: bool` |
 
+Em cada tipo, os alterados mais recentemente primeiro (empate pelo texto). `q` com menos de 2 caracteres depois de normalizado → 422 no campo `q`. Anotação sem título usa o começo do texto como `titulo`.
+
 ## SPA
 
 Qualquer `GET` que não comece com `/api` nem `/assets` devolve `index.html` (roteamento do React). `/api/*` inexistente devolve 404 no formato de erro, nunca o `index.html`.

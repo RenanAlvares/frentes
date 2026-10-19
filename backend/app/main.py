@@ -21,6 +21,7 @@ from app.routers import (
     anotacoes,
     avisos,
     backup,
+    busca,
     configuracoes,
     documentos,
     lembretes,
@@ -88,6 +89,7 @@ def create_app(settings: Settings | None = None, pasta_static: Path = PASTA_STAT
         lixeira,
         configuracoes,
         backup,
+        busca,
     )
     for router in (modulo.router for modulo in rotas):
         app.include_router(router, prefix="/api", responses=RESPOSTAS_ERRO)

@@ -2,12 +2,13 @@ import { Link } from 'react-router'
 import { AbasPrincipais } from '@/app/layout/AbasPrincipais'
 import { MenuGeral } from '@/app/layout/MenuGeral'
 import { SinoAvisos } from '@/app/layout/SinoAvisos'
+import { BuscaGlobal } from '@/features/busca/components/BuscaGlobal'
 import { useSaude } from '@/app/layout/useSaude'
 import { formatarData } from '@/lib/datas'
 
 type Props = { totalAvisos: number; onAbrirAvisos: () => void }
 
-// 01-produto §3. Busca e contador de "hoje" entram nas fases 3.5 e 6.
+// 01-produto §3.
 export function Cabecalho({ totalAvisos, onAbrirAvisos }: Props) {
   const { data: saude } = useSaude()
 
@@ -28,6 +29,7 @@ export function Cabecalho({ totalAvisos, onAbrirAvisos }: Props) {
         </div>
         <AbasPrincipais />
         <div className="ml-auto flex items-center gap-1">
+          <BuscaGlobal />
           <SinoAvisos total={totalAvisos} onAbrir={onAbrirAvisos} />
           <MenuGeral />
         </div>

@@ -9,6 +9,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from app.clock import Clock
+from app.domain.textos import titulo_da_anotacao
 from app.erros import NaoEncontrado
 from app.models.anotacao import Anotacao
 from app.models.documento import Documento
@@ -44,18 +45,12 @@ _TIPOS_DE_ITEM: dict[type[repositorio.ItemDeProjeto], TipoItemLixeira] = {
     Anotacao: TipoItemLixeira.ANOTACAO,
 }
 
-RESUMO_ANOTACAO = 60
-
 
 def _titulo(item: repositorio.ItemDeProjeto) -> str:
     if isinstance(item, Documento):
         return item.nome
-    if isinstance(item, Anotacao) and not item.titulo:
-        # Título é opcional (RN-80): o começo do texto identifica a anotação.
-        primeira_linha = item.texto.splitlines()[0] if item.texto else ""
-        if len(primeira_linha) <= RESUMO_ANOTACAO:
-            return primeira_linha
-        return primeira_linha[: RESUMO_ANOTACAO - 1].rstrip() + "…"
+    if isinstance(item, Anotacao):
+        return titulo_da_anotacao(item.titulo, item.texto)
     return item.titulo
 
 

@@ -25,4 +25,5 @@ export const chaves = {
   },
   lixeira: () => ['lixeira'] as const,
   configuracoes: () => ['configuracoes'] as const,
+  busca: (termo: string) => ['busca', termo] as const,
 }

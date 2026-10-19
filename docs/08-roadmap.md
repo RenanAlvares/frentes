@@ -134,7 +134,7 @@ Regras:
 
 ## Fase 6 — Polimento
 
-- [ ] **6.1 Busca global** · ler: 02 RN-120..121; 04 Busca
+- [x] **6.1 Busca global** · ler: 02 RN-120..121; 04 Busca
   `domain/textos.normalizar_busca`, endpoint, caixa de busca com `Ctrl+K`.
   Aceite: busca ignora acentos e maiúsculas; não retorna excluídos.
 
