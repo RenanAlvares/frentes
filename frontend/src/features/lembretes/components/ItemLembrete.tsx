@@ -17,7 +17,7 @@ import {
 } from '@/features/lembretes/hooks/useLembretes'
 import { anoDe, formatarData, formatarDataCurta, textoRelativo } from '@/lib/datas'
 import { avisarComDesfazer } from '@/lib/desfazer'
-import { cn } from '@/lib/utils'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 type Props = {
   lembrete: Lembrete
@@ -68,7 +68,7 @@ export function ItemLembrete({ lembrete, hoje, onEditar }: Props) {
         <button
           type="button"
           onClick={onEditar}
-          className="flex-1 text-left font-medium break-words"
+          className={cn('flex-1 text-left font-medium break-words', FOCO_VISIVEL)}
         >
           {lembrete.titulo}
         </button>

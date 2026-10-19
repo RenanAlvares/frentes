@@ -6,6 +6,7 @@ import { ChipProjeto } from '@/components/comum/ChipProjeto'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useConcluirTarefa, useDesfazerConclusao } from '@/features/tarefas/hooks/useTarefas'
 import { avisarComDesfazer } from '@/lib/desfazer'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 export type TarefaHoje = components['schemas']['TarefaHoje']
 
@@ -42,7 +43,7 @@ export function ItemHoje({ tarefa, onAbrir }: Props) {
       <button
         type="button"
         onClick={() => onAbrir(tarefa.id)}
-        className="min-w-0 flex-1 text-left font-medium break-words"
+        className={cn('min-w-0 flex-1 text-left font-medium break-words', FOCO_VISIVEL)}
       >
         {tarefa.titulo}
       </button>

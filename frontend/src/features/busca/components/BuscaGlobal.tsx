@@ -116,10 +116,11 @@ export function BuscaGlobal() {
         variant="outline"
         size="sm"
         className="text-muted-foreground"
+        aria-label="Buscar"
         onClick={() => setAberta(true)}
       >
-        <Search /> Buscar
-        <kbd className="ml-2 hidden rounded border bg-muted px-1 text-[10px] sm:inline">Ctrl K</kbd>
+        <Search /> <span className="hidden md:inline">Buscar</span>
+        <kbd className="ml-2 hidden rounded border bg-muted px-1 text-[10px] lg:inline">Ctrl K</kbd>
       </Button>
       <Dialog open={aberta} onOpenChange={alternar}>
         <DialogContent aria-describedby={undefined} className="grid gap-3 sm:max-w-xl">

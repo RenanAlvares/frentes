@@ -36,7 +36,11 @@ export function CardTarefa({ tarefa, hoje, onAbrir }: Props & { onAbrir: () => v
       onClick={onAbrir}
       onKeyDown={(evento) => {
         listeners?.onKeyDown?.(evento)
-        if (evento.key === 'Enter') onAbrir()
+        if (evento.key === 'Enter') {
+          // Sem isto, o mesmo Enter ativa o primeiro botão do modal (o X) e o fecha na hora.
+          evento.preventDefault()
+          onAbrir()
+        }
       }}
     >
       <ConteudoCard tarefa={tarefa} hoje={hoje} acoes={<AcoesMeta tarefa={tarefa} />} />

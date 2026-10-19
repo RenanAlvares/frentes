@@ -20,7 +20,7 @@ import { useAtualizarProjeto, useExcluirComDesfazer } from '@/features/projetos/
 import { LISTA_STATUS, ROTULO_STATUS, type StatusProjeto } from '@/features/projetos/status'
 import { CORES_PROJETO } from '@/lib/cores'
 import { anoDe, formatarData, formatarDataCurta } from '@/lib/datas'
-import { cn } from '@/lib/utils'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 type Props = { projeto: components['schemas']['Projeto'] }
 
@@ -108,6 +108,7 @@ export function CabecalhoProjeto({ projeto }: Props) {
             onClick={() => setDescricaoAberta(!descricaoAberta)}
             className={cn(
               'text-left text-sm whitespace-pre-line text-muted-foreground',
+              FOCO_VISIVEL,
               !descricaoAberta && 'truncate whitespace-nowrap',
             )}
           >

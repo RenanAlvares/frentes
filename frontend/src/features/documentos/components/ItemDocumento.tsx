@@ -18,6 +18,7 @@ import {
 import { type Documento, urlDoArquivo } from '@/features/documentos/upload'
 import { formatarCarimbo } from '@/lib/datas'
 import { avisarComDesfazer } from '@/lib/desfazer'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 type Props = { documento: Documento }
 
@@ -51,7 +52,7 @@ export function ItemDocumento({ documento }: Props) {
           href={url}
           {...abrir}
           title={documento.nome}
-          className="block truncate font-medium hover:underline"
+          className={cn('block truncate font-medium hover:underline', FOCO_VISIVEL)}
         >
           {documento.nome}
         </a>

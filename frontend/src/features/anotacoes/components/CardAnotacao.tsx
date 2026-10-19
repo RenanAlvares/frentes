@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import type { Anotacao } from '@/features/anotacoes/formulario'
 import { useAtualizarAnotacao } from '@/features/anotacoes/hooks/useAnotacoes'
 import { CORES_ANOTACAO } from '@/lib/cores'
-import { cn } from '@/lib/utils'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 type Props = { anotacao: Anotacao; onAbrir: () => void }
 
@@ -33,7 +33,7 @@ export function CardAnotacao({ anotacao, onAbrir }: Props) {
         type="button"
         onClick={onAbrir}
         aria-label={`Abrir anotação ${rotulo}`}
-        className="grid w-full gap-1 pr-6 text-left"
+        className={cn('grid w-full gap-1 pr-6 text-left', FOCO_VISIVEL)}
       >
         {anotacao.titulo && <span className="font-semibold break-words">{anotacao.titulo}</span>}
         <span className="line-clamp-4 whitespace-pre-wrap break-words">{anotacao.texto}</span>

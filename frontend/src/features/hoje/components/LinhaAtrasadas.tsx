@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 import { ItemHoje, type TarefaHoje } from '@/features/hoje/components/ItemHoje'
-import { cn } from '@/lib/utils'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 /** RN-61: o estado expandido vale durante a sessão do navegador. */
 const CHAVE_SESSAO = 'frentes:hoje:atrasadas-expandidas'
@@ -41,7 +41,10 @@ export function LinhaAtrasadas({ tarefas, onAbrir }: Props) {
         type="button"
         aria-expanded={expandida}
         onClick={alternar}
-        className="flex items-center gap-1 justify-self-start text-sm font-semibold text-red-600"
+        className={cn(
+          'flex items-center gap-1 justify-self-start text-sm font-semibold text-red-600',
+          FOCO_VISIVEL,
+        )}
       >
         {total} {total === 1 ? 'atrasada' : 'atrasadas'}
         <ChevronRight

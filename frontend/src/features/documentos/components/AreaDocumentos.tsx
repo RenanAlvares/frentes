@@ -105,7 +105,7 @@ function ZonaEnvio({
       }}
       onDrop={soltar}
       className={cn(
-        'flex flex-col items-center gap-1 rounded-lg border-2 border-dashed px-3 py-4 text-center text-sm text-muted-foreground transition-colors hover:border-area-documentos',
+        'flex flex-col items-center gap-1 rounded-lg border-2 border-dashed px-3 py-4 text-center text-sm text-muted-foreground transition-colors outline-none hover:border-area-documentos focus-visible:ring-3 focus-visible:ring-ring/50',
         sobre && 'border-area-documentos bg-area-documentos-suave text-area-documentos',
       )}
     >

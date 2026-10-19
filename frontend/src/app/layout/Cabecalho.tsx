@@ -5,10 +5,11 @@ import { SinoAvisos } from '@/app/layout/SinoAvisos'
 import { BuscaGlobal } from '@/features/busca/components/BuscaGlobal'
 import { useSaude } from '@/app/layout/useSaude'
 import { formatarData } from '@/lib/datas'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 type Props = { totalAvisos: number; onAbrirAvisos: () => void }
 
-// 01-produto §3.
+// 01-produto §3. 05 §7: abaixo de `sm` as abas descem para uma segunda linha.
 export function Cabecalho({ totalAvisos, onAbrirAvisos }: Props) {
   const { data: saude } = useSaude()
 
@@ -20,12 +21,14 @@ export function Cabecalho({ totalAvisos, onAbrirAvisos }: Props) {
           Data simulada: {formatarData(saude.hoje)}
         </p>
       )}
-      <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-6 px-4">
-        <div className="flex items-baseline gap-2">
-          <Link to="/" className="text-lg font-semibold">
+      <div className="mx-auto flex max-w-screen-2xl flex-wrap items-center gap-x-3 px-4 sm:h-14 sm:flex-nowrap sm:gap-x-6">
+        <div className="flex h-14 items-center gap-2">
+          <Link to="/" className={cn('text-lg font-semibold', FOCO_VISIVEL)}>
             Frentes
           </Link>
-          {saude && <span className="text-xs text-muted-foreground">v{saude.versao}</span>}
+          {saude && (
+            <span className="hidden text-xs text-muted-foreground sm:inline">v{saude.versao}</span>
+          )}
         </div>
         <AbasPrincipais />
         <div className="ml-auto flex items-center gap-1">

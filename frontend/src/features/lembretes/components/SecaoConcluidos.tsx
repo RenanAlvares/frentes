@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import type { Lembrete } from '@/features/lembretes/formulario'
 import { useDesfazerBaixa } from '@/features/lembretes/hooks/useLembretes'
 import { formatarCarimbo } from '@/lib/datas'
-import { cn } from '@/lib/utils'
+import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 /** 01 §4.4: seção recolhida "Concluídos (N)" com "Reativar" (RN-44, mesmo endpoint do desfazer). */
 export function SecaoConcluidos({
@@ -26,7 +26,10 @@ export function SecaoConcluidos({
         type="button"
         aria-expanded={aberta}
         onClick={() => setAberta(!aberta)}
-        className="flex items-center gap-1 text-left text-sm text-muted-foreground hover:text-foreground"
+        className={cn(
+          'flex items-center gap-1 text-left text-sm text-muted-foreground hover:text-foreground',
+          FOCO_VISIVEL,
+        )}
       >
         <ChevronRight className={cn('size-4 transition-transform', aberta && 'rotate-90')} />
         Concluídos ({lembretes.length})
