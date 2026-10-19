@@ -1631,6 +1631,77 @@
           }
         }
       }
+    },
+    "/api/configuracoes": {
+      "get": {
+        "tags": [
+          "configuracoes"
+        ],
+        "summary": "Obter Configuracoes",
+        "operationId": "obter_configuracoes",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuracoes"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "configuracoes"
+        ],
+        "summary": "Atualizar Configuracoes",
+        "description": "RN-100: 0 a 60 dias; `aviso_tarefas_dias` muda os avisos na hora.",
+        "operationId": "atualizar_configuracoes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfiguracoesAtualizar"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuracoes"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1860,6 +1931,57 @@
           "arquivos"
         ],
         "title": "Body_enviar_documentos"
+      },
+      "Configuracoes": {
+        "properties": {
+          "aviso_tarefas_dias": {
+            "type": "integer",
+            "title": "Aviso Tarefas Dias"
+          },
+          "antecedencia_padrao_lembretes": {
+            "type": "integer",
+            "title": "Antecedencia Padrao Lembretes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "aviso_tarefas_dias",
+          "antecedencia_padrao_lembretes"
+        ],
+        "title": "Configuracoes"
+      },
+      "ConfiguracoesAtualizar": {
+        "properties": {
+          "aviso_tarefas_dias": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 60.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aviso Tarefas Dias"
+          },
+          "antecedencia_padrao_lembretes": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 60.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Antecedencia Padrao Lembretes"
+          }
+        },
+        "type": "object",
+        "title": "ConfiguracoesAtualizar",
+        "description": "PATCH: só as chaves enviadas mudam."
       },
       "CorAnotacao": {
         "type": "string",

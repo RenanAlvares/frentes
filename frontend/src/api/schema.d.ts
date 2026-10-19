@@ -472,6 +472,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/configuracoes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter Configuracoes */
+        get: operations["obter_configuracoes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Atualizar Configuracoes
+         * @description RN-100: 0 a 60 dias; `aviso_tarefas_dias` muda os avisos na hora.
+         */
+        patch: operations["atualizar_configuracoes"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -576,6 +597,23 @@ export interface components {
              * @description Um ou mais arquivos (RN-70).
              */
             arquivos: string[];
+        };
+        /** Configuracoes */
+        Configuracoes: {
+            /** Aviso Tarefas Dias */
+            aviso_tarefas_dias: number;
+            /** Antecedencia Padrao Lembretes */
+            antecedencia_padrao_lembretes: number;
+        };
+        /**
+         * ConfiguracoesAtualizar
+         * @description PATCH: só as chaves enviadas mudam.
+         */
+        ConfiguracoesAtualizar: {
+            /** Aviso Tarefas Dias */
+            aviso_tarefas_dias?: number | null;
+            /** Antecedencia Padrao Lembretes */
+            antecedencia_padrao_lembretes?: number | null;
         };
         /**
          * CorAnotacao
@@ -2361,6 +2399,68 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    obter_configuracoes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Configuracoes"];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    atualizar_configuracoes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfiguracoesAtualizar"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Configuracoes"];
+                };
             };
             /** @description Erro (04-api, Formato de erro) */
             default: {

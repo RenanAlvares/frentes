@@ -13,19 +13,11 @@ from app.domain.enums import StatusProjeto, TipoTarefa
 from app.domain.metas import mes_de
 from app.domain.recorrencia import Recorrencia
 from app.models.projeto import Projeto
-from app.repositories import configuracoes as repositorio_configuracoes
 from app.repositories import lembretes as repositorio_lembretes
 from app.repositories import projetos as repositorio_projetos
 from app.repositories import tarefas as repositorio_tarefas
 from app.schemas.avisos import Avisos
-from app.services.configuracoes import PADROES
-
-AVISO_TAREFAS_DIAS = "aviso_tarefas_dias"
-
-
-def _aviso_tarefas_dias(sessao: Session) -> int:
-    valor = repositorio_configuracoes.valor(sessao, AVISO_TAREFAS_DIAS)
-    return valor if isinstance(valor, int) else PADROES[AVISO_TAREFAS_DIAS]
+from app.services.configuracoes import obter_configuracoes
 
 
 def calcular(sessao: Session, hoje: date, projetos: list[Projeto]) -> list[dominio.Aviso]:
@@ -62,7 +54,8 @@ def calcular(sessao: Session, hoje: date, projetos: list[Projeto]) -> list[domin
         )
         for t in tarefas
     ]
-    return dominio.calcular_avisos(lembretes, candidatas, hoje, _aviso_tarefas_dias(sessao))
+    dias = obter_configuracoes(sessao).aviso_tarefas_dias
+    return dominio.calcular_avisos(lembretes, candidatas, hoje, dias)
 
 
 def contar_por_projeto(sessao: Session, hoje: date, projetos: list[Projeto]) -> Counter[uuid.UUID]:

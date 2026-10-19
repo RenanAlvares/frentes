@@ -125,7 +125,7 @@ Regras:
   API, purga na inicialização (passo 5 de 06 §9), tela.
   Aceite: todos os casos de 07 §3.6.
 
-- [ ] **5.2 Configurações** · ler: 02 RN-100; 04 Configurações; 01 §4.9
+- [x] **5.2 Configurações** · ler: 02 RN-100; 04 Configurações; 01 §4.9
   Aceite: teste de API; alterar `aviso_tarefas_dias` muda os avisos.
 
 - [ ] **5.3 Backup e restauração** · ler: 02 RN-110..112; 06 §11

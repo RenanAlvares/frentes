@@ -62,6 +62,7 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
     '/api/projetos/{projeto_id}/documentos': [],
     '/api/projetos/{projeto_id}/anotacoes': [],
     '/api/lixeira': [],
+    '/api/configuracoes': { aviso_tarefas_dias: 3, antecedencia_padrao_lembretes: 3 },
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {

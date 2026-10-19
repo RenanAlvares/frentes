@@ -20,6 +20,7 @@ from app.erros import registrar_handlers
 from app.routers import (
     anotacoes,
     avisos,
+    configuracoes,
     documentos,
     lembretes,
     lixeira,
@@ -28,7 +29,7 @@ from app.routers import (
     tarefas,
 )
 from app.schemas.erros import ErroResposta
-from app.services import configuracoes
+from app.services import configuracoes as servico_configuracoes
 from app.services import lixeira as servico_lixeira
 from app.spa import PASTA_STATIC, montar_assets
 from app.storage.local import LocalStorage
@@ -49,7 +50,7 @@ def inicializar(settings: Settings, session_local: sessionmaker[Session]) -> Non
     agora_local = clock.agora_utc().astimezone(ZoneInfo(settings.timezone))
     migrar(settings.database_url, settings.pasta_backups, agora_local)
     with session_local() as sessao:
-        configuracoes.criar_padroes_faltantes(sessao, clock)
+        servico_configuracoes.criar_padroes_faltantes(sessao, clock)
         # RN-94: o que está na lixeira há mais de FRENTES_LIXEIRA_DIAS sai de vez.
         limite = clock.agora_utc() - timedelta(days=settings.lixeira_dias)
         apagados = servico_lixeira.purgar_expirados(
@@ -75,7 +76,17 @@ def create_app(settings: Settings | None = None, pasta_static: Path = PASTA_STAT
     app.state.engine = engine
     app.state.session_local = session_local
     registrar_handlers(app)
-    rotas = (sistema, projetos, tarefas, lembretes, avisos, documentos, anotacoes, lixeira)
+    rotas = (
+        sistema,
+        projetos,
+        tarefas,
+        lembretes,
+        avisos,
+        documentos,
+        anotacoes,
+        lixeira,
+        configuracoes,
+    )
     for router in (modulo.router for modulo in rotas):
         app.include_router(router, prefix="/api", responses=RESPOSTAS_ERRO)
     montar_assets(app, pasta_static)

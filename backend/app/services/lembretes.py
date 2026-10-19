@@ -14,13 +14,10 @@ from app.erros import Conflito, NaoEncontrado
 from app.models.lembrete import Lembrete as LembreteModelo
 from app.models.lembrete import LembreteBaixa
 from app.models.projeto import Projeto as ProjetoModelo
-from app.repositories import configuracoes as repositorio_configuracoes
 from app.repositories import lembretes as repositorio
 from app.repositories import projetos as repositorio_projetos
 from app.schemas.lembretes import Lembrete, LembreteAtualizar, LembreteCriar, ListaLembretes
-from app.services.configuracoes import PADROES
-
-ANTECEDENCIA_PADRAO = "antecedencia_padrao_lembretes"
+from app.services.configuracoes import obter_configuracoes
 
 
 def _buscar_projeto(sessao: Session, projeto_id: uuid.UUID) -> ProjetoModelo:
@@ -62,8 +59,8 @@ def _resposta(lembrete: LembreteModelo, projeto: ProjetoModelo, hoje: date) -> L
 
 
 def _antecedencia_padrao(sessao: Session) -> int:
-    valor = repositorio_configuracoes.valor(sessao, ANTECEDENCIA_PADRAO)
-    return valor if isinstance(valor, int) else PADROES[ANTECEDENCIA_PADRAO]
+    # RN-40: sem antecedência informada, vale a configuração (RN-100).
+    return obter_configuracoes(sessao).antecedencia_padrao_lembretes
 
 
 def listar_lembretes(sessao: Session, clock: Clock, projeto_id: uuid.UUID) -> ListaLembretes:
