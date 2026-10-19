@@ -26,6 +26,10 @@ class Clock:
             return self._hoje_simulado
         return datetime.now(self._fuso).date()
 
+    def data_local(self, momento: datetime) -> date:
+        """A data de um carimbo UTC no fuso configurado (para contar dias contra `hoje`)."""
+        return momento.astimezone(self._fuso).date()
+
 
 class ClockFixo(Clock):
     """Relógio parado para testes: "agora" é meio-dia (no fuso) do dia definido."""

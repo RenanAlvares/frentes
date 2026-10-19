@@ -20,4 +20,5 @@ def obter_saude(
         versao=__version__,
         hoje=clock.hoje(),
         hoje_simulado=settings.hoje_simulado is not None,
+        lixeira_dias=settings.lixeira_dias,
     )

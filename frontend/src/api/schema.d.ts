@@ -411,6 +411,30 @@ export interface paths {
         patch: operations["atualizar_anotacao"];
         trace?: never;
     };
+    "/api/lixeira": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar Lixeira
+         * @description RN-91: `excluido_em` decrescente.
+         */
+        get: operations["listar_lixeira"];
+        put?: never;
+        post?: never;
+        /**
+         * Esvaziar Lixeira
+         * @description RN-93: apaga tudo da lixeira definitivamente, com os arquivos.
+         */
+        delete: operations["esvaziar_lixeira"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/lixeira/{tipo}/{item_id}/restaurar": {
         parameters: {
             query?: never;
@@ -423,6 +447,26 @@ export interface paths {
         /** Restaurar Da Lixeira */
         post: operations["restaurar_da_lixeira"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lixeira/{tipo}/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Excluir Da Lixeira
+         * @description RN-93: "Excluir agora" (definitivo).
+         */
+        delete: operations["excluir_da_lixeira"];
         options?: never;
         head?: never;
         patch?: never;
@@ -609,6 +653,31 @@ export interface components {
          * @enum {string}
          */
         Frequencia: "diaria" | "semanal" | "mensal" | "anual";
+        /** ItemLixeira */
+        ItemLixeira: {
+            tipo: components["schemas"]["TipoItemLixeira"];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Titulo */
+            titulo: string;
+            /** Projeto Nome */
+            projeto_nome: string | null;
+            /**
+             * Excluido Em
+             * Format: date-time
+             */
+            excluido_em: string;
+            /**
+             * Expira Em
+             * Format: date-time
+             */
+            expira_em: string;
+            /** Dias Para Expirar */
+            dias_para_expirar: number;
+        };
         /** Lembrete */
         Lembrete: {
             /**
@@ -882,6 +951,8 @@ export interface components {
             hoje: string;
             /** Hoje Simulado */
             hoje_simulado: boolean;
+            /** Lixeira Dias */
+            lixeira_dias: number;
         };
         /**
          * StatusProjeto
@@ -2186,7 +2257,93 @@ export interface operations {
             };
         };
     };
+    listar_lixeira: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemLixeira"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    esvaziar_lixeira: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
     restaurar_da_lixeira: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tipo: components["schemas"]["TipoItemLixeira"];
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    excluir_da_lixeira: {
         parameters: {
             query?: never;
             header?: never;

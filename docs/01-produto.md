@@ -145,7 +145,7 @@ Lista de projetos concluídos (nome, cor, data de conclusão = `atualizado_em`).
 ### 4.8 Lixeira
 
 - Lista: tipo, nome, projeto de origem, excluído em, "apagado definitivamente em X dias".
-- Ações por item: **Restaurar**, **Excluir agora**. Botão geral **Esvaziar lixeira** (com confirmação).
+- Ações por item: **Restaurar**, **Excluir agora** (com confirmação). Botão geral **Esvaziar lixeira** (com confirmação).
 - Aviso no topo: "Itens ficam aqui por 30 dias."
 
 ### 4.9 Configurações

@@ -50,7 +50,7 @@ Anotacao       { id, projeto_id, titulo, texto, cor, fixada, criado_em, atualiza
 Aviso          { tipo: "lembrete"|"tarefa", id, titulo, projeto: { id, nome, cor }, vencimento, dias_restantes,
                  ocorrencias_atrasadas: int, meta: { feitas, meta }|null }
 ItemLixeira    { tipo: "projeto"|"tarefa"|"lembrete"|"documento"|"anotacao", id, titulo, projeto_nome: str|null,
-                 excluido_em, expira_em }
+                 excluido_em, expira_em, dias_para_expirar: int }   (dias de `hoje` até `expira_em`; 0 = na próxima inicialização)
 Configuracoes  { aviso_tarefas_dias: int, antecedencia_padrao_lembretes: int }
 ```
 
@@ -60,7 +60,7 @@ Configuracoes  { aviso_tarefas_dias: int, antecedencia_padrao_lembretes: int }
 
 | Método e rota | Descrição |
 | --- | --- |
-| `GET /api/saude` | `{ status: "ok", versao, hoje, hoje_simulado: bool }` — `hoje` segundo RN-01 (o front usa para detectar a virada do dia, RN-53) |
+| `GET /api/saude` | `{ status: "ok", versao, hoje, hoje_simulado: bool, lixeira_dias: int }` — `hoje` segundo RN-01 (o front usa para detectar a virada do dia, RN-53) |
 
 ### Projetos
 

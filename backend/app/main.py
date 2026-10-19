@@ -1,7 +1,9 @@
 """Criação do app FastAPI (06 §3)."""
 
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -27,7 +29,11 @@ from app.routers import (
 )
 from app.schemas.erros import ErroResposta
 from app.services import configuracoes
+from app.services import lixeira as servico_lixeira
 from app.spa import PASTA_STATIC, montar_assets
+from app.storage.local import LocalStorage
+
+logger = logging.getLogger(__name__)
 
 # Todo erro sai no formato de 04-api; "default" também tira do contrato o 422 padrão do FastAPI.
 RESPOSTAS_ERRO: dict[int | str, dict[str, Any]] = {
@@ -36,7 +42,7 @@ RESPOSTAS_ERRO: dict[int | str, dict[str, Any]] = {
 
 
 def inicializar(settings: Settings, session_local: sessionmaker[Session]) -> None:
-    """Passos 1 a 4 de 06 §9. Falha no backup ou na migration impede o app de subir."""
+    """Passos 1 a 5 de 06 §9. Falha no backup ou na migration impede o app de subir."""
     clock = Clock(settings.timezone, settings.hoje_simulado)
     for pasta in (settings.data_dir, settings.pasta_anexos, settings.pasta_backups):
         pasta.mkdir(parents=True, exist_ok=True)
@@ -44,6 +50,13 @@ def inicializar(settings: Settings, session_local: sessionmaker[Session]) -> Non
     migrar(settings.database_url, settings.pasta_backups, agora_local)
     with session_local() as sessao:
         configuracoes.criar_padroes_faltantes(sessao, clock)
+        # RN-94: o que está na lixeira há mais de FRENTES_LIXEIRA_DIAS sai de vez.
+        limite = clock.agora_utc() - timedelta(days=settings.lixeira_dias)
+        apagados = servico_lixeira.purgar_expirados(
+            sessao, LocalStorage(settings.pasta_anexos), limite
+        )
+    if apagados:
+        logger.info("Lixeira: %d itens expirados apagados definitivamente", apagados)
 
 
 def create_app(settings: Settings | None = None, pasta_static: Path = PASTA_STATIC) -> FastAPI:

@@ -61,6 +61,7 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
     '/api/tarefas/hoje': { atrasadas: [], hoje: [] },
     '/api/projetos/{projeto_id}/documentos': [],
     '/api/projetos/{projeto_id}/anotacoes': [],
+    '/api/lixeira': [],
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {
@@ -85,7 +86,14 @@ export function simularSaude(dados: Partial<Saude> = {}) {
 }
 
 export function saude(dados: Partial<Saude> = {}): Saude {
-  return { status: 'ok', versao: '1.2.3', hoje: '2026-10-14', hoje_simulado: false, ...dados }
+  return {
+    status: 'ok',
+    versao: '1.2.3',
+    hoje: '2026-10-14',
+    hoje_simulado: false,
+    lixeira_dias: 30,
+    ...dados,
+  }
 }
 
 export function projeto(dados: Partial<Projeto> = {}): Projeto {
@@ -213,6 +221,21 @@ export function anotacao(dados: Partial<Anotacao> = {}): Anotacao {
     fixada: false,
     criado_em: '2026-10-14T15:00:00Z',
     atualizado_em: '2026-10-14T15:00:00Z',
+    ...dados,
+  }
+}
+
+type ItemLixeira = components['schemas']['ItemLixeira']
+
+export function itemLixeira(dados: Partial<ItemLixeira> = {}): ItemLixeira {
+  return {
+    tipo: 'tarefa',
+    id: 'x1',
+    titulo: 'Comprar tinta',
+    projeto_nome: 'Reforma',
+    excluido_em: '2026-10-14T15:00:00Z',
+    expira_em: '2026-11-13T15:00:00Z',
+    dias_para_expirar: 30,
     ...dados,
   }
 }

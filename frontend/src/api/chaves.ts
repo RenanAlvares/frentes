@@ -23,4 +23,5 @@ export const chaves = {
   anotacoes: {
     lista: (projetoId: string) => ['anotacoes', 'lista', projetoId] as const,
   },
+  lixeira: () => ['lixeira'] as const,
 }

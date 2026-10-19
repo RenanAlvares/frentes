@@ -121,7 +121,7 @@ Regras:
 
 ## Fase 5 — Proteções
 
-- [ ] **5.1 Lixeira** · ler: 02 RN-90..94; 04 Lixeira; 01 §4.8
+- [x] **5.1 Lixeira** · ler: 02 RN-90..94; 04 Lixeira; 01 §4.8
   API, purga na inicialização (passo 5 de 06 §9), tela.
   Aceite: todos os casos de 07 §3.6.
 

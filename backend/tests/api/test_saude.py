@@ -17,6 +17,7 @@ def test_saude_usa_relogio_fixo(client: TestClient) -> None:
         "versao": __version__,
         "hoje": "2026-10-14",
         "hoje_simulado": False,
+        "lixeira_dias": 30,
     }
 
 
