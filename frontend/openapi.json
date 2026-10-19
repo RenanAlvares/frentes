@@ -425,6 +425,38 @@
         }
       }
     },
+    "/api/tarefas/hoje": {
+      "get": {
+        "tags": [
+          "tarefas"
+        ],
+        "summary": "Listar Tarefas Hoje",
+        "description": "RN-60..62.",
+        "operationId": "listar_tarefas_hoje",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TarefasHoje"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Erro (04-api, Formato de erro)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErroResposta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tarefas/{tarefa_id}": {
       "get": {
         "tags": [
@@ -1102,7 +1134,7 @@
             "title": "Titulo"
           },
           "projeto": {
-            "$ref": "#/components/schemas/ProjetoDoAviso"
+            "$ref": "#/components/schemas/ProjetoRef"
           },
           "vencimento": {
             "type": "string",
@@ -1773,7 +1805,7 @@
         ],
         "title": "ProjetoCriar"
       },
-      "ProjetoDoAviso": {
+      "ProjetoRef": {
         "properties": {
           "id": {
             "type": "string",
@@ -1794,7 +1826,8 @@
           "nome",
           "cor"
         ],
-        "title": "ProjetoDoAviso"
+        "title": "ProjetoRef",
+        "description": "Projeto resumido dentro de outros itens (avisos, Tarefas de hoje)."
       },
       "ProjetoResumo": {
         "properties": {
@@ -2473,6 +2506,147 @@
         ],
         "title": "TarefaDetalhe"
       },
+      "TarefaHoje": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "projeto_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Projeto Id"
+          },
+          "titulo": {
+            "type": "string",
+            "title": "Titulo"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StatusTarefa"
+          },
+          "prioridade": {
+            "$ref": "#/components/schemas/Prioridade"
+          },
+          "tipo": {
+            "$ref": "#/components/schemas/TipoTarefa"
+          },
+          "prazo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prazo"
+          },
+          "recorrencia": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Recorrencia"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recorrencia_descricao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorrencia Descricao"
+          },
+          "meta_mensal": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meta Mensal"
+          },
+          "progresso_mes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progresso Mes"
+          },
+          "posicao": {
+            "type": "integer",
+            "title": "Posicao"
+          },
+          "concluida_em": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concluida Em"
+          },
+          "atrasada": {
+            "type": "boolean",
+            "title": "Atrasada"
+          },
+          "criado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criado Em"
+          },
+          "atualizado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Atualizado Em"
+          },
+          "projeto": {
+            "$ref": "#/components/schemas/ProjetoRef"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "projeto_id",
+          "titulo",
+          "descricao",
+          "status",
+          "prioridade",
+          "tipo",
+          "prazo",
+          "recorrencia",
+          "recorrencia_descricao",
+          "meta_mensal",
+          "progresso_mes",
+          "posicao",
+          "concluida_em",
+          "atrasada",
+          "criado_em",
+          "atualizado_em",
+          "projeto"
+        ],
+        "title": "TarefaHoje"
+      },
       "TarefaMover": {
         "properties": {
           "status": {
@@ -2491,6 +2665,31 @@
         ],
         "title": "TarefaMover",
         "description": "RN-25: coluna de destino e posição nela (limitada ao tamanho da coluna)."
+      },
+      "TarefasHoje": {
+        "properties": {
+          "atrasadas": {
+            "items": {
+              "$ref": "#/components/schemas/TarefaHoje"
+            },
+            "type": "array",
+            "title": "Atrasadas"
+          },
+          "hoje": {
+            "items": {
+              "$ref": "#/components/schemas/TarefaHoje"
+            },
+            "type": "array",
+            "title": "Hoje"
+          }
+        },
+        "type": "object",
+        "required": [
+          "atrasadas",
+          "hoje"
+        ],
+        "title": "TarefasHoje",
+        "description": "RN-60..62: as duas listas da tela Tarefas de hoje, já ordenadas."
       },
       "TipoItemLixeira": {
         "type": "string",

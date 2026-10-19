@@ -13,6 +13,7 @@ from app.schemas.tarefas import (
     TarefaCriar,
     TarefaDetalhe,
     TarefaMover,
+    TarefasHoje,
 )
 from app.services import tarefas as servico
 
@@ -48,6 +49,13 @@ def criar_tarefa(
     projeto_id: uuid.UUID, dados: TarefaCriar, sessao: SessaoDep, clock: ClockDep
 ) -> Tarefa:
     return servico.criar_tarefa(sessao, clock, projeto_id, dados)
+
+
+# Antes de `/tarefas/{tarefa_id}`, para "hoje" não ser lido como id.
+@router.get("/tarefas/hoje", operation_id="listar_tarefas_hoje", response_model=TarefasHoje)
+def listar_tarefas_hoje(sessao: SessaoDep, clock: ClockDep) -> TarefasHoje:
+    """RN-60..62."""
+    return servico.listar_hoje(sessao, clock)
 
 
 @router.get("/tarefas/{tarefa_id}", operation_id="obter_tarefa", response_model=TarefaDetalhe)

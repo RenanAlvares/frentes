@@ -100,7 +100,7 @@ Regras:
 - [x] **3.4 Painel de avisos e sino** · ler: 01 §3, §4.1; 05 §8 (PainelAvisos)
   Aceite: testes de componente de 07 §4; teste manual da reabertura ao mudar o dia usando `FRENTES_HOJE_SIMULADO` (06 §6).
 
-- [ ] **3.5 Tarefas de hoje** · ler: 01 §4.3; 02 RN-60..63; 04 `GET /tarefas/hoje`
+- [x] **3.5 Tarefas de hoje** · ler: 01 §4.3; 02 RN-60..63; 04 `GET /tarefas/hoje`
   API + tela + contador da aba.
   Aceite: testes de 07 §3.5 (RN-60..62) e de componente da linha de atrasadas.
 

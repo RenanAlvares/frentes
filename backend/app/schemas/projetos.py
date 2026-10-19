@@ -58,6 +58,14 @@ class ProjetosOrdem(BaseModel):
     ids: list[uuid.UUID]
 
 
+class ProjetoRef(BaseModel):
+    """Projeto resumido dentro de outros itens (avisos, Tarefas de hoje)."""
+
+    id: uuid.UUID
+    nome: str
+    cor: CorProjeto
+
+
 class Progresso(BaseModel):
     concluidas: int
     total: int

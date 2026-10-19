@@ -6,13 +6,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from app.domain.enums import CorProjeto
-
-
-class ProjetoDoAviso(BaseModel):
-    id: uuid.UUID
-    nome: str
-    cor: CorProjeto
+from app.schemas.projetos import ProjetoRef
 
 
 class MetaDoAviso(BaseModel):
@@ -24,7 +18,7 @@ class Aviso(BaseModel):
     tipo: Literal["lembrete", "tarefa"]
     id: uuid.UUID
     titulo: str
-    projeto: ProjetoDoAviso
+    projeto: ProjetoRef
     vencimento: date
     dias_restantes: int
     ocorrencias_atrasadas: int

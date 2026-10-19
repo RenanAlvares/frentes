@@ -11,6 +11,7 @@ export const chaves = {
     quadro: (projetoId: string) => ['tarefas', 'quadro', projetoId] as const,
     concluidas: (projetoId: string) => ['tarefas', 'concluidas', projetoId] as const,
     detalhe: (id: string) => ['tarefas', 'detalhe', id] as const,
+    hoje: () => ['tarefas', 'hoje'] as const,
   },
   lembretes: {
     lista: (projetoId: string) => ['lembretes', 'lista', projetoId] as const,

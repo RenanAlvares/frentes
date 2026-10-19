@@ -19,6 +19,14 @@ export function useTarefa(id: string | undefined) {
   })
 }
 
+/** RN-60..63: listas da tela Tarefas de hoje (e o contador da aba). */
+export function useTarefasHoje() {
+  return useQuery({
+    queryKey: chaves.tarefas.hoje(),
+    queryFn: () => exigir(client.GET('/api/tarefas/hoje')),
+  })
+}
+
 export function useQuadro(projetoId: string) {
   return useQuery({
     queryKey: chaves.tarefas.quadro(projetoId),
@@ -45,14 +53,15 @@ export function useConcluidas(projetoId: string, ativo: boolean) {
   })
 }
 
-// 05 §4: mutação de tarefa invalida o quadro, as concluídas, os avisos e os projetos (progresso).
-// `tarefas.hoje()` entra junto com a tela de hoje (3.5).
+// 05 §4: mutação de tarefa invalida o quadro, as concluídas, Tarefas de hoje, os avisos e os
+// projetos (progresso).
 function useInvalidarTarefas(projetoId: string) {
   const queryClient = useQueryClient()
   return (tarefaId?: string) =>
     Promise.all([
       queryClient.invalidateQueries({ queryKey: chaves.tarefas.quadro(projetoId) }),
       queryClient.invalidateQueries({ queryKey: chaves.tarefas.concluidas(projetoId) }),
+      queryClient.invalidateQueries({ queryKey: chaves.tarefas.hoje() }),
       queryClient.invalidateQueries({ queryKey: chaves.avisos() }),
       queryClient.invalidateQueries({ queryKey: chaves.projetos.todos() }),
       tarefaId && queryClient.invalidateQueries({ queryKey: chaves.tarefas.detalhe(tarefaId) }),

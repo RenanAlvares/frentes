@@ -6,7 +6,7 @@ from datetime import date, datetime
 from sqlalchemy.orm import Session
 
 from app.clock import Clock
-from app.domain.enums import StatusProjeto, StatusTarefa, TipoTarefa
+from app.domain.enums import Prioridade, StatusProjeto, StatusTarefa, TipoTarefa
 from app.domain.metas import SituacaoMeta, mes_de, situacao_meta
 from app.domain.recorrencia import Recorrencia, avancar, descrever
 from app.domain.textos import normalizar_busca
@@ -22,7 +22,9 @@ from app.schemas.tarefas import (
     TarefaAtualizar,
     TarefaCriar,
     TarefaDetalhe,
+    TarefaHoje,
     TarefaMover,
+    TarefasHoje,
 )
 
 LIMITE_CONCLUIDAS = 20
@@ -418,3 +420,46 @@ def desfazer_conclusao(sessao: Session, clock: Clock, tarefa_id: uuid.UUID) -> T
         _mover(sessao, tarefa, StatusTarefa.PENDENTE, 0, agora, hoje)
     sessao.commit()
     return _resposta(sessao, tarefa, _buscar_projeto(sessao, tarefa.projeto_id), hoje)
+
+
+_ORDEM_PRIORIDADE = {Prioridade.ALTA: 0, Prioridade.MEDIA: 1, Prioridade.BAIXA: 2}
+
+
+def _ordem_hoje(tarefa: TarefaHoje) -> tuple[int, str, str]:
+    # RN-62: prioridade (alta, média, baixa), nome do projeto e título, sem diferenciar maiúsculas.
+    return (
+        _ORDEM_PRIORIDADE[tarefa.prioridade],
+        tarefa.projeto.nome.casefold(),
+        tarefa.titulo.casefold(),
+    )
+
+
+def listar_hoje(sessao: Session, clock: Clock) -> TarefasHoje:
+    """RN-60/61: só projetos ativos; atrasadas são as de RN-27; metas no último dia do mês."""
+    hoje = clock.hoje()
+    projetos = {p.id: p for p in repositorio_projetos.listar(sessao, arquivados=False)}
+    tarefas = repositorio.nao_concluidas_dos_projetos(sessao, list(projetos))
+    situacoes = _situacoes(sessao, tarefas, hoje)
+    ultimo_dia = hoje == mes_de(hoje)[1]
+
+    def resposta(tarefa: TarefaModelo) -> TarefaHoje:
+        projeto = projetos[tarefa.projeto_id]
+        campos = _campos(tarefa, projeto, hoje, situacoes.get(tarefa.id))
+        ref = {"id": projeto.id, "nome": projeto.nome, "cor": projeto.cor}
+        return TarefaHoje.model_validate({**campos, "projeto": ref})
+
+    atrasadas: list[TarefaHoje] = []
+    de_hoje: list[TarefaHoje] = []
+    for tarefa in tarefas:
+        if tarefa.tipo == TipoTarefa.META_MENSAL:
+            if ultimo_dia and not _meta_atingida(tarefa, situacoes):
+                de_hoje.append(resposta(tarefa))
+        elif tarefa.prazo == hoje:
+            de_hoje.append(resposta(tarefa))
+        elif tarefa.prazo is not None and tarefa.prazo < hoje:
+            atrasadas.append(resposta(tarefa))
+    return TarefasHoje(
+        # RN-62: nas atrasadas, o prazo mais antigo vem primeiro.
+        atrasadas=sorted(atrasadas, key=lambda t: (t.prazo or hoje, *_ordem_hoje(t))),
+        hoje=sorted(de_hoje, key=_ordem_hoje),
+    )

@@ -110,6 +110,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tarefas/hoje": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar Tarefas Hoje
+         * @description RN-60..62.
+         */
+        get: operations["listar_tarefas_hoje"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tarefas/{tarefa_id}": {
         parameters: {
             query?: never;
@@ -325,7 +345,7 @@ export interface components {
             id: string;
             /** Titulo */
             titulo: string;
-            projeto: components["schemas"]["ProjetoDoAviso"];
+            projeto: components["schemas"]["ProjetoRef"];
             /**
              * Vencimento
              * Format: date
@@ -562,8 +582,11 @@ export interface components {
              */
             acompanhar_progresso?: boolean;
         };
-        /** ProjetoDoAviso */
-        ProjetoDoAviso: {
+        /**
+         * ProjetoRef
+         * @description Projeto resumido dentro de outros itens (avisos, Tarefas de hoje).
+         */
+        ProjetoRef: {
             /**
              * Id
              * Format: uuid
@@ -792,6 +815,52 @@ export interface components {
             /** Execucoes */
             execucoes: components["schemas"]["Execucao"][];
         };
+        /** TarefaHoje */
+        TarefaHoje: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Projeto Id
+             * Format: uuid
+             */
+            projeto_id: string;
+            /** Titulo */
+            titulo: string;
+            /** Descricao */
+            descricao: string;
+            status: components["schemas"]["StatusTarefa"];
+            prioridade: components["schemas"]["Prioridade"];
+            tipo: components["schemas"]["TipoTarefa"];
+            /** Prazo */
+            prazo: string | null;
+            recorrencia: components["schemas"]["Recorrencia"] | null;
+            /** Recorrencia Descricao */
+            recorrencia_descricao: string | null;
+            /** Meta Mensal */
+            meta_mensal: number | null;
+            /** Progresso Mes */
+            progresso_mes: number | null;
+            /** Posicao */
+            posicao: number;
+            /** Concluida Em */
+            concluida_em: string | null;
+            /** Atrasada */
+            atrasada: boolean;
+            /**
+             * Criado Em
+             * Format: date-time
+             */
+            criado_em: string;
+            /**
+             * Atualizado Em
+             * Format: date-time
+             */
+            atualizado_em: string;
+            projeto: components["schemas"]["ProjetoRef"];
+        };
         /**
          * TarefaMover
          * @description RN-25: coluna de destino e posição nela (limitada ao tamanho da coluna).
@@ -800,6 +869,16 @@ export interface components {
             status: components["schemas"]["StatusTarefa"];
             /** Indice */
             indice: number;
+        };
+        /**
+         * TarefasHoje
+         * @description RN-60..62: as duas listas da tela Tarefas de hoje, já ordenadas.
+         */
+        TarefasHoje: {
+            /** Atrasadas */
+            atrasadas: components["schemas"]["TarefaHoje"][];
+            /** Hoje */
+            hoje: components["schemas"]["TarefaHoje"][];
         };
         /**
          * TipoItemLixeira
@@ -1123,6 +1202,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Tarefa"][];
+                };
+            };
+            /** @description Erro (04-api, Formato de erro) */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErroResposta"];
+                };
+            };
+        };
+    };
+    listar_tarefas_hoje: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TarefasHoje"];
                 };
             };
             /** @description Erro (04-api, Formato de erro) */

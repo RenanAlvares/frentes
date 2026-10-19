@@ -58,6 +58,7 @@ export function simularGet(respostas: Record<string, unknown> = {}) {
     '/api/tarefas/{tarefa_id}': { ...tarefa(), execucoes: [] },
     '/api/projetos/{projeto_id}/lembretes': { ativos: [], concluidos: [] },
     '/api/avisos': { total: 0, itens: [] },
+    '/api/tarefas/hoje': { atrasadas: [], hoje: [] },
     ...respostas,
   }
   return vi.spyOn(client, 'GET').mockImplementation((async (caminho: string) => {
@@ -170,4 +171,14 @@ export function aviso(dados: Partial<Aviso> = {}): Aviso {
 
 export function avisos(...itens: Aviso[]) {
   return { total: itens.length, itens }
+}
+
+type TarefaHoje = components['schemas']['TarefaHoje']
+
+export function tarefaHoje(dados: Partial<TarefaHoje> = {}): TarefaHoje {
+  return {
+    ...tarefa({ prazo: '2026-10-14' }),
+    projeto: { id: '11111111-1111-4111-8111-111111111111', nome: 'Reforma', cor: 'azul' },
+    ...dados,
+  }
 }

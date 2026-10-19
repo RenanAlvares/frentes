@@ -2,14 +2,13 @@ import { Bell, CircleCheck } from 'lucide-react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { mensagemDoErro } from '@/api/erros'
+import { ChipProjeto } from '@/components/comum/ChipProjeto'
 import { Button } from '@/components/ui/button'
 import type { Aviso } from '@/features/avisos/hooks/useAvisos'
 import { useDarBaixa, useDesfazerBaixa } from '@/features/lembretes/hooks/useLembretes'
 import { useConcluirTarefa, useDesfazerConclusao } from '@/features/tarefas/hooks/useTarefas'
-import { CORES_PROJETO } from '@/lib/cores'
 import { textoRelativo } from '@/lib/datas'
 import { avisarComDesfazer } from '@/lib/desfazer'
-import { cn } from '@/lib/utils'
 
 type Props = {
   aviso: Aviso
@@ -41,15 +40,6 @@ export function ItemAviso({ aviso, onTratado }: Props) {
         )}
       </div>
     </li>
-  )
-}
-
-function ChipProjeto({ projeto }: { projeto: Aviso['projeto'] }) {
-  return (
-    <span className="inline-flex max-w-48 items-center gap-1 rounded-full border px-2 py-0.5">
-      <span className={cn('size-2 shrink-0 rounded-full', CORES_PROJETO[projeto.cor].fundo)} />
-      <span className="truncate">{projeto.nome}</span>
-    </span>
   )
 }
 

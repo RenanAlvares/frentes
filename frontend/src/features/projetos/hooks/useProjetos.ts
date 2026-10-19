@@ -25,13 +25,14 @@ export function useProjeto(id: string | undefined) {
   })
 }
 
-// 05 §4: qualquer mutação de projeto invalida `projetos.*` e `avisos()` (hoje entra na 3.5).
+// 05 §4: qualquer mutação de projeto invalida `projetos.*`, `avisos()` e `tarefas.hoje()`.
 function useInvalidarProjetos() {
   const queryClient = useQueryClient()
   return () =>
     Promise.all([
       queryClient.invalidateQueries({ queryKey: chaves.projetos.todos() }),
       queryClient.invalidateQueries({ queryKey: chaves.avisos() }),
+      queryClient.invalidateQueries({ queryKey: chaves.tarefas.hoje() }),
     ])
 }
 

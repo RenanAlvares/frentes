@@ -8,6 +8,7 @@ from pydantic import AfterValidator, BaseModel, Field, field_validator
 
 from app.domain.enums import Prioridade, StatusTarefa, TipoTarefa
 from app.domain.recorrencia import Recorrencia
+from app.schemas.projetos import ProjetoRef
 
 
 def _titulo_preenchido(valor: str) -> str:
@@ -96,3 +97,14 @@ class Quadro(BaseModel):
     em_andamento: list[Tarefa]
     concluida: list[Tarefa]
     total_concluidas: int
+
+
+class TarefaHoje(Tarefa):
+    projeto: ProjetoRef
+
+
+class TarefasHoje(BaseModel):
+    """RN-60..62: as duas listas da tela Tarefas de hoje, já ordenadas."""
+
+    atrasadas: list[TarefaHoje]
+    hoje: list[TarefaHoje]
