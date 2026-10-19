@@ -149,7 +149,7 @@ Regras:
 - [x] **7.1 Testes ponta a ponta** · ler: 07 §5
   Playwright com os 6 fluxos; script `npm --prefix frontend run e2e`.
 
-- [ ] **7.2 README de portfólio**
+- [x] **7.2 README de portfólio**
   GIF de 20–30 s, funcionalidades, decisões técnicas (resumo de 09), arquitetura, como rodar, testes.
 
 - [ ] **7.3 Executável (opcional)** · ler: 06 §11
