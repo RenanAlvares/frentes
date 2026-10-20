@@ -51,7 +51,7 @@ export function CabecalhoProjeto({ projeto }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-3 overflow-hidden rounded-xl border bg-white">
+    <div className="flex flex-col gap-3 overflow-hidden rounded-xl border bg-white shadow-sm">
       <div className={cn('h-1.5', CORES_PROJETO[projeto.cor].fundo)} />
       <div className="flex flex-col gap-3 px-4 pb-4">
         {/* Voltar e o menu ficam nas pontas; só o meio (nome, status, datas) quebra linha (05 §7). */}

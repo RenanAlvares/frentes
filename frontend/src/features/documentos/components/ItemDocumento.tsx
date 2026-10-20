@@ -42,7 +42,7 @@ export function ItemDocumento({ documento }: Props) {
   }
 
   return (
-    <li className="flex items-center gap-2 rounded-lg border bg-white p-2 text-sm">
+    <li className="flex items-center gap-2 rounded-lg border bg-white p-2 text-sm shadow-xs transition-colors hover:border-foreground/25">
       {createElement(iconeDoDocumento(documento.extensao, documento.mime), {
         className: 'size-5 shrink-0 text-area-documentos',
         'aria-hidden': true,

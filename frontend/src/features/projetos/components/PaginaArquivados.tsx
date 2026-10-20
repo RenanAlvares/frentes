@@ -35,7 +35,7 @@ export function PaginaArquivados() {
       ) : projetos.length === 0 ? (
         <EstadoVazio icone={Archive} titulo="Nenhum projeto arquivado" />
       ) : (
-        <ul className="divide-y rounded-xl border bg-white">
+        <ul className="divide-y rounded-xl border bg-white shadow-sm">
           {projetos.map((projeto) => (
             <li key={projeto.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <span

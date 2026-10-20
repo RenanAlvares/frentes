@@ -20,7 +20,7 @@ type Props = {
 export function ItemAviso({ aviso, onTratado }: Props) {
   const Icone = aviso.tipo === 'lembrete' ? Bell : CircleCheck
   return (
-    <li className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border bg-white p-3 text-sm">
+    <li className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border bg-white p-3 text-sm shadow-xs transition-colors hover:border-foreground/25">
       <Icone
         className="size-4 shrink-0 text-muted-foreground"
         aria-label={aviso.tipo === 'lembrete' ? 'Lembrete' : 'Tarefa'}

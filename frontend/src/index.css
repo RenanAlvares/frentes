@@ -75,8 +75,9 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  /* Bordas um tom mais escuras que o padrão do shadcn (0.922): separação visível entre áreas. */
+  --border: oklch(0.88 0 0);
+  --input: oklch(0.88 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -137,5 +138,25 @@
   }
   html {
     @apply font-sans;
+  }
+  /* O Tailwind v4 deixa botões com o cursor padrão: tudo que é clicável mostra a mão. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  [role='menuitem'],
+  [role='menuitemradio'],
+  [role='menuitemcheckbox'],
+  [role='option'],
+  [role='tab'],
+  [role='checkbox'],
+  [role='switch'],
+  [role='radio'],
+  summary,
+  select,
+  input[type='file'] {
+    cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
   }
 }

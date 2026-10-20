@@ -118,7 +118,7 @@ function ZonaEnvio({
 function LinhaEnvio({ envio, onDispensar }: { envio: Envio; onDispensar: () => void }) {
   const porcentagem = Math.round(envio.progresso * 100)
   return (
-    <li className="grid gap-1 rounded-lg border bg-white p-2 text-sm">
+    <li className="grid gap-1 rounded-lg border bg-white p-2 text-sm shadow-xs">
       <div className="flex items-center gap-2">
         <span className="min-w-0 flex-1 truncate">{envio.nome}</span>
         {envio.erro ? (

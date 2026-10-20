@@ -12,7 +12,7 @@ export function Layout() {
   useAtalho('Escape', avisos.fechar, painelVisivel)
 
   return (
-    <div className="min-h-svh bg-neutral-50">
+    <div className="min-h-svh bg-neutral-100">
       <Cabecalho totalAvisos={avisos.itens.length} onAbrirAvisos={avisos.abrir} />
       <main className="mx-auto max-w-screen-2xl px-4 py-6">
         {!avisos.fechado && (

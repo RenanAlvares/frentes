@@ -54,7 +54,7 @@ export function CardTarefa({ tarefa, hoje, onAbrir }: Props & { onAbrir: () => v
 export function ConteudoCard({ tarefa, hoje, acoes }: Props & { acoes?: ReactNode }) {
   const meta = tarefa.tipo === 'meta_mensal'
   return (
-    <article className="flex flex-col gap-1.5 rounded-lg border bg-white p-3 text-sm shadow-xs">
+    <article className="flex flex-col gap-1.5 rounded-lg border bg-white p-3 text-sm shadow-sm transition-colors hover:border-foreground/25">
       <div className="flex items-start gap-1.5">
         <IconePrioridade prioridade={tarefa.prioridade} />
         <p className="flex-1 leading-snug break-words">{tarefa.titulo}</p>

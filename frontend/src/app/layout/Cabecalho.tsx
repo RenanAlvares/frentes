@@ -14,7 +14,7 @@ export function Cabecalho({ totalAvisos, onAbrirAvisos }: Props) {
   const { data: saude } = useSaude()
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-white">
+    <header className="sticky top-0 z-40 border-b bg-white shadow-sm">
       {saude?.hoje_simulado && (
         // 06 §6: FRENTES_HOJE_SIMULADO ligado (só para teste manual).
         <p role="status" className="bg-amber-100 py-1 text-center text-sm text-amber-900">

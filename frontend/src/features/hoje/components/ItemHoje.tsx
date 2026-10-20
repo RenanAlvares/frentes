@@ -33,7 +33,7 @@ export function ItemHoje({ tarefa, onAbrir }: Props) {
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-lg border bg-white p-3 text-sm">
+    <li className="flex items-center gap-3 rounded-lg border bg-white p-3 text-sm shadow-xs transition-colors hover:border-foreground/25">
       <Checkbox
         checked={false}
         disabled={concluir.isPending}

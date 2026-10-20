@@ -90,7 +90,11 @@ function FormularioConfiguracoes({ inicial }: { inicial: Configuracoes }) {
   })
 
   return (
-    <form onSubmit={enviar} noValidate className="grid gap-4 rounded-xl border bg-white p-4">
+    <form
+      onSubmit={enviar}
+      noValidate
+      className="grid gap-4 rounded-xl border bg-white p-4 shadow-sm"
+    >
       {CAMPOS.map(({ campo, rotulo }) => {
         const erro = errors[campo]?.message
         return (
@@ -124,7 +128,7 @@ function SecaoBackup() {
   return (
     <section
       aria-labelledby="titulo-backup"
-      className="grid gap-3 rounded-xl border bg-white p-4 text-sm"
+      className="grid gap-3 rounded-xl border bg-white p-4 text-sm shadow-sm"
     >
       <h2 id="titulo-backup" className="font-semibold">
         Backup

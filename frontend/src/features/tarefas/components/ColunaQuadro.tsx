@@ -21,7 +21,7 @@ export function ColunaQuadro({ status, tarefas, total, hoje, onAbrir, rodape }: 
   return (
     <section
       aria-label={ROTULO_COLUNA[status]}
-      className="flex w-64 shrink-0 flex-col gap-2 rounded-lg bg-muted/60 p-2 md:w-auto md:min-w-0 md:flex-1 md:shrink"
+      className="flex w-64 shrink-0 flex-col gap-2 rounded-lg border bg-neutral-100 p-2 md:w-auto md:min-w-0 md:flex-1 md:shrink"
     >
       <h3 className="flex items-center justify-between px-1 text-sm font-medium">
         {ROTULO_COLUNA[status]}

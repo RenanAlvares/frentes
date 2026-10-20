@@ -50,7 +50,7 @@ export function CardProjeto({ projeto, hoje, onEditar, onExcluir }: Props) {
         transition,
       }}
       className={cn(
-        'relative flex flex-col overflow-hidden rounded-xl border bg-white transition-shadow hover:shadow-sm',
+        'relative flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md',
         isDragging && 'z-20 shadow-lg',
       )}
     >

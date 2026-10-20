@@ -126,7 +126,7 @@ export function PaginaLixeira() {
         )}
       </div>
       {saude && (
-        <p className="rounded-lg border bg-white px-3 py-2 text-sm text-muted-foreground">
+        <p className="rounded-lg border bg-white px-3 py-2 text-sm text-muted-foreground shadow-xs">
           Itens ficam aqui por {saude.lixeira_dias} dias.
         </p>
       )}
@@ -157,7 +157,7 @@ function LinhaLixeira({ item, onExcluir }: { item: ItemLixeira; onExcluir: () =>
   const restaurar = useRestaurarDaLixeira()
   const { rotulo, icone: Icone } = TIPOS[item.tipo]
   return (
-    <li className="flex flex-wrap items-center gap-3 rounded-lg border bg-white p-3 text-sm">
+    <li className="flex flex-wrap items-center gap-3 rounded-lg border bg-white p-3 text-sm shadow-xs">
       <Icone className="size-4 shrink-0 text-muted-foreground" aria-hidden />
       <div className="grid min-w-0 flex-1 gap-0.5">
         <p className="font-medium break-words">{item.titulo}</p>

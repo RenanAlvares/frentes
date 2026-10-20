@@ -18,11 +18,14 @@ export function AreaProjeto({ area, titulo, icone: Icone, acao, className, child
   return (
     <section
       aria-labelledby={`area-${area}`}
-      className={cn('flex min-w-0 flex-col overflow-hidden rounded-xl border bg-white', className)}
+      className={cn(
+        'flex min-w-0 flex-col overflow-hidden rounded-xl border bg-white shadow-sm',
+        className,
+      )}
     >
       <div
         className={cn(
-          'flex items-center gap-2 px-4 py-2.5',
+          'flex items-center gap-2 border-b px-4 py-2.5',
           CORES_AREA[area].fundo,
           CORES_AREA[area].texto,
         )}

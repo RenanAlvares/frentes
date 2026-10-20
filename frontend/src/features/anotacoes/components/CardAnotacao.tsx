@@ -25,7 +25,7 @@ export function CardAnotacao({ anotacao, onAbrir }: Props) {
   return (
     <li
       className={cn(
-        'relative rounded-lg p-3 text-sm shadow-xs',
+        'relative rounded-lg p-3 text-sm shadow-sm transition-shadow hover:shadow-md',
         CORES_ANOTACAO[anotacao.cor].fundo,
       )}
     >

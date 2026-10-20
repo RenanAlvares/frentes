@@ -60,7 +60,7 @@ export function ItemLembrete({ lembrete, hoje, onEditar }: Props) {
   return (
     <li
       className={cn(
-        'grid gap-0.5 rounded-lg border bg-white p-3 text-sm',
+        'grid gap-0.5 rounded-lg border bg-white p-3 text-sm shadow-xs transition-colors hover:border-foreground/25',
         lembrete.na_janela && 'border-amber-400 bg-amber-50/50',
       )}
     >

@@ -80,7 +80,8 @@ frontend/
 
 ## 5. Visual
 
-- Fonte do sistema (pilha padrão do Tailwind). Fundo da página cinza muito claro; cards brancos com borda fina (`border`), cantos `rounded-xl`, sem sombras fortes.
+- Fonte do sistema (pilha padrão do Tailwind). Fundo da página cinza claro (`neutral-100`); cards e áreas brancos com borda (`border`, um tom mais escuro que o padrão do shadcn) e sombra suave (`shadow-sm`; itens de lista `shadow-xs`), cantos `rounded-xl`, nunca sombras fortes. O cabeçalho de cada área é separado do conteúdo por uma borda; as colunas do quadro são cinza com borda, com os cards brancos por cima.
+- Todo elemento clicável mostra o cursor de mão (regra global em `index.css`, já que o Tailwind v4 não faz isso em botões); cards arrastáveis mostram o de arrastar. Itens clicáveis destacam a borda ou a sombra ao passar o mouse.
 - **Cores das áreas** (definidas como variáveis CSS em `index.css`, usadas no cabeçalho de cada área como fundo suave + texto/ícone na cor forte):
 
   | Área | Cor | Ícone (lucide) |
