@@ -32,11 +32,11 @@ describe('PainelAvisos (01 §4.1, RN-52..55)', () => {
 
     expect(await screen.findByRole('region', { name: 'Avisos' })).toBeInTheDocument()
     expect(painel().getByLabelText('5 no total')).toHaveTextContent('5')
-    expect(
+    const titulos = () =>
       painel()
         .getAllByRole('listitem')
-        .map((li) => li.textContent?.charAt(0)),
-    ).toEqual(['A', 'B', 'C'])
+        .map((li) => within(li).getByText(/^[A-E]$/).textContent)
+    expect(titulos()).toEqual(['A', 'B', 'C'])
 
     await usuario.click(painel().getByRole('button', { name: 'Ver mais 2' }))
 
@@ -61,7 +61,7 @@ describe('PainelAvisos (01 §4.1, RN-52..55)', () => {
     expect(screen.getByRole('region', { name: 'Avisos' })).toBeInTheDocument()
   })
 
-  it('cada aviso: ícone, chip do projeto, texto de prazo com cor, ocorrências e meta', async () => {
+  it('cada aviso: tipo, projeto, data, texto de prazo com cor, urgência, ocorrências e meta', async () => {
     comAvisos(
       aviso({ id: 'v', titulo: 'Vencido', dias_restantes: -3, ocorrencias_atrasadas: 3 }),
       aviso({ id: 'u', titulo: 'Uma perdida', dias_restantes: -1, ocorrencias_atrasadas: 1 }),
@@ -78,22 +78,34 @@ describe('PainelAvisos (01 §4.1, RN-52..55)', () => {
     await screen.findByRole('region', { name: 'Avisos' })
     await userEvent.setup().click(painel().getByRole('button', { name: 'Ver mais 2' }))
 
+    const linha = (titulo: string) => painel().getByText(titulo).closest('li')!
+
     const vencido = itemDe('Vencido')
-    expect(vencido.getByLabelText('Lembrete')).toBeInTheDocument()
+    expect(vencido.getByText('Lembrete')).toBeInTheDocument()
+    expect(vencido.getByText('Projeto')).toBeInTheDocument()
     expect(vencido.getByText('Reforma')).toBeInTheDocument()
+    // Vencimento do lembrete (17/10, no ano corrente da API: só dia e mês).
+    expect(vencido.getByText('Vencimento')).toBeInTheDocument()
+    expect(vencido.getByText('17/10')).toBeInTheDocument()
     expect(vencido.getByText('vencido há 3 dias · 3 ocorrências')).toHaveClass('text-red-600')
+    expect(linha('Vencido')).toHaveClass('border-l-red-500')
     expect(itemDe('Uma perdida').getByText('vencido há 1 dia')).toBeInTheDocument()
 
     const hoje = itemDe('Hoje')
-    expect(hoje.getByLabelText('Tarefa')).toBeInTheDocument()
+    expect(hoje.getByText('Tarefa')).toBeInTheDocument()
+    expect(hoje.getByText('Prazo')).toBeInTheDocument()
     expect(hoje.getByText('vence hoje')).toHaveClass('text-amber-600')
+    expect(linha('Hoje')).toHaveClass('border-l-amber-500')
     expect(hoje.getByRole('button', { name: 'Concluir' })).toBeInTheDocument()
 
     const meta = itemDe('Correr')
-    expect(meta.getByText('2/4 · mês termina em 2 dias')).toHaveClass('text-muted-foreground')
+    expect(meta.getByText('Meta mensal')).toBeInTheDocument()
+    expect(meta.getByText('2/4 no mês')).toBeInTheDocument()
+    expect(meta.getByText('mês termina em 2 dias')).toHaveClass('text-muted-foreground')
     expect(meta.getByRole('button', { name: '+1' })).toBeInTheDocument()
 
     expect(itemDe('Futuro').getByText('vence em 3 dias')).toHaveClass('text-muted-foreground')
+    expect(linha('Futuro')).toHaveClass('border-l-sky-400')
   })
 
   it('Abrir projeto e Abrir levam ao projeto e ao modal da tarefa', async () => {

@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { BellRing, X } from 'lucide-react'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -24,13 +24,26 @@ export function PainelAvisos({ itens, onFechar, onTratado }: Props) {
   return (
     <section
       aria-labelledby="titulo-avisos"
-      className="mb-6 grid gap-3 rounded-xl border border-amber-200 bg-amber-50/60 p-4"
+      className="mb-6 grid gap-3 rounded-xl border border-l-4 border-amber-300 border-l-amber-500 bg-amber-50 p-4 shadow-sm"
     >
-      <div className="flex items-center gap-2">
-        <h2 id="titulo-avisos" className="font-semibold">
-          Avisos
-        </h2>
-        <Badge aria-label={`${itens.length} no total`}>{itens.length}</Badge>
+      <div className="flex items-start gap-3">
+        <span
+          aria-hidden
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-amber-500 text-white"
+        >
+          <BellRing className="size-5" />
+        </span>
+        <div className="grid gap-0.5">
+          <div className="flex items-center gap-2">
+            <h2 id="titulo-avisos" className="text-base font-semibold">
+              Avisos
+            </h2>
+            <Badge className="bg-amber-500 text-white" aria-label={`${itens.length} no total`}>
+              {itens.length}
+            </Badge>
+          </div>
+          <p className="text-xs text-amber-900">Vencidos ou com prazo nos próximos dias</p>
+        </div>
         <Button
           variant="ghost"
           size="icon-sm"
@@ -55,8 +68,9 @@ export function PainelAvisos({ itens, onFechar, onTratado }: Props) {
       </ul>
       {restantes > 0 && (
         <Button
-          variant="link"
-          className="justify-self-start px-0"
+          variant="outline"
+          size="sm"
+          className="justify-self-start bg-white"
           onClick={() => setExpandido(true)}
         >
           Ver mais {restantes}

@@ -46,12 +46,12 @@ Rotas:
 
 Aparece no topo da área de conteúdo, em qualquer rota, sempre que o app é carregado e existe pelo menos um aviso (RN-50 a RN-56). Não bloqueia a tela.
 
-- Título: "Avisos" com o total.
+- Destacado: fundo âmbar, faixa âmbar à esquerda e ícone de sino. Título "Avisos" com o total e a linha "Vencidos ou com prazo nos próximos dias".
 - Lista os **3 primeiros** avisos; se houver mais, botão "Ver mais N" expande a lista toda.
-- Cada aviso mostra: ícone do tipo (sino = lembrete, check = tarefa), título, chip do projeto (com a cor do projeto), texto relativo de prazo e ações.
+- Cada aviso mostra: o tipo por escrito e com ícone (Lembrete, Tarefa ou Meta mensal), título, "Projeto" com o chip (na cor do projeto), "Prazo" (tarefa) ou "Vencimento" (lembrete) com a data, texto relativo de prazo e ações. A borda esquerda do aviso mostra a urgência: vermelha se vencido, âmbar se vence hoje ou amanhã.
 - Texto de prazo em vermelho quando vencido ("vencido há 3 dias"), âmbar quando vence hoje ou amanhã, cinza nos demais.
 - Lembrete recorrente com mais de uma ocorrência perdida mostra "· 3 ocorrências".
-- Meta mensal mostra o progresso: "2/4 · mês termina em 2 dias".
+- Meta mensal mostra o progresso no lugar da data: "Meta 2/4 no mês" e "mês termina em 2 dias".
 - Ações: lembrete → **Dar baixa**, **Abrir projeto**; tarefa → **Concluir** (meta mensal: **+1**), **Abrir**.
 - Botão **Fechar** (X) oculta o painel até o próximo acesso. O sino continua mostrando o total e reabre o painel.
 

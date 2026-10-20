@@ -1,14 +1,17 @@
-import { Bell, CircleCheck } from 'lucide-react'
+import { Bell, CircleCheck, Target } from 'lucide-react'
+import { createElement, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { mensagemDoErro } from '@/api/erros'
+import { useSaude } from '@/app/layout/useSaude'
 import { ChipProjeto } from '@/components/comum/ChipProjeto'
 import { Button } from '@/components/ui/button'
 import type { Aviso } from '@/features/avisos/hooks/useAvisos'
 import { useDarBaixa, useDesfazerBaixa } from '@/features/lembretes/hooks/useLembretes'
 import { useConcluirTarefa, useDesfazerConclusao } from '@/features/tarefas/hooks/useTarefas'
-import { textoRelativo } from '@/lib/datas'
+import { anoDe, formatarData, formatarDataCurta, textoRelativo } from '@/lib/datas'
 import { avisarComDesfazer } from '@/lib/desfazer'
+import { cn } from '@/lib/utils'
 
 type Props = {
   aviso: Aviso
@@ -16,20 +19,64 @@ type Props = {
   onTratado: (tratado: boolean) => void
 }
 
-/** 01 §4.1: ícone do tipo, título, chip do projeto, texto de prazo e ações. */
+const TIPOS = {
+  lembrete: { rotulo: 'Lembrete', icone: Bell, cor: 'bg-amber-100 text-amber-800' },
+  tarefa: { rotulo: 'Tarefa', icone: CircleCheck, cor: 'bg-blue-100 text-blue-800' },
+  meta: { rotulo: 'Meta mensal', icone: Target, cor: 'bg-blue-100 text-blue-800' },
+} as const
+
+/**
+ * 01 §4.1: tipo (rótulo e ícone), título, projeto, data (ou progresso da meta), texto relativo
+ * e ações. A borda esquerda mostra a urgência.
+ */
 export function ItemAviso({ aviso, onTratado }: Props) {
-  const Icone = aviso.tipo === 'lembrete' ? Bell : CircleCheck
+  const { data: saude } = useSaude()
+  const tipo = TIPOS[aviso.meta ? 'meta' : aviso.tipo]
+  const data = saude
+    ? formatarDataCurta(aviso.vencimento, anoDe(saude.hoje))
+    : formatarData(aviso.vencimento)
   return (
-    <li className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border bg-white p-3 text-sm shadow-xs transition-colors hover:border-foreground/25">
-      <Icone
-        className="size-4 shrink-0 text-muted-foreground"
-        aria-label={aviso.tipo === 'lembrete' ? 'Lembrete' : 'Tarefa'}
-      />
-      <div className="grid min-w-0 flex-1 gap-0.5">
-        <p className="font-medium break-words">{aviso.titulo}</p>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <ChipProjeto projeto={aviso.projeto} />
-          <span className={corDoPrazo(aviso.dias_restantes)}>{textoDoPrazo(aviso)}</span>
+    <li
+      className={cn(
+        'flex flex-wrap items-center gap-x-4 gap-y-3 rounded-lg border border-l-4 bg-white p-3 text-sm shadow-xs transition-shadow hover:shadow-md',
+        bordaDaUrgencia(aviso.dias_restantes),
+      )}
+    >
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        <span
+          aria-hidden
+          className={cn('flex size-8 shrink-0 items-center justify-center rounded-full', tipo.cor)}
+        >
+          {createElement(tipo.icone, { className: 'size-4' })}
+        </span>
+        <div className="grid min-w-0 gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className={cn(
+                'rounded px-1.5 py-0.5 text-[11px] font-semibold tracking-wide uppercase',
+                tipo.cor,
+              )}
+            >
+              {tipo.rotulo}
+            </span>
+            <p className="font-semibold break-words">{aviso.titulo}</p>
+          </div>
+          <dl className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+            <Campo rotulo="Projeto">
+              <ChipProjeto projeto={aviso.projeto} />
+            </Campo>
+            {aviso.meta ? (
+              <Campo rotulo="Meta">
+                {aviso.meta.feitas}/{aviso.meta.meta} no mês
+              </Campo>
+            ) : (
+              <Campo rotulo={aviso.tipo === 'lembrete' ? 'Vencimento' : 'Prazo'}>{data}</Campo>
+            )}
+            <div>
+              <dt className="sr-only">Situação</dt>
+              <dd className={corDoPrazo(aviso.dias_restantes)}>{textoDoPrazo(aviso)}</dd>
+            </div>
+          </dl>
         </div>
       </div>
       <div className="flex gap-1">
@@ -43,17 +90,31 @@ export function ItemAviso({ aviso, onTratado }: Props) {
   )
 }
 
+function Campo({ rotulo, children }: { rotulo: string; children: ReactNode }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <dt className="text-muted-foreground">{rotulo}</dt>
+      <dd className="font-medium">{children}</dd>
+    </div>
+  )
+}
+
 /** 01 §4.1: vermelho se vencido, âmbar se vence hoje ou amanhã, cinza nos demais. */
 function corDoPrazo(diasRestantes: number) {
-  if (diasRestantes < 0) return 'font-medium text-red-600'
-  if (diasRestantes <= 1) return 'text-amber-600'
+  if (diasRestantes < 0) return 'font-semibold text-red-600'
+  if (diasRestantes <= 1) return 'font-semibold text-amber-600'
   return 'text-muted-foreground'
 }
 
+/** A mesma urgência, na borda esquerda do item. */
+function bordaDaUrgencia(diasRestantes: number) {
+  if (diasRestantes < 0) return 'border-l-red-500'
+  if (diasRestantes <= 1) return 'border-l-amber-500'
+  return 'border-l-sky-400'
+}
+
 function textoDoPrazo(aviso: Aviso) {
-  if (aviso.meta) {
-    return `${aviso.meta.feitas}/${aviso.meta.meta} · ${textoFimDoMes(aviso.dias_restantes)}`
-  }
+  if (aviso.meta) return textoFimDoMes(aviso.dias_restantes)
   // RN-34: só mostra a partir de 2 ocorrências perdidas.
   const ocorrencias = aviso.ocorrencias_atrasadas
   return (

@@ -4,17 +4,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Cores das áreas do projeto (05 §5): fundo suave + texto/ícone na cor forte.
-   Viram classes como `bg-area-tarefas-suave` e `text-area-tarefas` (mapa em lib/cores.ts). */
+/* Cores das áreas do projeto (05 §5): cabeçalho com fundo suave, texto/ícone na cor forte e
+   borda na cor da área. Viram classes como `bg-area-tarefas-suave`, `text-area-tarefas` e
+   `border-area-tarefas-borda` (mapa em lib/cores.ts). */
 @theme inline {
-  --color-area-lembretes: var(--color-amber-700);
-  --color-area-lembretes-suave: var(--color-amber-50);
-  --color-area-tarefas: var(--color-blue-700);
-  --color-area-tarefas-suave: var(--color-blue-50);
-  --color-area-documentos: var(--color-emerald-700);
-  --color-area-documentos-suave: var(--color-emerald-50);
-  --color-area-anotacoes: var(--color-violet-700);
-  --color-area-anotacoes-suave: var(--color-violet-50);
+  --color-area-lembretes: var(--color-amber-800);
+  --color-area-lembretes-suave: var(--color-amber-100);
+  --color-area-lembretes-borda: var(--color-amber-300);
+  --color-area-tarefas: var(--color-blue-800);
+  --color-area-tarefas-suave: var(--color-blue-100);
+  --color-area-tarefas-borda: var(--color-blue-300);
+  --color-area-documentos: var(--color-emerald-800);
+  --color-area-documentos-suave: var(--color-emerald-100);
+  --color-area-documentos-borda: var(--color-emerald-300);
+  --color-area-anotacoes: var(--color-violet-800);
+  --color-area-anotacoes-suave: var(--color-violet-100);
+  --color-area-anotacoes-borda: var(--color-violet-300);
 }
 
 @theme inline {
@@ -71,13 +76,14 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /* Texto secundário e bordas mais escuros que o padrão do shadcn (0.556 e 0.922): a tela não
+     fica "apagada" e os blocos se separam. */
+  --muted-foreground: oklch(0.46 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  /* Bordas um tom mais escuras que o padrão do shadcn (0.922): separação visível entre áreas. */
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.88 0 0);
+  --border: oklch(0.85 0 0);
+  --input: oklch(0.85 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
