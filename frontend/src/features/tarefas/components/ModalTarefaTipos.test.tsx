@@ -48,7 +48,7 @@ describe('Modal da tarefa: campos por tipo (01 §4.6)', () => {
     const post = simularEscrita('POST', sucesso(tarefa(), 201))
     const usuario = userEvent.setup()
     renderizarRota(URL)
-    await usuario.click(await screen.findByRole('button', { name: 'Mais opções' }))
+    await usuario.click(await screen.findByRole('button', { name: 'Nova tarefa' }))
     await usuario.type(await screen.findByLabelText('Título'), 'Correr')
 
     await escolher(usuario, 'Tipo', 'Meta mensal')
@@ -79,7 +79,7 @@ describe('Modal da tarefa: campos por tipo (01 §4.6)', () => {
     const post = simularEscrita('POST', sucesso(tarefa(), 201))
     const usuario = userEvent.setup()
     renderizarRota(URL)
-    await usuario.click(await screen.findByRole('button', { name: 'Mais opções' }))
+    await usuario.click(await screen.findByRole('button', { name: 'Nova tarefa' }))
     await usuario.type(await screen.findByLabelText('Título'), 'Regar')
 
     await escolher(usuario, 'Tipo', 'Repetida')

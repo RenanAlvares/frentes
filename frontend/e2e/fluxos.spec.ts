@@ -62,7 +62,7 @@ test('2. lembrete vencendo em 2 dias: aviso ao recarregar; dar baixa some; desfa
 
 test('3. tarefa repetida semanal: concluir avança o prazo uma semana', async ({ page }) => {
   await criarProjeto(page, nomeUnico('Jardim'))
-  await page.getByRole('button', { name: 'Mais opções' }).click()
+  await page.getByRole('button', { name: 'Nova tarefa' }).click()
   const modal = page.getByRole('dialog', { name: 'Nova tarefa' })
   await modal.getByPlaceholder('Título da tarefa').fill('Regar plantas')
   await modal.getByRole('combobox', { name: 'Tipo' }).click()
@@ -88,7 +88,7 @@ test('3. tarefa repetida semanal: concluir avança o prazo uma semana', async ({
 
 test('4. meta mensal de 2 vezes: +1, +1 vai para Concluída', async ({ page }) => {
   await criarProjeto(page, nomeUnico('Saúde'))
-  await page.getByRole('button', { name: 'Mais opções' }).click()
+  await page.getByRole('button', { name: 'Nova tarefa' }).click()
   const modal = page.getByRole('dialog', { name: 'Nova tarefa' })
   await modal.getByPlaceholder('Título da tarefa').fill('Correr')
   await modal.getByRole('combobox', { name: 'Tipo' }).click()

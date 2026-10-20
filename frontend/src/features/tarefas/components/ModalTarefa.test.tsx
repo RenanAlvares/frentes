@@ -182,14 +182,14 @@ describe('ModalTarefa (01 §4.5)', () => {
   })
 })
 
-describe('ModalTarefa: criação ("Mais opções")', () => {
+describe('ModalTarefa: criação (botão "Nova tarefa")', () => {
   it('cria tarefa simples com título, descrição, prioridade e prazo', async () => {
     simularGet()
     const post = simularEscrita('POST', sucesso(existente, 201))
     const usuario = userEvent.setup()
     renderizarRota(URL)
 
-    await usuario.click(await screen.findByRole('button', { name: 'Mais opções' }))
+    await usuario.click(await screen.findByRole('button', { name: 'Nova tarefa' }))
     const modal = within(await screen.findByRole('dialog', { name: 'Nova tarefa' }))
     expect(modal.queryByLabelText('Status')).not.toBeInTheDocument()
     expect(modal.queryByRole('button', { name: 'Excluir' })).not.toBeInTheDocument()

@@ -34,7 +34,7 @@ describe('Atalhos (RN-130)', () => {
     expect(campo).toHaveFocus()
     expect(campo).toHaveValue('')
 
-    await usuario.click(screen.getByRole('button', { name: 'Mais opções' }))
+    await usuario.click(screen.getByRole('button', { name: 'Nova tarefa' }))
     await screen.findByRole('dialog')
     await usuario.click(screen.getByRole('dialog'))
     await usuario.keyboard('n')
@@ -47,7 +47,7 @@ describe('Atalhos (RN-130)', () => {
     const usuario = userEvent.setup()
     await screen.findByRole('region', { name: 'Avisos' })
 
-    await usuario.click(await screen.findByRole('button', { name: 'Mais opções' }))
+    await usuario.click(await screen.findByRole('button', { name: 'Nova tarefa' }))
     await screen.findByRole('dialog')
     await usuario.keyboard('{Escape}')
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())

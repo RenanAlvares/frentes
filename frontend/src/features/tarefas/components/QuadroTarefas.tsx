@@ -46,7 +46,7 @@ type Props = {
   projetoId: string
   /** Clique ou Enter no card (abre o modal da tarefa). */
   onAbrirTarefa: (tarefaId: string) => void
-  /** "Mais opções" da criação rápida. */
+  /** Botão "Nova tarefa" da criação rápida. */
   onNovaTarefa: () => void
 }
 
@@ -134,7 +134,7 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
 
   return (
     <div className="flex flex-col gap-3">
-      <CriacaoRapida projetoId={projetoId} onMaisOpcoes={onNovaTarefa} />
+      <CriacaoRapida projetoId={projetoId} onNovaTarefa={onNovaTarefa} />
       <DndContext
         sensors={sensores}
         collisionDetection={closestCorners}

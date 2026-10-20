@@ -9,10 +9,23 @@ import { cn, FOCO_VISIVEL } from '@/lib/utils'
 
 type Props = { anotacao: Anotacao; onAbrir: () => void }
 
-/** 01 §4.4: card colorido com título (opcional) e até 4 linhas do texto; alfinete nas fixadas. */
+/** 01 §4.4: o título (ou a primeira linha do texto) e uma linha de prévia do resto. */
+function resumir({ titulo, texto }: Anotacao) {
+  const linhas = texto
+    .split('\n')
+    .map((linha) => linha.trim())
+    .filter(Boolean)
+  if (titulo) return { titulo, previa: linhas.join(' ') }
+  return { titulo: linhas[0] ?? '', previa: linhas.slice(1).join(' ') }
+}
+
+/**
+ * 01 §4.4: card colorido e compacto (título + uma linha de prévia; o texto completo fica no
+ * modal); alfinete nas fixadas.
+ */
 export function CardAnotacao({ anotacao, onAbrir }: Props) {
   const atualizar = useAtualizarAnotacao(anotacao.projeto_id)
-  const rotulo = anotacao.titulo || anotacao.texto
+  const { titulo: rotulo, previa } = resumir(anotacao)
 
   // RN-85: fixar é ação direta (salva na hora, sem o modal).
   function alternarFixada() {
@@ -33,10 +46,10 @@ export function CardAnotacao({ anotacao, onAbrir }: Props) {
         type="button"
         onClick={onAbrir}
         aria-label={`Abrir anotação ${rotulo}`}
-        className={cn('grid w-full gap-1 pr-6 text-left', FOCO_VISIVEL)}
+        className={cn('grid w-full min-w-0 gap-0.5 pr-6 text-left', FOCO_VISIVEL)}
       >
-        {anotacao.titulo && <span className="font-semibold break-words">{anotacao.titulo}</span>}
-        <span className="line-clamp-4 whitespace-pre-wrap break-words">{anotacao.texto}</span>
+        <span className="truncate font-semibold">{rotulo}</span>
+        {previa && <span className="truncate text-xs text-foreground/70">{previa}</span>}
       </button>
       <Button
         variant="ghost"

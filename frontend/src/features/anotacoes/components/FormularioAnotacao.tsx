@@ -71,6 +71,8 @@ export function FormularioAnotacao({ inicial, onSalvar, onSujoChange, acoesEsque
           id="texto-anotacao"
           autoFocus
           rows={8}
+          // Cresce com o texto até metade da tela; depois rola por dentro.
+          className="max-h-[50vh]"
           {...register('texto')}
           {...atributosDeErro('texto-anotacao', erro('texto'))}
         />

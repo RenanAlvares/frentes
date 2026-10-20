@@ -104,7 +104,7 @@ Cada área tem um cabeçalho com fundo na cor da área, ícone, nome e botão de
 **Tarefas**
 
 - Quadro com três colunas: **Pendente**, **Em andamento**, **Concluída**.
-- Campo de criação rápida no topo: digitar o título e Enter cria uma tarefa simples em Pendente, prioridade média. Botão "Mais opções" abre o modal completo.
+- Campo de criação rápida no topo: digitar o título e Enter cria uma tarefa simples em Pendente, prioridade média. Botão "Nova tarefa" abre o modal completo.
 - Card de tarefa: título, prazo (vermelho se atrasada), ícone de prioridade (alta = vermelho, baixa = cinza; média sem ícone), selo "repete" ou "meta 2/4".
 - Arrastar entre colunas muda o status; arrastar dentro da coluna reordena (RN-25).
 - Meta mensal não é arrastável entre colunas; tem botões **+1** e **−1** no card (RN-24).
@@ -117,7 +117,7 @@ Cada área tem um cabeçalho com fundo na cor da área, ícone, nome e botão de
 
 **Anotações**
 
-- Cards coloridos com título (opcional) e até 4 linhas do texto; fixadas primeiro, com ícone de alfinete.
+- Cards coloridos e compactos: título (sem título, a primeira linha do texto) e uma linha de prévia do resto; o texto completo fica no modal. Fixadas primeiro, com ícone de alfinete.
 - Clique abre o modal de anotação. "+ Anotação" cria uma nova.
 
 ### 4.5 Modal da tarefa

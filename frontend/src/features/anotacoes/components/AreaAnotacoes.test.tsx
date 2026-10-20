@@ -30,7 +30,9 @@ describe('Cards de anotação (01 §4.4, RN-81)', () => {
 
     const fixada = await card('Senhas')
     expect(fixada).toHaveClass('bg-violet-100', 'border-violet-300')
-    expect(within(fixada).getByText('Wi-Fi: casa123')).toHaveClass('line-clamp-4')
+    // Card compacto: título + uma linha de prévia (o texto completo fica no modal).
+    expect(within(fixada).getByText('Senhas')).toHaveClass('truncate')
+    expect(within(fixada).getByText('Wi-Fi: casa123')).toHaveClass('truncate')
     expect(within(fixada).getByRole('button', { name: 'Desafixar Senhas' })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -44,6 +46,14 @@ describe('Cards de anotação (01 §4.4, RN-81)', () => {
 
     const area = within(screen.getByRole('region', { name: 'Anotações' }))
     expect(area.getAllByRole('listitem')).toEqual([fixada, semTitulo])
+  })
+
+  it('sem título: a primeira linha vira o título e o resto, uma linha de prévia', async () => {
+    comAnotacoes([anotacao({ titulo: '', texto: 'Medidas da sala\n4 x 5 m\n\npé-direito 2,60 m' })])
+
+    const cartao = await card('Medidas da sala')
+    expect(within(cartao).getByText('Medidas da sala')).toHaveClass('truncate', 'font-semibold')
+    expect(within(cartao).getByText('4 x 5 m pé-direito 2,60 m')).toHaveClass('truncate')
   })
 
   it('sem anotações: "Nenhuma anotação."', async () => {
@@ -99,6 +109,9 @@ describe('ModalAnotacao (01 §4.6, RN-80, RN-85)', () => {
     expect(dialogo.getByLabelText('Título')).toHaveValue('Medidas')
     const texto = dialogo.getByLabelText('Texto *')
     expect(texto).toHaveValue('Sala')
+    // Texto longo não empurra o Salvar para fora da tela: o campo e o modal rolam.
+    expect(texto).toHaveClass('max-h-[50vh]')
+    expect(screen.getByRole('dialog')).toHaveClass('max-h-[calc(100dvh-2rem)]', 'overflow-y-auto')
     await usuario.type(texto, ': 4 x 5 m')
     await usuario.click(dialogo.getByRole('button', { name: 'Salvar' }))
 

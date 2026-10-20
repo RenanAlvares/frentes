@@ -30,7 +30,7 @@ import {
 type Props = {
   projetoId: string
   aberto: boolean
-  /** Ausente = criar ("Mais opções"); presente = a tarefa de `?tarefa=`. */
+  /** Ausente = criar ("Nova tarefa"); presente = a tarefa de `?tarefa=`. */
   tarefaId?: string
   onFechar: () => void
 }

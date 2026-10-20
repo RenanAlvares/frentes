@@ -1,6 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 import { camposDoErro, mensagemDoErro } from '@/api/erros'
+import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useCriarTarefa } from '@/features/tarefas/hooks/useTarefas'
@@ -8,12 +9,12 @@ import { useAtalho } from '@/lib/atalhos'
 
 type Props = {
   projetoId: string
-  /** "Mais opções": abre o modal completo de criação. */
-  onMaisOpcoes: () => void
+  /** "Nova tarefa": abre o modal completo de criação. */
+  onNovaTarefa: () => void
 }
 
 /** 01 §4.4: título + Enter cria uma tarefa simples em Pendente, prioridade média. */
-export function CriacaoRapida({ projetoId, onMaisOpcoes }: Props) {
+export function CriacaoRapida({ projetoId, onNovaTarefa }: Props) {
   const criar = useCriarTarefa(projetoId)
   const [titulo, setTitulo] = useState('')
   const [erro, setErro] = useState<string>()
@@ -53,8 +54,8 @@ export function CriacaoRapida({ projetoId, onMaisOpcoes }: Props) {
           aria-invalid={Boolean(erro)}
           aria-describedby={erro ? 'nova-tarefa-erro' : undefined}
         />
-        <Button type="button" variant="outline" onClick={onMaisOpcoes}>
-          Mais opções
+        <Button type="button" variant="outline" onClick={onNovaTarefa}>
+          <Plus /> Nova tarefa
         </Button>
       </div>
       {erro && (
