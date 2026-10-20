@@ -1,6 +1,6 @@
 [project]
 name = "frentes"
-version = "0.1.0"
+version = "0.1.1"
 description = "Gerenciador local de projetos e tarefas."
 requires-python = ">=3.12"
 dependencies = [
