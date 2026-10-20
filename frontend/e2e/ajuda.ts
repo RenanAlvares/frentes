@@ -42,6 +42,8 @@ export async function escolherDia(dentro: Locator, rotulo: string, dia: number) 
 
 /** Arrasta com o mouse (dnd-kit só começa depois de 5 px). */
 export async function arrastar(page: Page, item: Locator, destino: Locator) {
+  // Se o card acabou de ser solto, espera a animação de soltar terminar (ele fica oculto nela).
+  await expect(item).toHaveCSS('opacity', '1')
   const de = await item.boundingBox()
   const para = await destino.boundingBox()
   if (!de || !para) throw new Error('Item ou destino fora da tela')

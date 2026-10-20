@@ -19,6 +19,8 @@ type Props = { tarefa: Tarefa; hoje: string | undefined }
 export function CardTarefa({ tarefa, hoje, onAbrir }: Props & { onAbrir: () => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: tarefa.id,
+    // Os outros cards abrem espaço com uma curva suave (desacelera no fim).
+    transition: { duration: 220, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
   })
   return (
     <div
@@ -29,7 +31,9 @@ export function CardTarefa({ tarefa, hoje, onAbrir }: Props & { onAbrir: () => v
       }}
       className={cn(
         'cursor-grab rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50',
-        isDragging && 'opacity-40',
+        // Enquanto arrasta, o lugar onde o card vai cair fica marcado com borda tracejada.
+        isDragging &&
+          '[&_article]:border-2 [&_article]:border-dashed [&_article]:border-neutral-400 [&_article]:bg-neutral-200/60 [&_article]:shadow-none [&_article>*]:opacity-0',
       )}
       {...attributes}
       {...listeners}

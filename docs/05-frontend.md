@@ -117,7 +117,7 @@ frontend/
 ## 8. Componentes-chave
 
 - `PainelAvisos`: busca `avisos()` ao montar o layout; estado `fechado` em memória (zera ao recarregar, RN-52/53). Escuta `visibilitychange`/`focus`: se `GET /api/saude` devolver um `hoje` diferente do último visto, refaz `avisos()` e reabre.
-- `QuadroTarefas`: dnd-kit com `SortableContext` por coluna; ao soltar, chama `mover` com `status` e `indice`. Cards de meta mensal com `disabled` para troca de coluna.
+- `QuadroTarefas`: dnd-kit com `SortableContext` por coluna; ao soltar, chama `mover` com `status` e `indice`. Cards de meta mensal com `disabled` para troca de coluna. Animação: o card levantado acompanha o cursor (leve inclinação e sombra), o lugar de destino fica tracejado e, ao soltar, a arrumação nova permanece até o cache trazer o quadro previsto (o card nunca volta à coluna antiga antes de assentar).
 - `EditorRecorrencia`: controla o objeto `Recorrencia` (RN-30) e mostra a frase usando o mesmo texto de RN-35 (pré-visualização local; o texto oficial vem da API depois de salvar).
 - `ModalTarefa`, `ModalProjeto`, `ModalLembrete`, `ModalAnotacao`: react-hook-form + zod; schema zod espelha as validações da API; erros 422 da API são aplicados aos campos com `setError`.
 - `ConfirmarDescartar`: diálogo padrão para fechar modal com alterações (RN-85).

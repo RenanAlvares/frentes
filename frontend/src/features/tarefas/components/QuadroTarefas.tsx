@@ -1,8 +1,10 @@
 import {
   closestCorners,
+  defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
   KeyboardSensor,
+  MeasuringStrategy,
   PointerSensor,
   useSensor,
   useSensors,
@@ -10,6 +12,7 @@ import {
   type Announcements,
   type DragEndEvent,
   type DragOverEvent,
+  type DropAnimation,
   type Over,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
@@ -33,6 +36,13 @@ import {
   ROTULO_COLUNA,
   type Colunas,
 } from '@/features/tarefas/quadro'
+
+/** Soltar: o card flutuante pousa no lugar novo com uma curva suave; o card real fica oculto até lá. */
+const ANIMACAO_SOLTAR: DropAnimation = {
+  duration: 220,
+  easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+  sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0' } } }),
+}
 
 /** O item arrastado passou da metade do item de destino? (cair antes ou depois dele) */
 function depoisDe(active: Active, over: Over): boolean {
@@ -58,6 +68,14 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
   // Arrumação local enquanto arrasta (a tarefa já aparece na coluna sob o cursor).
   const [arrastando, setArrastando] = useState<{ id: string; colunas: Colunas } | null>(null)
   const [verTodas, setVerTodas] = useState(false)
+  // Depois de soltar, a arrumação nova fica na tela até o cache trazer o quadro previsto. Sem
+  // isso o card volta um quadro para a coluna antiga e a animação de soltar vai para lá.
+  const [aplicando, setAplicando] = useState<Colunas | null>(null)
+  const [quadroVisto, setQuadroVisto] = useState(quadro)
+  if (quadro !== quadroVisto) {
+    setQuadroVisto(quadro)
+    setAplicando(null)
+  }
   const sensores = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     // Só Espaço inicia o arraste pelo teclado; Enter fica para abrir a tarefa (1.6).
@@ -79,7 +97,7 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
   const tarefas = new Map(
     [...quadro.pendente, ...quadro.em_andamento, ...quadro.concluida].map((t) => [t.id, t]),
   )
-  const colunas = arrastando?.colunas ?? colunasDoQuadro(quadro)
+  const colunas = arrastando?.colunas ?? aplicando ?? colunasDoQuadro(quadro)
   const titulo = (id: string | number) => tarefas.get(String(id))?.titulo ?? 'tarefa'
   const ativa = arrastando ? tarefas.get(arrastando.id) : undefined
 
@@ -116,6 +134,7 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
     // RN-23: repetida solta em Concluída continua em Pendente (com o próximo prazo, da API).
     const repetida = tarefas.get(id)?.tipo === 'repetida' && pedido.status === 'concluida'
     const previsto = repetida ? quadro : aplicarNoQuadro(quadro, final, id)
+    if (!repetida) setAplicando(final)
     mover.mutate({ tarefaId: id, ...pedido, previsto })
   }
 
@@ -138,6 +157,8 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
       <DndContext
         sensors={sensores}
         collisionDetection={closestCorners}
+        // Mede as colunas durante o arraste: trocar de coluna não dá saltos.
+        measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
         accessibility={{
           announcements: anuncios,
           screenReaderInstructions: {
@@ -175,8 +196,13 @@ export function QuadroTarefas({ projetoId, onAbrirTarefa, onNovaTarefa }: Props)
             )
           })}
         </div>
-        <DragOverlay>
-          {ativa ? <ConteudoCard tarefa={ativa} hoje={saude?.hoje} /> : null}
+        <DragOverlay dropAnimation={ANIMACAO_SOLTAR}>
+          {ativa ? (
+            // O card "levantado": leve inclinação e sombra enquanto acompanha o cursor.
+            <div className="rotate-2 cursor-grabbing rounded-lg shadow-xl">
+              <ConteudoCard tarefa={ativa} hoje={saude?.hoje} />
+            </div>
+          ) : null}
         </DragOverlay>
       </DndContext>
       <DialogoConcluidas
