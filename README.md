@@ -78,7 +78,16 @@ docs/              especificação: produto, regras (RN-xx), dados, API, front, 
 
 ## Como rodar
 
-Requisitos: [uv](https://docs.astral.sh/uv/) (instala o Python sozinho), [Node.js](https://nodejs.org/) LTS e Git.
+**Sem instalar nada (Windows):** baixe o `Frentes-vX.Y.Z-windows.zip` na [página de Releases](https://github.com/RenanAlvares/frentes/releases/latest), extraia e dê dois cliques em `Frentes\Frentes.exe` (mais detalhes em [Executável para Windows](#executável-para-windows)).
+
+**Pelo código, no Windows:** baixe o repositório (botão **Code › Download ZIP**, ou `git clone`) e dê dois cliques em `executar.bat`. Na primeira vez ele baixa sozinho o que faltar, sem pedir administrador:
+
+- o [uv](https://docs.astral.sh/uv/), pelo instalador oficial, na pasta do usuário (ele baixa o Python e as dependências do back-end);
+- o [Node.js](https://nodejs.org/) LTS portátil, dentro da pasta `.ferramentas` do projeto (não instala nada no sistema), se ainda não houver um Node no computador.
+
+Depois ele gera o front-end e abre o app. Precisa de internet só na primeira vez. Em computadores corporativos que bloqueiam scripts do PowerShell, instale o uv e o Node à mão.
+
+**Pelo código, em qualquer sistema:** requisitos [uv](https://docs.astral.sh/uv/) e [Node.js](https://nodejs.org/) LTS.
 
 ```bash
 # primeira vez
@@ -95,15 +104,14 @@ uv run --directory backend uvicorn app.main:app --reload --port 8000
 npm --prefix frontend run dev    # abra http://localhost:5173
 ```
 
-No Windows, basta dar dois cliques em `executar.bat`: ele faz o build e abre o app (na primeira vez, instala as dependências do front-end).
 
 O `frentes` só aceita conexões da própria máquina e abre o navegador quando o banco estiver pronto. Se a porta 8765 estiver ocupada (o app já está aberto?), ele avisa e sai; troque com `FRENTES_PORT`.
 
 **Backup e restauração.** "Exportar backup" (em Configurações ou no menu ⋯) baixa um `.zip`; pela linha de comando, `uv run --directory backend frentes backup`. Para restaurar, com o app fechado: `uv run --directory backend frentes restaurar caminho/do/backup.zip` (os dados atuais ficam guardados em `backups/`).
 
-### Executável para Windows (opcional)
+### Executável para Windows
 
-Para usar o app num computador sem uv nem Node, gere uma pasta com o `Frentes.exe`:
+O `Frentes.exe` roda num computador sem uv, Python ou Node. A cada versão, o GitHub Actions monta, testa e publica o zip em [Releases](https://github.com/RenanAlvares/frentes/releases/latest). Para gerar na sua máquina:
 
 ```bash
 npm --prefix frontend run build
@@ -114,6 +122,7 @@ O resultado fica em `backend/dist/Frentes/` (cerca de 45 MB). Copie a pasta inte
 
 - Os dados ficam na pasta de dados do sistema (veja abaixo). Para outra pasta ou porta, crie um `.env` ao lado do `Frentes.exe` com `FRENTES_DATA_DIR` ou `FRENTES_PORT`.
 - O executável não é assinado: o Windows SmartScreen pode mostrar "O Windows protegeu o computador" (clique em **Mais informações** › **Executar assim mesmo**), e alguns antivírus podem bloqueá-lo. Se preferir, rode pelo código-fonte, como acima.
+- **Publicar uma versão nova:** atualize a versão em `backend/pyproject.toml` e `backend/app/__init__.py`, crie a tag (`git tag v0.2.0`) e envie (`git push origin v0.2.0`). O workflow `Release` confere que a tag bate com a versão, monta e testa o `Frentes.exe` e publica o zip.
 
 ### Configuração e dados
 

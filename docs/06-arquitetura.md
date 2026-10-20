@@ -163,10 +163,12 @@ Falha em 2 ou 3 interrompe a inicialização com mensagem clara (o app não sobe
 | Uso local | `npm --prefix frontend run build` e depois `uv run --directory backend frentes` → abre `http://127.0.0.1:8765` |
 | Backup pela linha de comando | `uv run --directory backend frentes backup` (grava o zip na pasta atual) |
 | Restaurar | app fechado: `uv run --directory backend frentes restaurar caminho/do/backup.zip` |
+| Windows, pelo código | `executar.bat`: na primeira vez, `scripts/preparar.ps1` baixa o que faltar sem administrador (uv pelo instalador oficial na pasta do usuário; Node.js LTS portátil em `.ferramentas/node`, ignorada pelo git). As ferramentas baixadas entram no fim do PATH: as já instaladas têm preferência |
+| Windows, sem instalar nada | `Frentes.exe` do zip publicado em Releases (workflow `release.yml`: tag `vX.Y.Z` igual à versão do app → monta, testa `/api/saude` e publica) |
 
 `frentes iniciar`: se a porta estiver ocupada, mostra "A porta 8765 já está em uso. O Frentes já está aberto? Acesse http://127.0.0.1:8765 ou defina FRENTES_PORT." e sai com código 2.
 
-Empacotamento (Fase 7, opcional): PyInstaller em modo `onedir`, incluindo `app/static` e `migrations/`. Executáveis sem assinatura podem ser bloqueados por antivírus no Windows; documentar no README. Alternativa: `uv tool install` a partir do repositório.
+Empacotamento: PyInstaller em modo `onedir` (`backend/frentes.spec`), incluindo `app/static`, `migrations/` e `alembic.ini`. Executáveis sem assinatura podem ser bloqueados por antivírus no Windows; documentado no README.
 
 ## 12. Segurança
 

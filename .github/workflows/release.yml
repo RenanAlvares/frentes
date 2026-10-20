@@ -1,0 +1,86 @@
+# Executável do Windows (06 §11): monta o Frentes.exe, testa e publica um Release.
+# - Tag `vX.Y.Z` enviada: publica o Release com o zip (a tag tem de bater com a versão do app).
+# - Rodado à mão (Actions › Release › Run workflow): só monta e guarda o zip como artefato.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      ZIP: Frentes-${{ github.ref_name }}-windows.zip
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0 # o setup-uv só publica tags de versão completa
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: uv sync --directory backend --frozen
+
+      - name: Conferir a versão da tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $versao = uv run --directory backend python -c "import app; print(app.__version__)"
+          if ("v$versao" -ne "${{ github.ref_name }}") {
+            throw "A tag ${{ github.ref_name }} não bate com a versão do app ($versao)."
+          }
+
+      - run: npm --prefix frontend ci
+      - run: npm --prefix frontend run build
+      - run: uv run --directory backend pyinstaller frentes.spec --noconfirm
+
+      - name: Testar o executável
+        shell: pwsh
+        run: |
+          $env:FRENTES_DATA_DIR = Join-Path $env:RUNNER_TEMP 'dados'
+          $env:FRENTES_PORT = '8799'
+          $env:FRENTES_ABRIR_NAVEGADOR = 'false'
+          $proc = Start-Process backend/dist/Frentes/Frentes.exe -PassThru
+          $ok = $false
+          for ($i = 0; $i -lt 60; $i++) {
+            try { Invoke-RestMethod http://127.0.0.1:8799/api/saude | Out-Null; $ok = $true; break }
+            catch { Start-Sleep -Seconds 2 }
+          }
+          taskkill /PID $proc.Id /T /F | Out-Null
+          if (-not $ok) { throw 'O Frentes.exe não respondeu em /api/saude.' }
+
+      - name: Empacotar
+        shell: pwsh
+        run: Compress-Archive -Path backend/dist/Frentes -DestinationPath $env:ZIP
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: frentes-windows
+          path: ${{ env.ZIP }}
+          retention-days: 7
+
+      - name: Publicar o Release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $notas = @"
+          Frentes para Windows, sem instalar nada.
+
+          1. Baixe o $env:ZIP abaixo e extraia (botão direito › Extrair tudo).
+          2. Abra a pasta Frentes e dê dois cliques em Frentes.exe; o navegador abre sozinho.
+
+          O executável não é assinado: se o Windows mostrar "O Windows protegeu o computador",
+          clique em Mais informações › Executar assim mesmo.
+          "@
+          gh release create "${{ github.ref_name }}" $env:ZIP --title "Frentes ${{ github.ref_name }}" --notes $notas

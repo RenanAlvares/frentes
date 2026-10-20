@@ -38,3 +38,6 @@ Thumbs.db
 !.vscode/extensions.json
 
 .claude
+
+# ferramentas baixadas pelo executar.bat (scripts/preparar.ps1)
+.ferramentas/
